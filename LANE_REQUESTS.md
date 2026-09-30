@@ -14,8 +14,8 @@ When the shared version lands, delete your copy.
 - **Never** edit another lane's folder, even for a one-line fix.
 - **Never** edit anything in `BACKEND_BOUNDARY.md`. A backend need is a request
   here with status `blocked` and an owner decision — not a change you make.
-- Foundation (`src/components/v1/**`, `src/styles/bylda-v1.css`,
-  `src/lib/data/types/**`, `src/lib/data/mocks/**`) is **frozen once merged**.
+- Foundation (`src/components/bylda/**`, `src/components/ui/**`, `src/styles/**`,
+  `src/lib/data/**`, `src/routes/app.tsx`) is **frozen once merged** (`CLAUDE.md` §12 A).
   Every change to it comes through this file.
 - One row per request. Keep `what` to one line — link a PR or issue for detail.
 - Update your own row's status. Don't let it rot.
@@ -36,15 +36,18 @@ When the shared version lands, delete your copy.
 | # | Requester | Lane | What | Why | Status |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Ansh | setup | ~~Supply the correct Figma file key~~ — **resolved** | The file was right; `get_metadata` with no `nodeId` only reports page `0:1` and hides the other 20. All 21 pages and 128 views are now mapped with real node IDs in `FRAMES.md`. | `landed` |
-| 2 | Ansh | setup | Rule on the 33 `OWNER DECISION` routes in `AUDIT.md` (Launchpad + CRM, ~19k lines) — leave routed / flag off / delete in a separate PR | They have no V1 counterpart. "Rebuild the ENTIRE frontend" is undefined until this is answered. Default assumed: leave routed and untouched. | `blocked` |
+| 2 | Ansh | setup | Rule on the `OWNER DECISION` routes in `AUDIT.md` | **Ruled 2026-09-30 (§12 B):** the 29 routes are QUARANTINED — out of nav, code untouched, reachable by URL (`LEGACY_ROUTES.md`). Keep / flag off / delete is still open, as its own PR. | `landed` |
 | 3 | Ansh | setup | Decide where `confidence` and `sample_size` come from | `CLAUDE.md` §4 makes both mandatory on every insight. No table carries either field. Blocks every insight surface across 05, 06, 08, 09, 11. | `blocked` |
-| 4 | Ansh | setup | Regenerate `src/integrations/supabase/types.ts` | `calls`, `call_insights`, `call_transcripts` exist in the DB but are missing from the generated types. Cheapest unblock on the list; it gates area 07, the one well-supported area. Backend change — needs an owner. | `blocked` |
-| 5 | Ansh | setup | Rule on the UNSURE list in `BACKEND_BOUNDARY.md` | ~12 client-side files encode backend contracts. Until ruled, all are read-only, which constrains Lane 2's adapter work. | `blocked` |
-| 6 | Ansh | setup | Rebalance lanes once real frame counts land | Provisional split puts 41 rows on Lane 5 and 9 on Lane 2. Suggest moving area 16 Settings to Lane 2 or Lane 6. | `open` |
-| 7 | Dravin | 5 | Ship area 17 (empty / loading / error / skeleton) before anything else in Lane 5 | Lanes 1–6 all import these states; `CLAUDE.md` §11 makes them part of done. | `open` |
+| 4 | Ansh | setup | Regenerate `src/integrations/supabase/types.ts` | **Ruled (§12 C–D):** Tirth, item 2 in `BACKEND_BACKLOG.md`. Until then 16 missing tables are typed in `src/lib/data/db-types.ts` (TEMP). | `accepted` |
+| 5 | Ansh | setup | Rule on the UNSURE list in `BACKEND_BOUNDARY.md` | **Ruled (§12 A):** all frozen, owner Ansh; lanes reach them only through `src/lib/data`. | `landed` |
+| 6 | Ansh | setup | Rebalance lanes once real frame counts land | **Ruled (§12 F):** Lane 3 dissolved — 11 Coaching → Lane 2, 09 Team + 10 Reports → Lane 4. Counts now L1 20 · L2 24 · L4 37 · L5 45 (≈32; Foundation built the 13 states) · L6 14. Lane 4 is heaviest — see `FRAMES.md`. | `landed` |
+| 7 | Mayur | 5 | Ship area 17 (empty / loading / error / skeleton) before anything else in Lane 5 | **Foundation built all 13 (`SystemState` in `@/components/bylda`).** Lane 5 reviews them against `19:2` and logs any fix here. (Lane 5 is Mayur's since the 2026-09-30 owner swap.) | `landed` |
 
-| 8 | Ansh | setup | Confirm the corrected design values in `CLAUDE.md` §3 | Three values in the original brief contradicted page 01 Foundations and were corrected from Figma: **card radius is 2px** (brief said 10/6/pill), the primary card has **no shadow** (brief said "minimal soft shadows"), and the fourth signal colour is **`signal/info`** (brief called it "Pattern"). Shell numbers 64/248/56/344 were confirmed correct by Dev Handoff. | `open` |
+| 8 | Ansh | setup | Confirm the design values in `CLAUDE.md` §3 | **Re-checked 2026-09-30 against the page-02 components** (`get_design_context`): cards/blocks use radius **10**, buttons/inputs/evidence **6**, tags/avatars pill, popovers 12 + one soft shadow `0 12px 32px rgba(0,0,0,.12)`. The "Cards: 2 / Inputs: 4" text on page 01 contradicts every component — the earlier "2px" correction was wrong and is reverted. Signal 4 is `info`. **Ask the designer to fix the page-01 caption.** | `open` |
 | 9 | Ansh | setup | Source the licensed **Ragnar/Nordic** display face | Foundations: *"Cinzel is a stand-in… Swap the `Display/*` styles when the licensed font is added — nothing else changes."* Ship on Cinzel; swap later. | `open` |
 | 10 | Ansh | setup | Decide where `coaching_value` is computed | It ranks calls on `C1`, `H1` and `H3`. No column exists on `calls`. Until it's decided, Calls and Home cannot order their lists — mock it and flag. | `blocked` |
+
+| 11 | Ansh | setup | Add `VITE_BYLDA_MOCKS=` to `.env.example` | Requested in the foundation brief, but `.env.*` is a guarded backend path — only a `backend/*` PR with the `backend` label may touch it. Documented in `CLAUDE.md` §12 H and `src/lib/data/README.md` instead. | `open` — Tirth |
+| 12 | Ansh | setup | Lane owner swap | 2026-09-30: Lane 4 → **Dravin**, Lane 5 → **Mayur**. Lane numbers, folders, screens and order unchanged. `CLAUDE.md` §8/§12, `FRAMES.md`, `CODEOWNERS`, `TEAM_START.md` updated. | `landed` |
 
 <!-- Add new rows above. Keep the newest at the bottom. -->

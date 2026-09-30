@@ -1,49 +1,106 @@
-# CODEOWNERS — backend paths need an owner's review.
+# CODEOWNERS — who must review what. Last matching pattern wins.
 #
-# Mirrors the `boundary-patterns` block in BACKEND_BOUNDARY.md. CODEOWNERS
-# cannot read that block, so this file is a hand-kept copy: change a pattern
-# there and change it here too.
+# Handles are PLACEHOLDERS (@TODO-<name>). Replace each with the real GitHub
+# handle, and make sure that account has write access — GitHub silently ignores
+# rules for users without it — before turning on "Require review from Code Owners".
 #
-# @TODO-ansh-github is a PLACEHOLDER. Replace it with the real GitHub handle
-# (and make sure that account has write access, or GitHub silently ignores the
-# rule) before relying on required reviews.
+# Owners as of 2026-09-30 (CLAUDE.md §8 / §12):
+#   Lane 1 Ansh · Lane 2 Dhruv · Lane 4 Dravin · Lane 5 Mayur · Lane 6 TBD · Backend Tirth
+#   (Lanes 4 and 5 swapped owners on 2026-09-30.)
 
-# ── Supabase: schema, RLS, edge functions, project config ────────────────────
-/supabase/                              @TODO-ansh-github
+# ── Default: anything not listed below ───────────────────────────────────────
+*                                           @TODO-ansh
 
-# ── Cloudflare Workers + config ──────────────────────────────────────────────
-/workers/                               @TODO-ansh-github
-/wrangler.jsonc                         @TODO-ansh-github
+# ══ BACKEND — mirrors the boundary-patterns block in BACKEND_BOUNDARY.md ═════
+# CODEOWNERS can't read that block; change a pattern there, change it here.
+/supabase/                                  @TODO-ansh
+/workers/                                   @TODO-ansh
+/wrangler.jsonc                             @TODO-ansh
+/n8n/                                       @TODO-ansh
+/N8N/                                       @TODO-ansh
+/src/integrations/supabase/types.ts         @TODO-ansh
+/src/integrations/supabase/client.server.ts @TODO-ansh
+/src/integrations/supabase/auth-middleware.ts @TODO-ansh
+/.env                                       @TODO-ansh
+/.env.*                                     @TODO-ansh
+/.dev.vars                                  @TODO-ansh
+/scripts/demo-seed/                         @TODO-ansh
+/spec_schema.ts                             @TODO-ansh
 
-# ── n8n automation + subagent definitions ────────────────────────────────────
-/n8n/                                   @TODO-ansh-github
-/N8N/                                   @TODO-ansh-github
+# ══ FROZEN — CLAUDE.md §12 A ═════════════════════════════════════════════════
+/src/lib/invokeEdge.ts                      @TODO-ansh
+/src/lib/queries.ts                         @TODO-ansh
+/src/lib/crm.ts                             @TODO-ansh
+/src/lib/auth.tsx                           @TODO-ansh
+/src/integrations/supabase/client.ts        @TODO-ansh
+/src/lib/feature-gates.ts                   @TODO-ansh
+/src/lib/plan.ts                            @TODO-ansh
+/src/lib/stripe.ts                          @TODO-ansh
+/src/lib/impersonation.ts                   @TODO-ansh
+/src/lib/admin.ts                           @TODO-ansh
+/src/lib/ownerMode.ts                       @TODO-ansh
+/src/lib/observability.ts                   @TODO-ansh
+/src/lib/analytics.ts                       @TODO-ansh
+/vite.config.ts                             @TODO-ansh
+/bunfig.toml                                @TODO-ansh
+/.lovable/                                  @TODO-ansh
+/package.json                               @TODO-ansh
+/bun.lock                                   @TODO-ansh
 
-# ── Generated DB types + server-only clients / session middleware ────────────
-/src/integrations/supabase/types.ts              @TODO-ansh-github
-/src/integrations/supabase/client.server.ts      @TODO-ansh-github
-/src/integrations/supabase/auth-middleware.ts    @TODO-ansh-github
+# Foundation (frozen once the foundation PR merges)
+/src/styles/                                @TODO-ansh
+/src/styles.css                             @TODO-ansh
+/src/components/ui/                         @TODO-ansh
+/src/components/bylda/                      @TODO-ansh
+/src/routes/app.tsx                         @TODO-ansh
+/src/routes/dev/                            @TODO-ansh
+/src/lib/data/                              @TODO-ansh
 
-# ── Environment and secrets ──────────────────────────────────────────────────
-/.env                                   @TODO-ansh-github
-/.env.*                                 @TODO-ansh-github
-/.dev.vars                              @TODO-ansh-github
+# Guards and the docs everybody builds against
+/.github/                                   @TODO-ansh
+/scripts/                                   @TODO-ansh
+/BACKEND_BOUNDARY.md                        @TODO-ansh
+/CLAUDE.md                                  @TODO-ansh
+/FRAMES.md                                  @TODO-ansh
+/LEGACY_ROUTES.md                           @TODO-ansh
+/TEAM_START.md                              @TODO-ansh
 
-# ── Seed / teardown SQL against the live schema ──────────────────────────────
-/scripts/demo-seed/                     @TODO-ansh-github
+# Backend backlog: Tirth maintains it, Ansh approves contract changes
+/BACKEND_BACKLOG.md                         @TODO-tirth @TODO-ansh
 
-# ── Shared cross-boundary contract schema ────────────────────────────────────
-/spec_schema.ts                         @TODO-ansh-github
+# ══ LANES — each owner reviews their own folders ═════════════════════════════
+# Lane 1 — Ansh: 05 Home, 14 Notifications, 08 Intelligence
+/src/routes/app/home/                       @TODO-ansh
+/src/routes/app/notifications/              @TODO-ansh
+/src/routes/app/intelligence/               @TODO-ansh
+/src/components/lanes/lane-1/               @TODO-ansh
 
-# ── The guard itself, and the docs the whole team builds against ─────────────
-/.github/                               @TODO-ansh-github
-/scripts/boundary-check.sh              @TODO-ansh-github
-/BACKEND_BOUNDARY.md                    @TODO-ansh-github
-/CLAUDE.md                              @TODO-ansh-github
-/FRAMES.md                              @TODO-ansh-github
+# Lane 2 — Dhruv: 07 Calls, 13 Search & Ask, 11 Coaching
+/src/routes/app/calls/                      @TODO-dhruv
+/src/routes/app/search/                     @TODO-dhruv
+/src/routes/app/coaching/                   @TODO-dhruv
+/src/components/lanes/lane-2/               @TODO-dhruv
 
-# ── Foundation: frozen once merged (CLAUDE.md §8) ────────────────────────────
-/src/components/v1/                     @TODO-ansh-github
-/src/styles/                            @TODO-ansh-github
-/src/lib/data/types/                    @TODO-dhruv-github
-/src/lib/data/mocks/                    @TODO-dhruv-github
+# Lane 4 — Dravin: 04 Onboarding/Auth, 06 Rep, 09 Team, 10 Reports
+/src/routes/welcome/                        @TODO-dravin
+/src/routes/app/rep/                        @TODO-dravin
+/src/routes/app/team/                       @TODO-dravin
+/src/routes/app/reports/                    @TODO-dravin
+/src/routes/doc/                            @TODO-dravin
+/src/components/lanes/lane-4/               @TODO-dravin
+
+# Lane 5 — Mayur: 15 Integrations, 16 Settings + Methodology, 17 states, 18 Mobile
+/src/routes/app/connections/                @TODO-mayur
+/src/routes/app/workspace/                  @TODO-mayur
+/src/routes/app/methodology/                @TODO-mayur
+/src/routes/app/states/                     @TODO-mayur
+/src/routes/m/                              @TODO-mayur
+/src/components/lanes/lane-5/               @TODO-mayur
+
+# Lane 6 — first free person: 12 Rooms & Messages
+/src/routes/app/rooms/                      @TODO-lane6
+/src/routes/app/dm/                         @TODO-lane6
+/src/components/lanes/lane-6/               @TODO-lane6
+
+# Generated — whoever regenerates it; Ansh breaks ties
+/src/routeTree.gen.ts                       @TODO-ansh
