@@ -1,0 +1,309 @@
+# AUDIT.md — what exists today
+
+Generated on branch `integration`. Two parts: **(a)** every frontend route and what
+becomes of it, **(b)** every backend call the frontend makes today.
+
+---
+
+## Headline
+
+This repo's frontend is **Launchpad Nova** — 87 routes covering a founder-journey
+product (Launchpad missions, Academy, Builder, Automations, SOP library) plus a
+full CRM (contacts, leads, pipelines, campaigns, forms).
+
+The Bylda V1 Figma is **Bylda — Behavioral Intelligence**: a different product.
+Its own screen index says *"127 VIEWS DESIGNED · NO PHASES"* across areas 04–19,
+and it contains **no** Launchpad screens and **no** CRM pipeline/contacts/deals
+screens at all.
+
+Counted against the V1 screen index:
+
+| | Routes |
+| --- | --- |
+| Map to a V1 Figma area | **21** |
+| Redirect-only stubs (≤10 lines) → DELETE | **19** |
+| Explicitly excluded by a V1 architecture decision | **6** |
+| Marketing / public pages, outside the app shell | **8** |
+| **Launchpad Nova + CRM surface with no V1 counterpart** | **33** |
+
+Those 33 routes — ~19,000 lines including `app.bylda.crm.tsx` (3,308),
+`app.launchpad.$tool.tsx` (2,397) and `app.builder.tsx` (1,818) — are **not
+mine to delete**. They are marked `OWNER DECISION` below and are the single
+biggest open question in this setup. See "What blocks Step 2" in the report.
+
+---
+
+## (a) Frontend routes → V1 Figma screen
+
+Legend: **→ NN** = becomes that Figma area · **DELETE** = remove ·
+**MERGE** = folds into another screen · **OWNER DECISION** = no V1 counterpart,
+someone must rule on it · **KEEP** = out of rebuild scope.
+
+### Auth & onboarding → 04
+
+| Route | File | Lines | Disposition |
+| --- | --- | --- | --- |
+| `/auth/sign-in` | `auth.sign-in.tsx` | 143 | → **04** Sign in |
+| `/auth/sign-up` | `auth.sign-up.tsx` | 86 | → **04** Sign up |
+| `/auth/forgot-password` | `auth.forgot-password.tsx` | 50 | → **04** Forgot password |
+| `/auth/reset-password` | `auth.reset-password.tsx` | 68 | → **04** Verify / reset |
+| `/auth/invite` | `auth.invite.tsx` | 184 | → **04** Invite acceptance |
+| `/onboarding` | `onboarding.tsx` | 684 | → **04** Workspace setup · Teach Bylda · Connect source · Invite team · Analysis initializing · First insight (6 screens) |
+| `/signup` | `signup.tsx` | 343 | **MERGE** → `/auth/sign-up`. Duplicate signup path. |
+| `/demo` | `demo.tsx` | 90 | **DELETE** — demo shell, no V1 counterpart |
+
+### Home → 05 / 06
+
+| Route | File | Lines | Disposition |
+| --- | --- | --- | --- |
+| `/app/bylda-home` | `app.bylda-home.tsx` | 682 | → **05** Manager Home intelligence feed. Rewrite: today it is a KPI grid + health hero, which V1 architecture decision 2 explicitly rejects. |
+| `/app/` | `app.index.tsx` | 6 | → **05** role-aware redirect (Manager/Rep/Admin home) |
+| `/app` | `app.tsx` | 94 | → shell layout. Becomes rail 64 / sidebar 248 / top bar 56 / main / context panel 344. |
+| `/app/monitoring` | `app.monitoring.tsx` | 547 | → **05** Admin Home — workspace health |
+| `/app/dashboard` | `app.dashboard.tsx` | 10 | **DELETE** (redirect stub) |
+| `/app/command-center` | `app.command-center.tsx` | 9 | **DELETE** (redirect stub) |
+| `/app/launch-control` | `app.launch-control.tsx` | 9 | **DELETE** (redirect stub) |
+| `/app/galaxy` | `app.galaxy.tsx` | 9 | **DELETE** (redirect stub) |
+| `/app/bylda-full` | `app.bylda-full.tsx` | 9 | **DELETE** (redirect stub) |
+| `/app/bylda-os` | `app.bylda-os.tsx` | 9 | **DELETE** (redirect stub) |
+| `/app/bylda-os/$slug` | `app.bylda-os.$slug.tsx` | 9 | **DELETE** (redirect stub) |
+| `/app/bylda/` | `app.bylda.index.tsx` | 9 | **DELETE** (redirect stub) |
+| `/app/mission-control` | `app.mission-control.tsx` | 714 | **DELETE** — Launchpad mission concept, absent from V1 |
+
+There is **no Rep Home today.** Area **06** is built from nothing.
+
+### Calls → 07
+
+| Route | File | Lines | Disposition |
+| --- | --- | --- | --- |
+| `/app/crm/calls` | `app.crm.calls.tsx` | 508 | → **07** Calls Index + Call Review. Closest thing in the repo to a V1 screen. Note its `const db = supabase as any` workaround for stale types. |
+| `/app/crm/conversations` | `app.crm.conversations.tsx` | 455 | **MERGE** → **12** Rooms & Messages (thread UI) and **07** (call context) |
+
+### Intelligence → 08
+
+| Route | File | Lines | Disposition |
+| --- | --- | --- | --- |
+| `/app/context-memory` | `app.context-memory.tsx` | 903 | **MERGE** → **16** Methodology (what Bylda knows about how you sell) |
+| `/app/memory` | `app.memory.tsx` | 941 | **MERGE** → **16** Methodology. Overlaps `/app/context-memory`; pick one. |
+| `/app/ai-dashboard` | `app.ai-dashboard.tsx` | 9 | **DELETE** (redirect stub) |
+
+Behavior Detail, Intelligence Home, Emerging Patterns, Objection view and the
+Behavior × Outcome matrix are **all new.** Nothing in the repo does behavioral analysis.
+
+### Team → 09
+
+| Route | File | Lines | Disposition |
+| --- | --- | --- | --- |
+| `/app/admin` | `app.admin.tsx` | 1,594 | **SPLIT** → **05** Admin Home (workspace health) + **16** Settings (users, teams, roles) |
+| `/app/scale/team` | `app.scale.team.tsx` | 9 | **DELETE** (redirect stub) |
+
+Team Overview, Team Detail, Rep Profile and Rep Comparison are **all new.**
+
+### Reports → 10
+
+| Route | File | Lines | Disposition |
+| --- | --- | --- | --- |
+| `/app/bylda/reports` | `app.bylda.reports.tsx` | 339 | → **10** Reports shell. Content is entirely new (briefs are behavioral, not KPI). |
+| `/app/scale/reports` | `app.scale.reports.tsx` | 9 | **DELETE** (redirect stub) |
+
+Daily Manager Brief, Daily Rep Brief, email brief, Weekly reports, PDF export: **all new.**
+
+### Coaching → 11
+
+Nothing exists. **All new.**
+
+| Route | File | Lines | Disposition |
+| --- | --- | --- | --- |
+| `/app/mentor` | `app.mentor.tsx` | 656 | **DELETE** — Launchpad AI mentor chat, a different concept from V1 coaching |
+| `/app/academy` | `app.academy.tsx` | 312 | **DELETE** — V1 architecture decision 3: *"No LMS, no courses, no quizzes"* |
+| `/app/academy/$module` | `app.academy.$module.tsx` | 693 | **DELETE** — same |
+| `/app/tutorials` | `app.tutorials.tsx` | 893 | **DELETE** — same |
+| `/app/launchpad/course` | `app.launchpad.course.tsx` | 410 | **DELETE** — same |
+| `/app/launchpad/mentors` | `app.launchpad.mentors.tsx` | 594 | **DELETE** — same |
+
+### Rooms & Messages → 12 · Search → 13 · Notifications → 14
+
+| Route | File | Lines | Disposition |
+| --- | --- | --- | --- |
+| `/app/activity` | `app.activity.tsx` | 9 | **DELETE** (redirect stub); **14** Notification center is new |
+
+Rooms, DMs, threads, BYLDA Coach DM, ⌘K palette, NL search, notification
+drawer + center: **all new.** No command palette exists (`cmdk` is a dependency,
+unused for this).
+
+### Integrations → 15
+
+| Route | File | Lines | Disposition |
+| --- | --- | --- | --- |
+| `/app/integrations` | `app.integrations.tsx` | 1,068 | → **15** Data sources. Real OAuth wiring exists — reuse the contract, rebuild the UI. |
+| `/app/crm/setup` | `app.crm.setup.tsx` | 648 | **MERGE** → **15** (source mapping) + **16** (methodology) |
+
+Delivery channels (Slack/Teams/email) as a **separate** settings area: new, per V1
+architecture decision 5.
+
+### Settings & Methodology → 16
+
+| Route | File | Lines | Disposition |
+| --- | --- | --- | --- |
+| `/app/settings` | `app.settings.tsx` | 1,063 | → **16** Settings: General · Profile · Users · Teams · Roles |
+| `/app/billing` | `app.billing.tsx` | 842 | → **16** Billing & plan |
+| `/app/billing/return` | `app.billing.return.tsx` | 54 | → **16** Billing return |
+| `/app/playbook` | `app.playbook.tsx` | 220 | → **16** Methodology from template |
+
+Analysis preferences, Retention & privacy, stage/rule editor, objection library,
+success criteria, API keys, audit log: **all new.**
+
+### 17 Empty & System States · 18 Mobile & Responsive
+
+No dedicated state or mobile screens exist. **All new.** 12 empty/loading/error
+states + skeleton (17); mobile brief, alerts, quick call review, room, DM (18).
+
+### Marketing / public — KEEP, outside rebuild scope
+
+| Route | File | Lines |
+| --- | --- | --- |
+| `/` | `index.tsx` | 370 |
+| `/about` | `about.tsx` | 152 |
+| `/pricing` | `pricing.tsx` | 197 |
+| `/book/$slug` | `book.$slug.tsx` | 246 |
+| `/f/$formId` | `f.$formId.tsx` | 175 |
+| `__root` | `__root.tsx` | 154 |
+
+Public booking and form-fill pages serve live links. Do not touch them.
+
+### OWNER DECISION — 33 routes, no V1 counterpart
+
+Neither in the V1 screen index nor implied by it. **Do not delete without a ruling.**
+
+**CRM surface (17 routes, ~11,600 lines)** — `/app/bylda/crm` (3,308),
+`/app/contacts` (1,761), `/app/crm/campaigns` (567), `/app/crm/companies` (513),
+`/app/crm/calendar` (530), `/app/crm/forms` (498), `/app/crm/tasks` (398),
+`/app/crm/waitlist` (302), `/app/crm/duplicates` (265), `/app/crm/accounts` (226),
+`/app/crm/automations` (641), `/app/scale` (282), `/app/scale/campaigns` (243),
+`/app/leads` (9), `/app/bylda/leads` (9), `/app/bylda/clients` (9),
+`/app/scale/pipeline` (9), `/app/scale/automations` (9)
+
+**Launchpad Nova surface (16 routes, ~9,200 lines)** — `/app/launchpad/$tool` (2,397),
+`/app/builder` (1,818), `/app/automations` (1,162), `/app/templates` (957),
+`/app/research` (770), `/app/workflow-templates` (507), `/app/roadmap` (443),
+`/app/sop-library` (434), `/app/reputation` (319), `/app/outcomes/$category` (312),
+`/app/launchpad/bylda` (289), `/app/launchpad/first-customers` (274),
+`/app/launchpad/outputs/$id` (280), `/app/assets` (187),
+`/app/launchpad/history` (204), `/app/launchpad/missions` (166),
+plus stubs `/app/launchpad/`, `/app/launchpad-path`, `/app/mission-briefing`
+
+Three options, all the owner's call: **(1)** leave them routed and untouched while
+V1 is built alongside; **(2)** move them behind a feature flag; **(3)** delete them
+as a separate PR before lane work starts. Option 1 is the default assumption
+baked into the lane map — nothing in lanes 1–6 touches these files.
+
+---
+
+## (b) Backend calls the frontend makes today
+
+### Transport
+
+There are **no server functions.** Both greps return empty:
+
+```
+grep -rl "use server" src/                                          → (nothing)
+grep -rl "createServerFn\|createServerRoute\|createAPIFileRoute" src/ → (nothing)
+```
+
+Three wire protocols, all from the browser:
+
+1. **`supabase.from(...)` / `.rpc(...)`** — PostgREST over HTTP, anon key +
+   user JWT, RLS-scoped. Auth is the Supabase session; most tables gate on
+   `is_org_member(organization_id, auth.uid())`.
+2. **`invokeEdge(fn, body)`** (`src/lib/invokeEdge.ts`) — `POST
+   {VITE_SUPABASE_URL}/functions/v1/{fn}`. Adds `apikey`, `Authorization: Bearer
+   <access_token>`, 60s timeout, 1 retry on network/5xx, never on 4xx. Throws
+   `EdgeError {message, status, code}`. `invokeEdgeStream` for SSE (no retry).
+3. **`supabase.functions.invoke(fn, {body})`** — the raw supabase-js path, used by
+   14 call sites that predate `invokeEdge`. Same endpoint, no timeout/retry.
+   New code should use `invokeEdge`.
+
+### Edge functions called from the frontend
+
+All **POST** to `/functions/v1/<name>`. "Auth" is `verify_jwt` from
+`supabase/config.toml` — `true` means the gateway rejects an unauthenticated call
+before the function runs. All 32 below are `verify_jwt=true` except where noted.
+
+| Function | Request shape | Response shape | Auth |
+| --- | --- | --- | --- |
+| `analyze-call` | `{call_id, analysis_job_id?, analysis_attempt_token?}` | `{ok, objections: n, competitors: n, …}`; writes `call_insights`, backfills transcript sentiment, inserts `mentor_insights` on risk | JWT |
+| `get-call-ingest-url` | `{…}` | ingest URL | JWT |
+| `get-inbound-url` | `{org_id}` | `{configured: boolean, url?: string}` | JWT |
+| `write-call-to-gohighlevel` | `{…}` | writeback result | JWT |
+| `sync-gohighlevel` | `{…}` | sync result | JWT |
+| `sync-crm` | `{…}` | sync result | JWT |
+| `sync-salesforce` | `{…}` | sync result | JWT |
+| `crm-insights` | `{…}` | `{ok, insights_written: number}` | JWT |
+| `crm-action` | `{…}` | `{ok, result: {id}}` / `{ok, result: {id, created}}` | JWT |
+| `crm-dedupe` | `{…}` | `{ok, scanned: number}` | JWT |
+| `crm-merge` | `{…}` | `{ok}` | JWT |
+| `next-best-action` | `{…}` | `{ok, actions: NbaAction[]}` | JWT |
+| `conversation-ai` | `{…}` | `{draft: string}` | JWT |
+| `bylda-action` | `{action_id, decision: "approve"\|"skip"}` | action result | JWT |
+| `bylda-chat` | `{…}` | chat response | JWT |
+| `mentor-chat` | `{…}` | **SSE stream** (`invokeEdgeStream`) | JWT |
+| `operator` | `{…}` | operator response | JWT |
+| `complete-onboarding` | `{mode, answers}` | onboarding result | JWT |
+| `advance-mission` | `{…}` | mission state | JWT |
+| `compile-workflow` | `{…}` | `{ok, workflow_id, steps: number}` | JWT |
+| `run-workflow` | `{…}` | run result | JWT |
+| `run-tool` | `{…}` | tool run | JWT |
+| `automation-dispatch` | `{body: {…}}` | dispatch result | — not in `config.toml` |
+| `generate-ai-dashboard` | `{…}` | dashboard spec | JWT |
+| `generate-course` | `{casefile_run_id}` | course | — not in `config.toml` |
+| `save-integration` | `{…}` | save result | JWT |
+| `team-invite` | `{…}` | invite result | JWT |
+| `create-checkout` | `{…}` | Stripe checkout session | JWT |
+| `manage-subscription` | `{…}` | portal session | JWT |
+| `list-invoices` | `{…}` | invoices | JWT |
+| `cs-health` | `{org_id}` | `{ok, accounts_scored: number}` | **`verify_jwt=false`** |
+| `forecast-rollup` | `{org_id}` | `{ok, period: string}` | **`verify_jwt=false`** |
+| `marketing-attribution` | `{…}` | `{ok, leads_attributed: number}` | **`verify_jwt=false`** |
+| `weekly-review` | `{…}` | review | **`verify_jwt=false`** |
+
+⚠️ The four `verify_jwt=false` functions are called from the browser with an
+`org_id` in the body. Whether they validate org membership internally is a
+**backend** question — read them before Lane 3 wires Reports, and do not change them.
+
+64 edge functions exist; 32 are reachable from the frontend. The other 32 are
+webhooks (`payments-webhook`, `ingest-call-webhook`, `receive-message`), OAuth
+callbacks, and cron jobs (`sequence-runner`, `process-reminders`, `feedback-loop`).
+
+### RPCs called from the frontend
+
+| RPC | Purpose |
+| --- | --- |
+| `install_automation_template` | installs an automation template |
+| `list_org_members` | lists org members (bypasses a recursive-RLS problem on `organization_members`) |
+
+23 DB functions exist. Useful unused ones for V1: `search_contacts`,
+`search_leads`, `match_documents` (pgvector), `has_role`, `has_permission`,
+`is_org_member`, `is_org_admin`, `is_admin`, `get_org_entitlements`, `get_user_plan`.
+
+### Tables read by the frontend
+
+83 distinct tables/views. Most-used: `leads` (18 call sites), `contacts` (16),
+`tool_runs` (11), `workspaces` (10), `operator_memory` (8), `subscriptions` (7),
+`tasks`/`profiles`/`missions`/`mission_steps`/`mentor_insights`/`memory_sources`/
+`automation_workflows` (6 each).
+
+V1-relevant: `calls`, `call_transcripts`, `call_insights`, `deviation_alerts`,
+`bylda_events`, `notifications`, `organizations`, `organization_members`,
+`profiles`, `user_roles`, `workspaces`, `crm_intelligence_profiles`.
+
+Full schema: **105 tables, 9 views, 23 functions** in
+`src/integrations/supabase/types.ts` — but see the stale-types warning in
+`BACKEND_BOUNDARY.md`; `calls`, `call_insights` and `call_transcripts` are
+missing from it despite existing in the database.
+
+### Cloudflare Workers
+
+8 workers exist (`workers/bylda-context-api`, `-contacts-api`, `-automations-api`,
+`-tools-api`, `-ai-api`, `-stripe-api`, `-automation-consumer`, `-pulse`).
+**No frontend code calls them directly** — no `fetch` to a worker URL anywhere in
+`src/`. They are invoked by queues, cron and other services. Treated as read-only.

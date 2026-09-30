@@ -1,0 +1,49 @@
+# CODEOWNERS — backend paths need an owner's review.
+#
+# Mirrors the `boundary-patterns` block in BACKEND_BOUNDARY.md. CODEOWNERS
+# cannot read that block, so this file is a hand-kept copy: change a pattern
+# there and change it here too.
+#
+# @TODO-ansh-github is a PLACEHOLDER. Replace it with the real GitHub handle
+# (and make sure that account has write access, or GitHub silently ignores the
+# rule) before relying on required reviews.
+
+# ── Supabase: schema, RLS, edge functions, project config ────────────────────
+/supabase/                              @TODO-ansh-github
+
+# ── Cloudflare Workers + config ──────────────────────────────────────────────
+/workers/                               @TODO-ansh-github
+/wrangler.jsonc                         @TODO-ansh-github
+
+# ── n8n automation + subagent definitions ────────────────────────────────────
+/n8n/                                   @TODO-ansh-github
+/N8N/                                   @TODO-ansh-github
+
+# ── Generated DB types + server-only clients / session middleware ────────────
+/src/integrations/supabase/types.ts              @TODO-ansh-github
+/src/integrations/supabase/client.server.ts      @TODO-ansh-github
+/src/integrations/supabase/auth-middleware.ts    @TODO-ansh-github
+
+# ── Environment and secrets ──────────────────────────────────────────────────
+/.env                                   @TODO-ansh-github
+/.env.*                                 @TODO-ansh-github
+/.dev.vars                              @TODO-ansh-github
+
+# ── Seed / teardown SQL against the live schema ──────────────────────────────
+/scripts/demo-seed/                     @TODO-ansh-github
+
+# ── Shared cross-boundary contract schema ────────────────────────────────────
+/spec_schema.ts                         @TODO-ansh-github
+
+# ── The guard itself, and the docs the whole team builds against ─────────────
+/.github/                               @TODO-ansh-github
+/scripts/boundary-check.sh              @TODO-ansh-github
+/BACKEND_BOUNDARY.md                    @TODO-ansh-github
+/CLAUDE.md                              @TODO-ansh-github
+/FRAMES.md                              @TODO-ansh-github
+
+# ── Foundation: frozen once merged (CLAUDE.md §8) ────────────────────────────
+/src/components/v1/                     @TODO-ansh-github
+/src/styles/                            @TODO-ansh-github
+/src/lib/data/types/                    @TODO-dhruv-github
+/src/lib/data/mocks/                    @TODO-dhruv-github

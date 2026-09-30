@@ -1,0 +1,43 @@
+# Backend boundary guard.
+#
+# The Bylda V1 frontend rebuild makes ZERO backend changes. This job fails a PR
+# that touches any path matched by the `boundary-patterns` block in
+# BACKEND_BOUNDARY.md — the single source of truth, shared with
+# scripts/boundary-check.sh, which this job runs directly.
+name: backend-guard
+
+on:
+  pull_request:
+    branches: [integration, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-guard-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  boundary:
+    name: Backend boundary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          # Full history so `git merge-base <base> HEAD` resolves. A shallow
+          # clone makes the merge base unavailable and the diff meaningless.
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch --no-tags origin "${{ github.event.pull_request.base.ref }}"
+
+      - name: Run boundary check
+        run: |
+          chmod +x scripts/boundary-check.sh
+          ./scripts/boundary-check.sh "origin/${{ github.event.pull_request.base.ref }}"
+
+      - name: Explain a failure
+        if: failure()
+        run: |
+          echo "::error title=Backend boundary violation::This PR changes a read-only backend path. See BACKEND_BOUNDARY.md; log the request in LANE_REQUESTS.md if the change is genuinely needed."
