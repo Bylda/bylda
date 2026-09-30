@@ -3,7 +3,7 @@ import { ScreenPlaceholder } from "@/components/bylda";
 /**
  * N2 · Notifications — Center
  * Figma 31:1258 (page 1:15) · Lane 1 — Ansh · route /app/notifications
- * Hooks: useNotifications — see src/lib/data/README.md
+ * Hooks: useNotifications, useMarkNotificationRead — see src/lib/data/README.md
  *
  * PLACEHOLDER. Replace the body with the real screen; keep the export name.
  */

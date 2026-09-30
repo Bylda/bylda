@@ -37,3 +37,13 @@ export function toViewer(input: {
     team: null,
   };
 }
+
+/** C-09 · proposed workspace_member_roles row once `role` is constrained to the V1 enum. */
+export type WorkspaceRoleV1Row = {
+  workspace_id: string;
+  organization_id: string;
+  user_id: string;
+  role: Role;
+  team_id: string | null;
+};
+export const mapWorkspaceRole = (r: WorkspaceRoleV1Row): Role => resolveRole(null, r.role);

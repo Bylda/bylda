@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
     "boundary": "bash scripts/boundary-check.sh",
     "tokens:check": "node scripts/tokens-check.mjs",
+    "contracts:doc": "bun scripts/contracts-doc.ts",
     "lint:changed": "bash scripts/lint-changed.sh",
     "test": "vitest run",
     "test:context": "bun test src/lib/__tests__/context-package.test.ts src/lib/__tests__/crm-adapters.test.ts",

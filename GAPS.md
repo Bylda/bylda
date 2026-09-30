@@ -296,6 +296,12 @@ Same data, narrower layout. No new backend need.
 
 ---
 
+## Every MISSING item has a backend contract
+
+`BACKEND_BACKLOG.md` → *Contracts* (37, C-01…C-37) covers every item marked MISSING above,
+ordered by the demo flow it unblocks — each with the view model, proposed table/columns,
+endpoint and a Vitest contract test. The backend is built from those.
+
 ## Rules for filling a gap
 
 1. Type it in `src/lib/data/types/` — shaped how the real table *should* look,

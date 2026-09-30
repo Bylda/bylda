@@ -24,3 +24,10 @@ export type Notification = {
   read: boolean;
   createdAt: ISODate;
 };
+
+/** B-screens — mobile push registration (GAPS 14). */
+export type PushRegistration = {
+  platform: "ios" | "android" | "web";
+  enabled: boolean;
+  registeredAt: ISODate | null;
+};
