@@ -53,7 +53,6 @@
   "src/routes/app.settings.tsx": 11,
   "src/routes/app.sop-library.tsx": 20,
   "src/routes/app.templates.tsx": 6,
-  "src/routes/app.tsx": 13,
   "src/routes/app.tutorials.tsx": 24,
   "src/routes/auth.sign-in.tsx": 17,
   "src/routes/index.tsx": 59,

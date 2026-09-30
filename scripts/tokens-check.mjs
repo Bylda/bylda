@@ -26,7 +26,8 @@ const BASELINE = join(ROOT, "scripts", "tokens-baseline.json");
 const ALLOWED = new Set(["src/styles/bylda.css"]);
 const SKIP = new Set(["src/routeTree.gen.ts"]);
 const EXT = /\.(tsx?|jsx?|css)$/;
-const COLOR = /(?<![\w&/-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])|\b(?:rgba?|hsla?)\(/g;
+const COLOR =
+  /(?<![\w&/-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])|\b(?:rgba?|hsla?)\(/g;
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {
