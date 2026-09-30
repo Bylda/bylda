@@ -1,304 +1,394 @@
 # FRAMES.md — Figma frame → screen code → lane owner
 
-# ⛔ PENDING — generate from Figma
+File: **Bylda — Behavioral Intelligence (V1)** · fileKey `8q5872jwTTRK69cOrWDOmk`
+Pulled live from Figma. **128 product views across 21 pages.** Dev Handoff (page 20)
+confirms the same total.
 
-**Every node ID in this file is `PENDING`. Do not start a screen until its row is filled.**
+## ⚠️ How to list the pages
 
----
+`get_metadata` **without** a `nodeId` is broken on this file — it reports only
+`0:1: 00 — Product Architecture` and hides the other 20 pages. Do not trust it.
 
-## Why it is pending
+Pages are `0:1` plus `1:2` … `1:21`. The full map is below. Always call
+`get_metadata` / `get_design_context` with an explicit `nodeId` from this file.
 
-Figma MCP **is** available this session and authenticated (`whoami` → Ansh Patel,
-`Ansh Patel's team`, pro, admin). File `8q5872jwTTRK69cOrWDOmk` opened fine.
+Skip frames whose name starts `__` (e.g. `__lib` `25:2`, `__swap` `38:2` on page 20).
 
-The problem is the file itself. `get_metadata` with no `nodeId` returns **one page**:
+## Page map
 
-```
-Top-level pages of the document:
-- 0:1: 00 — Product Architecture
-```
+| Node | Page | Contents |
+| --- | --- | --- |
+| `0:1` | 00 — Product Architecture | Strategy poster (frame `2:2`). Reference. |
+| `1:2` | 01 — Foundations | Design tokens (frame `3:2`). **Read before any screen.** |
+| `1:3` | 02 — Components | Component library. **Foundation.** |
+| `1:4` | 03 — Global Shell | Shell symbols + explorations. **Foundation.** |
+| `1:5` | 04 — Onboarding | 11 views |
+| `1:6` | 05 — Manager | 7 views |
+| `1:7` | 06 — Rep | 3 views |
+| `1:8` | 07 — Calls | 9 views |
+| `1:9` | 08 — Intelligence | 11 views |
+| `1:10` | 09 — Team | 13 views |
+| `1:11` | 10 — Reports | 10 views |
+| `1:12` | 11 — Coaching | 12 views |
+| `1:13` | 12 — Rooms | 14 views |
+| `1:14` | 13 — Search | 3 views |
+| `1:15` | 14 — Notifications | 2 views |
+| `1:16` | 15 — Integrations | 3 views |
+| `1:17` | 16 — Settings | 18 views |
+| `1:18` | 17 — Empty & System States | 1 board, 13 states |
+| `1:19` | 18 — Mobile / Responsive | 11 views |
+| `1:20` | 19 — Prototypes | **101 `PROTO ·` copies. Do NOT build. Reference only.** |
+| `1:21` | 20 — Dev Handoff | Doc (frame `21:2`). **Governs.** |
 
-That page holds exactly **one** top-level frame — `2:2 "Product Architecture"`,
-2600 × 2934 — a strategy poster made of 333 text nodes. No sections, no
-components, no screen frames. There is no page 03, no pages 04–18, and **no page
-20 "Dev Handoff"**.
-
-The poster *references* the screen pages by number — `"Manager Home feed ·
-1280/1024 variants (05, 18)"`, `"Prototype flows 0–4 (19)"` — and states
-**"SCREEN INDEX — BY ROLE · 127 VIEWS DESIGNED · NO PHASES — EVERYTHING BELOW IS
-IN SCOPE"**. So the 127 screens exist somewhere. **They are not in this file key.**
-
-**Blocker:** someone must supply the correct file key (or move/branch the screen
-pages into this file). Then re-run Step 5 and fill the tables below.
-
-### How to finish this file
-
-```
-1. Get the real file key for the file containing pages 03–20.
-2. mcp__Figma__get_metadata { fileKey }                     → confirm pages 03–20 exist
-3. For EACH page, one call at a time (never the whole file):
-     mcp__Figma__get_metadata { fileKey, nodeId: "<page id>" }
-4. Read page 20 "Dev Handoff" in full first — it overrides guesses below.
-5. Fill frame name + node ID per row. Skip frames whose name starts "__".
-6. Delete this section and the PENDING banner.
-```
-
-Page 20 "Dev Handoff" governs. Where it disagrees with `CLAUDE.md`, **Dev Handoff wins** —
-raise it in `LANE_REQUESTS.md` so §3 gets corrected once for everyone.
+Page 19 holds duplicate copies wired for the clickable prototype. Build from the
+source pages (04–18); use 19 only to check flows.
 
 ---
 
-## Screen codes
+## FOUNDATION — Ansh
 
-`<letter><n>` where the letter is the area and `n` the screen within it. The
-letters below are **provisional** — replace them with whatever page 20 uses.
-Screen files are named `<code><Name>.tsx`, e.g. `H1RoomFeed.tsx` (CLAUDE.md §6).
+### 01 — Foundations · `1:2`
 
-| Area | Letter |
+| Frame | Node ID | Notes |
+| --- | --- | --- |
+| Foundations | `3:2` | Color, type, spacing, radius, surfaces, shell zones, motion |
+
+Token groups inside: `pearl/0` `pearl/50` `pearl/100` `white` · `silver/200-600` ·
+`graphite/700-900` `ink` · `signal/improve` `signal/regress` `signal/attention`
+`signal/info` + each `-bg` · `space/4-72` · radius `none·0 xs·2 sm·4 md·6 pill·999`.
+
+### 02 — Components · `1:3`
+
+| Component | Node ID | Variants |
+| --- | --- | --- |
+| Button | `4:23` | Primary · Secondary · Ghost · Dark · Destructive × Default/Disabled |
+| Tag | `4:34` | Improve · Regress · Attention · Info · Neutral |
+| Avatar | `4:35` | — |
+| Sidebar Item | `4:47` | Default · Active · Unread |
+| **Confidence** | `4:66` | Low · Medium · High — **required on every insight** |
+| Evidence Block | `4:67` | — |
+| Insight Card | `4:72` | — |
+| Icons | `35:15` | 34 icons (`Icon/home` … `Icon/trend`) |
+| Block / Report | `39:904` | Room message blocks |
+| Block / Call | `39:918` | |
+| Block / Coaching | `39:935` | |
+| Block / Structured insight | `39:946` | |
+| Reactions | `39:956` | |
+| Badge / APP | `39:965` | |
+
+### 03 — Global Shell · `1:4`
+
+| Frame | Node ID | Notes |
+| --- | --- | --- |
+| **App Shell / Navigation v2** | `37:51` | 312×1024 — rail 64 + sidebar 248. **Use this one.** |
+| **Workspace Top Bar** | `36:52` | 784×56 |
+| Nav Item | `36:51` | |
+| Avatar/Small | `37:49` | |
+| Menus & popovers | `50:27312` | Workspace switcher · + New · profile · call more-menu |
+| Visual Product Spec | `41:17795` | Merged references |
+| App Shell / Navigation | `6:2` | **v1 — superseded by `37:51`. Do not use.** |
+| Exploration A | `5:4` | Rejected |
+| Exploration B (CHOSEN) | `5:34` | The chosen structure |
+| Exploration C | `5:76` | Rejected |
+| Scorecard | `5:100` | Decision record |
+
+Shell arithmetic, verified on every screen: **312** (rail 64 + sidebar 248) +
+**784** main + **344** context = **1440**. Top bar **56**.
+The 72/240/520/300 boxes in the Foundations diagram are illustrative — use 64/248/344.
+
+---
+
+## Lane 4 — Mayur · 04 Onboarding & Auth · `1:5` · 11 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Auth — Sign in | `26:40` | `A1` | Mayur |
+| Auth — Sign up | `26:91` | `A2` | Mayur |
+| Auth — Verify email | `26:139` | `A3` | Mayur |
+| Auth — Forgot password | `26:184` | `A4` | Mayur |
+| Auth — Invite acceptance | `26:224` | `A5` | Mayur |
+| Onboarding — Workspace setup | `26:784` | `A6` | Mayur |
+| Onboarding — Teach Bylda how you sell | `15:2` | `A7` | Mayur |
+| Onboarding — Connect calls (integration states) | `15:302` | `A8` | Mayur |
+| Onboarding — Invite team | `26:496` | `A9` | Mayur |
+| Onboarding — Analysis initializing | `16:21` | `A10` | Mayur |
+| Onboarding — First insight | `16:244` | `A11` | Mayur |
+
+All 1440×1024.
+
+## Lane 1 — Ansh · 05 Manager/Admin Home · `1:6` · 7 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Manager Home — Feed | `7:2` | `H1` | Ansh |
+| Manager Home — Team Updates | `43:692` | `H2` | Ansh |
+| Manager Home — Calls | `43:1176` | `H3` | Ansh |
+| Manager Home — Coaching | `43:1670` | `H4` | Ansh |
+| Manager Home — Reports | `43:2139` | `H5` | Ansh |
+| Manager Home — Mentions | `43:2612` | `H6` | Ansh |
+| Admin Home — Owner (workspace health) | `31:9916` | `H7` | Ansh |
+
+H2–H6 are tabs of H1 (`For You · Team Updates · Calls · Coaching · Reports · Mentions`).
+
+## Lane 4 — Mayur · 06 Rep · `1:7` · 3 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Rep Home — Daily Brief | `8:2` | `R1` | Mayur |
+| Rep — My progress | `32:129` | `R2` | Mayur |
+| Call Review — Rep perspective | `32:334` | `R3` | Mayur |
+
+`R1` context panel ends with *"No team rankings here. This view is only about you."*
+`R2` with *"Your manager sees this same page. No one else does."* Keep both.
+
+## Lane 2 — Dhruv · 07 Calls · `1:8` · 9 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Calls Index — saved views | `17:1090` | `C1` | Dhruv |
+| Calls Index — All calls + filters open | `52:8665` | `C2` | Dhruv |
+| Call Review — Transcript & timeline | `9:2` | `C3` | Dhruv |
+| Call Review — Overview | `44:1375` | `C4` | Dhruv |
+| Call Review — Analysis | `44:1755` | `C5` | Dhruv |
+| Call Review — Coaching | `44:2146` | `C6` | Dhruv |
+| Calls — Manual upload | `28:1263` | `C7` | Dhruv |
+| Call comparison | `28:1464` | `C8` | Dhruv |
+| Calls — Rep view (my calls) | `28:1646` | `C9` | Dhruv |
+
+`C3` is 1440×1476. `C4`–`C6` are tabs of the Call Review.
+
+## Lane 1 — Ansh · 08 Intelligence · `1:9` · 11 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Intelligence Home | `27:298` | `I1` | Ansh |
+| Behavior Detail — Interrupting during objections | `11:2` | `I2` | Ansh |
+| Emerging Patterns | `27:567` | `I3` | Ansh |
+| Objections | `28:378` | `I4` | Ansh |
+| Behavior × Outcome matrix | `28:641` | `I5` | Ansh |
+| Behavioral Outcome Graph | `28:857` | `I6` | Ansh |
+| Intelligence — Team behaviors | `51:1420` | `I7` | Ansh |
+| Intelligence — Methodology adherence | `51:2887` | `I8` | Ansh |
+| Intelligence — Outcome patterns | `51:1819` | `I9` | Ansh |
+| Intelligence — Rep patterns | `51:2196` | `I10` | Ansh |
+| Intelligence — Prospect patterns | `51:2556` | `I11` | Ansh |
+
+`I6` is 1600×1000 — a concept view, not shell-framed.
+
+## Lane 3 — Tirth · 09 Team · `1:10` · 13 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Team Overview | `12:2` | `T1` | Tirth |
+| Team Detail — Mid-Market AE | `29:1423` | `T2` | Tirth |
+| Team Detail — Reps | `52:2125` | `T3` | Tirth |
+| Team Detail — Behaviors | `52:2520` | `T4` | Tirth |
+| Team Detail — Coaching | `52:2928` | `T5` | Tirth |
+| Team Detail — Calls | `52:3276` | `T6` | Tirth |
+| Team Detail — Settings | `52:3634` | `T7` | Tirth |
+| Rep Profile — Jordan Reyes (manager view) | `12:271` | `T8` | Tirth |
+| Rep Profile — Overview | `45:1147` | `T9` | Tirth |
+| Rep Profile — Calls | `45:1493` | `T10` | Tirth |
+| Rep Profile — Coaching | `45:1841` | `T11` | Tirth |
+| Rep Profile — Trends | `45:2142` | `T12` | Tirth |
+| Rep Comparison | `29:1629` | `T13` | Tirth |
+
+## Lane 3 — Tirth · 10 Reports · `1:11` · 10 views
+
+| Frame name | Node ID | Code | Owner | Width |
+| --- | --- | --- | --- | --- |
+| Reports — Index | `29:159` | `P1` | Tirth | 1440 |
+| Daily Manager Brief — in-app document | `13:2` | `P2` | Tirth | 1440×1656 |
+| Daily Manager Brief — email (640) | `13:232` | `P3` | Tirth | **760** |
+| Daily Rep Brief — email / push (60 sec) | `13:316` | `P4` | Tirth | **420×380** |
+| Weekly Manager Report — living document | `29:352` | `P5` | Tirth | 1440×2056 |
+| Weekly Sales Behavior Report — outline | `52:10624` | `P6` | Tirth | 1440 |
+| Weekly Rep Report — Jordan | `29:625` | `P7` | Tirth | 1440×1256 |
+| Team Report — September | `29:773` | `P8` | Tirth | 1440×1256 |
+| Behavior Report — Objection handling | `29:993` | `P9` | Tirth | 1440×1156 |
+| Weekly Report — PDF / print (A4) | `29:1154` | `P10` | Tirth | **794×1123** |
+
+`P3`, `P4`, `P10` are **not** app screens — email, push and print. Don't wrap them in the shell.
+
+## Lane 3 — Tirth · 11 Coaching · `1:12` · 12 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Coaching lifecycle | `14:2` | `G1` | Tirth (1450×70 — diagram, reference) |
+| Assign Coaching — modal | `14:24` | `G2` | Tirth |
+| Coaching — Index (Active) | `30:246` | `G3` | Tirth |
+| Coaching — Needs follow-up | `52:6380` | `G4` | Tirth |
+| Coaching — Completed | `30:430` | `G5` | Tirth |
+| Coaching Detail — Jordan · active | `30:639` | `G6` | Tirth |
+| Coaching Detail — Overview | `46:1604` | `G7` | Tirth |
+| Coaching Detail — Evidence | `46:1935` | `G8` | Tirth |
+| Coaching Detail — Progress | `46:2244` | `G9` | Tirth |
+| Coaching Detail — Discussion | `46:2549` | `G10` | Tirth |
+| Coaching — Rep view (Jordan) | `30:839` | `G11` | Tirth |
+| Behavior Change Result — Alex Morgan | `14:224` | `G12` | Tirth |
+
+## Lane 6 — first free person · 12 Rooms & Messages · `1:13` · 14 views · MOCKS ONLY
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Rooms — Directory | `31:241` | `O1` | Lane 6 |
+| Room — #objection-watch | `18:2` | `O2` | Lane 6 |
+| Room — #objection-watch · Insights | `48:1283` | `O3` | Lane 6 |
+| Room — #objection-watch · Calls | `48:1732` | `O4` | Lane 6 |
+| Room — #objection-watch · Reports | `48:2213` | `O5` | Lane 6 |
+| Room — #objection-watch · Files | `48:2662` | `O6` | Lane 6 |
+| Room — #objection-watch · About | `48:3103` | `O7` | Lane 6 |
+| Room — #daily-brief | `31:403` | `O8` | Lane 6 |
+| Room — #coaching | `31:586` | `O9` | Lane 6 |
+| Room — #mid-market-team (team room) | `48:25761` | `O10` | Lane 6 |
+| Room — #acme-logistics (deal room) | `50:3655` | `O11` | Lane 6 |
+| Direct message — Dana ↔ Jordan | `49:3123` | `O12` | Lane 6 |
+| Direct message — BYLDA Coach (rep) | `49:3627` | `O13` | Lane 6 |
+| Rooms — New room modal | `50:4184` | `O14` | Lane 6 |
+
+## Lane 2 — Dhruv · 13 Search & Ask · `1:14` · 3 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Search — Command palette ⌘K | `31:760` | `S1` | Dhruv |
+| Search — Natural-language results | `31:909` | `S2` | Dhruv |
+| Ask Bylda — side panel (from rail ✦) | `50:26784` | `S3` | Dhruv |
+
+`S2` states the rule: *"Bylda converts your question to filters you can see and
+edit. It never answers from memory — every result links to a call."* Build the
+editable filter chips, not a chat.
+`S3`'s panel is 440 wide and overlays main (main shrinks to 1000).
+
+## Lane 1 — Ansh · 14 Notifications · `1:15` · 2 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Notifications — Drawer over Home | `31:1101` | `N1` | Ansh |
+| Notifications — Center | `31:1258` | `N2` | Ansh |
+
+Drawer is 400 wide. Types: `BEHAVIOR REGRESSION` · `IMPORTANT CALL` ·
+`EMERGING PATTERN` · `REPORT READY` · `COACHING COMPLETED` ·
+`COACHING ACKNOWLEDGED` · `METHODOLOGY BREAKDOWN` · `INTEGRATION PROBLEM` ·
+`BEHAVIOR IMPROVEMENT`.
+Rule on the frame: *"Severity is shown by a dot and a word, never by red badges
+or counts that pile up."*
+
+## Lane 5 — Dravin · 15 Integrations · `1:16` · 3 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Integrations — Data sources | `31:1464` | `X1` | Dravin |
+| Integrations — Delivery channels | `31:1688` | `X2` | Dravin |
+| Integration detail — HubSpot mapping | `31:1915` | `X3` | Dravin |
+
+`X1` states: *"Bylda never writes to your CRM in V1."* Read-only, always.
+
+## Lane 5 — Dravin · 16 Settings + Methodology · `1:17` · 18 views
+
+| Frame name | Node ID | Code | Owner |
+| --- | --- | --- | --- |
+| Settings — Workspace general | `31:2201` | `E1` | Dravin |
+| Settings — Profile | `31:2394` | `E2` | Dravin |
+| Settings — Users | `31:2583` | `E3` | Dravin |
+| Settings — Teams | `31:2828` | `E4` | Dravin |
+| Settings — Roles & permissions | `31:3018` | `E5` | Dravin |
+| Settings — Analysis preferences | `31:3275` | `E6` | Dravin |
+| Settings — Notifications | `31:3474` | `E7` | Dravin |
+| Settings — Retention & privacy | `31:3738` | `E8` | Dravin |
+| Methodology — Index | `31:7762` | `E9` | Dravin |
+| Methodology — Detail (stages) | `31:7973` | `E10` | Dravin |
+| Methodology — Behavior rules list | `31:8450` | `E11` | Dravin |
+| Methodology — Behavior rule editor | `31:8218` | `E12` | Dravin |
+| Methodology — Objection library | `31:8720` | `E13` | Dravin |
+| Methodology — Success criteria | `31:8913` | `E14` | Dravin |
+| Settings — Billing & plan | `31:9113` | `E15` | Dravin |
+| Settings — Usage | `31:9316` | `E16` | Dravin |
+| Settings — API keys | `31:9530` | `E17` | Dravin |
+| Settings — Audit log | `31:9715` | `E18` | Dravin |
+
+## Lane 5 — Dravin · 17 Empty & System States · `1:18` · BUILD FIRST
+
+One board frame `19:2` (1600×1424) holding **13** states. Every lane imports these.
+
+| State | Node ID | Code |
+| --- | --- | --- |
+| Home · No calls yet | `19:6` | `Y1` |
+| Home · Analysis processing | `19:19` | `Y2` |
+| Behavior · Insufficient data | `19:30` | `Y3` |
+| Intelligence · No pattern yet | `19:41` | `Y4` |
+| Call · Analysis failed | `19:52` | `Y5` |
+| Call · Missing transcript | `19:65` | `Y6` |
+| Upload · Unsupported file | `19:76` | `Y7` |
+| Integration · Disconnected | `19:87` | `Y8` |
+| Rep · Permission denied | `19:98` | `Y9` |
+| Team · No members | `19:109` | `Y10` |
+| Call · Deleted | `19:122` | `Y11` |
+| Search · No results | `19:133` | `Y12` |
+| Feed · Skeleton | `19:144` | `Y13` |
+
+Board rule: *"when Bylda lacks evidence, it says so — with the number it needs.
+It never fills space with fake intelligence."*
+`Y13` is labelled **"NO SHIMMER THEATRICS"** — static bars, no animated shimmer.
+
+## Lane 5 — Dravin · 18 Mobile & Responsive · `1:19` · 11 views
+
+| Frame name | Node ID | Code | Size |
+| --- | --- | --- | --- |
+| Mobile — Rep Daily Brief | `20:2` | `B1` | 390×844 |
+| Mobile — Manager Brief + alert | `20:24` | `B2` | 390×844 |
+| Mobile — Quick call review + coach | `20:67` | `B3` | 390×844 |
+| Mobile — Coaching acknowledge (Rep) | `32:572` | `B4` | 390×844 |
+| Mobile — Alerts (Manager) | `32:605` | `B5` | 390×844 |
+| Mobile — Moment player (Rep) | `32:646` | `B6` | 390×844 |
+| Mobile — Room #objection-watch | `52:11424` | `B7` | 390×844 |
+| Mobile — Direct message (Dana ↔ Jordan) | `52:11495` | `B8` | 390×844 |
+| Mobile — Ask Bylda / BYLDA Coach | `52:11547` | `B9` | 390×844 |
+| Responsive — Manager Home @1280 (context → drawer) | `32:7245` | `B10` | 1280×1080 |
+| Responsive — Manager Home @1024 (icon rail only) | `32:7490` | `B11` | 1024×1080 |
+
+Skip `20:130` — an unnamed 420×198 helper frame, not a view.
+
+## 19 — Prototypes · `1:20` · reference only
+
+101 frames, all prefixed `PROTO · `. Duplicates of the source screens wired for
+the clickable prototype. **Never build from this page.**
+
+Dev Handoff lists **13 flows (0–12)**, and *"SIDEBAR, RAIL, TOP BAR, TABS ALL CLICKABLE"*:
+
+`0` Sign in · `1` Manager day · `2` Rep day · `3` Pattern · `4` Sign up & connect ·
+`5` Rep invite · `6` Rooms · `7` Messages · `8` Ask & find · `9` Intelligence ·
+`10` Team · `11` Connections · `12` Settings
+
+## 20 — Dev Handoff · `1:21` · governs
+
+| Frame | Node ID |
 | --- | --- |
-| 03 Menus & overlays | `M` |
-| 04 Onboarding & Auth | `A` |
-| 05 Manager/Admin Home | `H` |
-| 06 Rep | `R` |
-| 07 Calls | `C` |
-| 08 Intelligence | `I` |
-| 09 Team | `T` |
-| 10 Reports | `P` |
-| 11 Coaching | `G` |
-| 12 Rooms & Messages | `O` |
-| 13 Search & Ask | `S` |
-| 14 Notifications | `N` |
-| 15 Integrations | `X` |
-| 16 Settings + Methodology | `E` |
-| 17 Empty & System States | `Y` |
-| 18 Mobile & Responsive | `B` |
+| Dev Handoff | `21:2` |
+| Screen inventory (live from file) | `55:50908` |
+| Prototype flows table | `55:50996` |
+| **Core data objects** | `21:91` |
+| **Implementation rules** | `21:143` |
 
-Expected rows are derived from the poster's own screen index, so the row *lists*
-are grounded even though the node IDs are not.
+Hidden helpers on this page: `__lib` `25:2`, `__swap` `38:2` — skip.
 
 ---
 
-## 03 — Menus & overlays — Ansh (FOUNDATION)
+## View count per lane
 
-| Frame name | Node ID | Screen code | Lane owner |
+| Lane | Owner | Areas | Views |
 | --- | --- | --- | --- |
-| Workspace switcher | `PENDING` | `M1` | Ansh (foundation) |
-| + New menu | `PENDING` | `M2` | Ansh (foundation) |
-| Profile menu | `PENDING` | `M3` | Ansh (foundation) |
-| Call more-menu | `PENDING` | `M4` | Ansh (foundation) |
+| Foundation | Ansh | 01, 02, 03 | tokens + 14 components + shell |
+| Lane 1 | Ansh | 05, 08, 14 | 7 + 11 + 2 = **20** |
+| Lane 2 | Dhruv | adapters, 07, 13 | 9 + 3 = **12** |
+| Lane 3 | Tirth | 09, 10, 11 | 13 + 10 + 12 = **35** |
+| Lane 4 | Mayur | 04, 06 | 11 + 3 = **14** |
+| Lane 5 | Dravin | 15, 16, 17, 18 | 3 + 18 + 13 states + 11 = **45** |
+| Lane 6 | first free | 12 | **14** |
+| | | | **128 product views** |
 
-## 04 — Onboarding & Auth — Lane 4 Mayur
+⚠️ **The brief's lane split is badly unbalanced against the real counts.**
+Lane 5 has 45 and Lane 3 has 35; Lane 2 has 12. Recommended fix, one move:
 
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Sign in | `PENDING` | `A1` | Mayur |
-| Sign up | `PENDING` | `A2` | Mayur |
-| Verify email | `PENDING` | `A3` | Mayur |
-| Forgot password | `PENDING` | `A4` | Mayur |
-| Invite acceptance | `PENDING` | `A5` | Mayur |
-| Workspace setup | `PENDING` | `A6` | Mayur |
-| Teach Bylda how you sell | `PENDING` | `A7` | Mayur |
-| Connect call source | `PENDING` | `A8` | Mayur |
-| Invite team | `PENDING` | `A9` | Mayur |
-| Analysis initializing | `PENDING` | `A10` | Mayur |
-| First insight | `PENDING` | `A11` | Mayur |
-
-## 05 — Manager / Admin Home — Lane 1 Ansh
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Manager Home — feed (1440) | `PENDING` | `H1` | Ansh |
-| Manager Home — 1280 variant | `PENDING` | `H2` | Ansh |
-| Manager Home — 1024 variant | `PENDING` | `H3` | Ansh |
-| Manager Home — tab views | `PENDING` | `H4` | Ansh |
-| Admin Home — workspace health | `PENDING` | `H5` | Ansh |
-
-## 06 — Rep — Lane 4 Mayur
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Rep Home — 60-sec brief + Today's Focus | `PENDING` | `R1` | Mayur |
-| My progress | `PENDING` | `R2` | Mayur |
-| My calls | `PENDING` | `R3` | Mayur |
-| Call Review — rep perspective | `PENDING` | `R4` | Mayur |
-
-## 07 — Calls — Lane 2 Dhruv
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Calls Index — saved views | `PENDING` | `C1` | Dhruv |
-| All calls + filter panel | `PENDING` | `C2` | Dhruv |
-| Call Review | `PENDING` | `C3` | Dhruv |
-| Call Review — tab views | `PENDING` | `C4` | Dhruv |
-| Manual upload | `PENDING` | `C5` | Dhruv |
-| Call comparison | `PENDING` | `C6` | Dhruv |
-
-## 08 — Intelligence — Lane 1 Ansh
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Intelligence Home | `PENDING` | `I1` | Ansh |
-| Behavior Detail | `PENDING` | `I2` | Ansh |
-| Emerging Patterns | `PENDING` | `I3` | Ansh |
-| Objection view | `PENDING` | `I4` | Ansh |
-| Behavior × Outcome matrix | `PENDING` | `I5` | Ansh |
-| Behavioral Outcome Graph — concept | `PENDING` | `I6` | Ansh |
-| Tab: Team behaviors | `PENDING` | `I7` | Ansh |
-| Tab: Methodology adherence | `PENDING` | `I8` | Ansh |
-| Tab: Outcome patterns | `PENDING` | `I9` | Ansh |
-| Tab: Rep patterns | `PENDING` | `I10` | Ansh |
-| Tab: Prospect patterns | `PENDING` | `I11` | Ansh |
-
-## 09 — Team — Lane 3 Tirth
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Team Overview | `PENDING` | `T1` | Tirth |
-| Team Detail — Reps | `PENDING` | `T2` | Tirth |
-| Team Detail — Behaviors heatmap | `PENDING` | `T3` | Tirth |
-| Team Detail — Coaching | `PENDING` | `T4` | Tirth |
-| Team Detail — Calls | `PENDING` | `T5` | Tirth |
-| Team Detail — Settings | `PENDING` | `T6` | Tirth |
-| Rep Profile (manager) | `PENDING` | `T7` | Tirth |
-| Rep Profile — tab views | `PENDING` | `T8` | Tirth |
-| Rep Comparison | `PENDING` | `T9` | Tirth |
-
-## 10 — Reports — Lane 3 Tirth
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Daily Manager Brief — in-app | `PENDING` | `P1` | Tirth |
-| Daily Rep Brief | `PENDING` | `P2` | Tirth |
-| Brief — email version | `PENDING` | `P3` | Tirth |
-| Rep email brief | `PENDING` | `P4` | Tirth |
-| Weekly Manager Report | `PENDING` | `P5` | Tirth |
-| Weekly Rep Report | `PENDING` | `P6` | Tirth |
-| Weekly report — outline view | `PENDING` | `P7` | Tirth |
-| Team / Behavior report | `PENDING` | `P8` | Tirth |
-| PDF export | `PENDING` | `P9` | Tirth |
-
-## 11 — Coaching — Lane 3 Tirth
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Assign Coaching modal | `PENDING` | `G1` | Tirth |
-| Coaching Detail | `PENDING` | `G2` | Tirth |
-| Coaching Detail — tab views | `PENDING` | `G3` | Tirth |
-| Coaching index | `PENDING` | `G4` | Tirth |
-| Needs follow-up | `PENDING` | `G5` | Tirth |
-| Completed | `PENDING` | `G6` | Tirth |
-| Rep Coaching view | `PENDING` | `G7` | Tirth |
-| Practice script | `PENDING` | `G8` | Tirth |
-| Behavior Change Result | `PENDING` | `G9` | Tirth |
-
-## 12 — Rooms & Messages — Lane 6 (first free person) · MOCKS ONLY
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Rooms directory | `PENDING` | `O1` | Lane 6 |
-| #daily-brief | `PENDING` | `O2` | Lane 6 |
-| #coaching | `PENDING` | `O3` | Lane 6 |
-| #objection-watch — Insights | `PENDING` | `O4` | Lane 6 |
-| #objection-watch — Calls | `PENDING` | `O5` | Lane 6 |
-| #objection-watch — Reports | `PENDING` | `O6` | Lane 6 |
-| #objection-watch — Files | `PENDING` | `O7` | Lane 6 |
-| #objection-watch — About | `PENDING` | `O8` | Lane 6 |
-| #mid-market-team (team room) | `PENDING` | `O9` | Lane 6 |
-| #acme-logistics (deal room) | `PENDING` | `O10` | Lane 6 |
-| Thread on an insight | `PENDING` | `O11` | Lane 6 |
-| New room modal | `PENDING` | `O12` | Lane 6 |
-| DM — Dana ↔ Jordan | `PENDING` | `O13` | Lane 6 |
-| DM — BYLDA Coach | `PENDING` | `O14` | Lane 6 |
-
-## 13 — Search & Ask — Lane 2 Dhruv
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| ⌘K command palette — entities | `PENDING` | `S1` | Dhruv |
-| Natural-language search | `PENDING` | `S2` | Dhruv |
-| Ask Bylda side panel (rail ✦) | `PENDING` | `S3` | Dhruv |
-
-## 14 — Notifications — Lane 1 Ansh
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Notifications drawer | `PENDING` | `N1` | Ansh |
-| Notification center | `PENDING` | `N2` | Ansh |
-
-## 15 — Integrations — Lane 5 Dravin
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Data sources | `PENDING` | `X1` | Dravin |
-| HubSpot field mapping | `PENDING` | `X2` | Dravin |
-| Delivery channels | `PENDING` | `X3` | Dravin |
-
-## 16 — Settings + Methodology — Lane 5 Dravin
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Settings — General | `PENDING` | `E1` | Dravin |
-| Settings — Profile | `PENDING` | `E2` | Dravin |
-| Settings — Users | `PENDING` | `E3` | Dravin |
-| Settings — Teams | `PENDING` | `E4` | Dravin |
-| Settings — Roles | `PENDING` | `E5` | Dravin |
-| Personal notifications | `PENDING` | `E6` | Dravin |
-| Analysis preferences | `PENDING` | `E7` | Dravin |
-| Retention & privacy | `PENDING` | `E8` | Dravin |
-| Methodology — index | `PENDING` | `E9` | Dravin |
-| Methodology — stages | `PENDING` | `E10` | Dravin |
-| Methodology — rule list | `PENDING` | `E11` | Dravin |
-| Methodology — rule editor | `PENDING` | `E12` | Dravin |
-| Objection library | `PENDING` | `E13` | Dravin |
-| Success criteria | `PENDING` | `E14` | Dravin |
-| Billing · Usage | `PENDING` | `E15` | Dravin |
-| API keys | `PENDING` | `E16` | Dravin |
-| Audit log | `PENDING` | `E17` | Dravin |
-
-## 17 — Empty & System States — Lane 5 Dravin · BUILD FIRST
-
-12 states + skeleton. Lanes 1–6 all import these, so they land before screen work.
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Empty / loading / error states ×12 | `PENDING` | `Y1`–`Y12` | Dravin |
-| Skeleton | `PENDING` | `Y13` | Dravin |
-
-## 18 — Mobile & Responsive — Lane 5 Dravin
-
-| Frame name | Node ID | Screen code | Lane owner |
-| --- | --- | --- | --- |
-| Mobile — brief | `PENDING` | `B1` | Dravin |
-| Mobile — alerts | `PENDING` | `B2` | Dravin |
-| Mobile — quick call review | `PENDING` | `B3` | Dravin |
-| Mobile — coaching acknowledge | `PENDING` | `B4` | Dravin |
-| Mobile — moment player | `PENDING` | `B5` | Dravin |
-| Mobile — room | `PENDING` | `B6` | Dravin |
-| Mobile — DM | `PENDING` | `B7` | Dravin |
-| Mobile — BYLDA Coach | `PENDING` | `B8` | Dravin |
-
-## 19 — Prototype flows — reference only, not built
-
-Flows 0–4. CLAUDE.md §11 requires screen links to match them. Read, don't build.
-
----
-
-## Provisional frame count per lane
-
-Rows listed above, all `PENDING`:
-
-| Lane | Owner | Areas | Rows |
-| --- | --- | --- | --- |
-| Foundation | Ansh | 03 | 4 |
-| Lane 1 | Ansh | 05, 08, 14 | 18 |
-| Lane 2 | Dhruv | 07, 13 | 9 |
-| Lane 3 | Tirth | 09, 10, 11 | 27 |
-| Lane 4 | Mayur | 04, 06 | 15 |
-| Lane 5 | Dravin | 15, 16, 17, 18 | 41 |
-| Lane 6 | first free | 12 | 14 |
-| **Total** | | | **128** |
-
-128 rows against the poster's claimed **127 views** — close enough to suggest the
-row lists are right and only the node IDs are missing. Treat the split as
-provisional: **Lane 5 at 41 rows is overloaded and Lane 2 at 9 is light.** Once
-real frame counts land, move 16 Settings (17 rows) to Lane 2 or Lane 6.
+**Give 16 Settings (18 views, `E1`–`E18`) to Lane 2.** Lane 2 → 30, Lane 5 → 27,
+Lane 3 → 35. Lane 3 stays heaviest because 09+10+11 are the coaching core and
+shouldn't be split across owners. Raise it in `LANE_REQUESTS.md` before starting.

@@ -11,25 +11,62 @@ behavioral domain — the thing the product *is* — has no schema.
 
 ---
 
-## The five missing tables everything hangs off
+## The contract: 6 core objects, 1 partly exists
 
-Verified across all 106 migrations with
+Dev Handoff (page 20, node `21:91`) names exactly six core data objects. Checked
+against all 106 migrations with
 `grep -riE "create table (if not exists )?(public\.)?<name>"`:
 
-| Table | Exists? | Without it you cannot build |
+| Dev Handoff object | Backing today | Verdict |
 | --- | --- | --- |
-| `behaviors` / `behavioral_events` / `behavior_events` | **no** | 08 Behavior Detail, 05 Manager feed, 09 behaviors heatmap, 11 all coaching |
-| `patterns` | **no** | 08 Emerging Patterns, Behavior × Outcome matrix, Outcome patterns |
-| `coaching` / `coaching_assignments` | **no** | 11 entirely — Focus, Evidence, Acknowledgement, Result |
-| `teams` / `team_members` | **no** | 09 entirely. Closest: `organization_members`, `workspace_member_roles`, `territories` — none is a sales team. |
-| `rooms` / `messages` / `room_members` | **no** | 12 entirely — rooms, DMs, threads, BYLDA Coach |
+| **Call** | `calls` + `call_transcripts` + `call_insights` | **PARTIAL** — see below |
+| **BehavioralEvent** | nothing | **MISSING — no table** |
+| **Behavior** | nothing | **MISSING — no table** |
+| **Insight** | nothing | **MISSING — no table** |
+| **OutcomeAssociation** | nothing | **MISSING — no table** |
+| **CoachingFocus** | nothing | **MISSING — no table** |
 
-Also absent: `briefs` (10), `methodology` / `objections` / `success_criteria` (16),
-`rep_metrics` (06, 09), `insights` as a first-class object (05, 08).
+Dev Handoff on `BehavioralEvent`: *"The atomic layer. Everything above is computed
+from events — keep them immutable and versioned by detector."* There is no atomic
+layer. Five of six objects, and therefore five sixths of the product, are unbuilt.
+
+**Call** is the one partial win, and it is missing three fields the screens use:
+
+| Call field (Dev Handoff) | In `calls`? |
+| --- | --- |
+| `id`, `started_at`, `duration`, `outcome` | ✅ (`outcome_tag`) |
+| `rep_id` | ✅ as `user_id` |
+| `account` | ⚠️ only `contact_id` / `lead_id` FKs — no account name |
+| `opportunity_id?` | ❌ |
+| `type` | ⚠️ only `direction` (inbound/outbound) |
+| `stage_at_call` | ❌ — needed by 08 Behavior × Outcome, 16 Methodology |
+| `coaching_value` | ❌ — **drives ranking in Calls + Home**; blocks `C1`, `H1`, `H3` |
+| `status(processing\|ready\|failed\|partial)` | ⚠️ `calls.status` is a *telephony* enum (`queued`…`voicemail`); `call_analysis_jobs` covers analysis separately. Different concept, same name. |
+
+Also absent, needed for 09 and 12 respectively: `teams`/`team_members` (the
+"Mid-Market AE team of 9" has nothing to map onto — `organization_members`,
+`workspace_member_roles` and `territories` are not sales teams), and
+`rooms`/`room_members`/`messages` (`conversations` and `bylda_conversations` are
+**customer** messaging, not internal team rooms).
+
+Also absent: `briefs` (10), `methodology` / `methodology_stages` /
+`methodology_rules` / objection library / success criteria (16), `rep_metrics` (06, 09),
+`delivery_channels` (15), `saved_views` (07).
 
 Lane 6 is **mocks only** for exactly this reason. Lanes 1 and 3 are majority-mock.
 
 ---
+
+## Evidence thresholds the backend must eventually support
+
+From page 17 (`1:18`) — these are product rules, not UI copy:
+
+- Patterns start at **~50 calls per team** (`19:6`).
+- A rep's insights appear at **10 analyzed calls** (`19:19`).
+- `OutcomeAssociation` needs **~30 calls with and without** the behavior, plus CRM
+  outcomes; below that, render `Behavior · Insufficient data` (`19:30`).
+
+Nothing computes any of these today.
 
 ## What *is* available
 
@@ -263,18 +300,20 @@ Fixture, used by every mock so screens compose: **Acme Revenue** workspace ·
 
 ## Top 5 to escalate
 
-1. **`behaviors` / `behavioral_events`** — blocks 05, 06, 08, 09, 11. The product
-   does not exist without it. Nothing else on this list matters until it is decided.
-2. **`coaching_assignments` + acknowledgement + result** — blocks 11 entirely
-   (100% missing) and the "did it work?" half of the manager's job, which V1
-   architecture decision 3 names as the point of the product.
-3. **`confidence` + `sample_size` on every insight** — CLAUDE.md §4 makes these
-   mandatory on screen. No table carries either field. Every insight surface is
-   blocked on a decision about where these are computed.
-4. **`teams` / `team_members`** — blocks 09 (88% missing) and every team rollup on
-   05. `organization_members` is not a sales team; the "team of 9" fixture has
-   nothing to map onto.
-5. **Stale `types.ts`** — `calls`, `call_insights`, `call_transcripts` are absent
-   from the generated types although the tables exist. Cheapest item on this list
-   and it blocks the one well-supported area (07). Someone with backend access
-   should regenerate; until then lanes hand-write types and cast.
+1. **`BehavioralEvent` — the atomic layer has no table.** Dev Handoff is explicit
+   that every other object is computed from it. Blocks 05, 06, 08, 09, 11 — 65 of
+   128 views. Nothing else on this list matters until this is decided.
+2. **`Behavior` + `Insight`** — no tables. `Insight` carries the `confidence` and
+   `sample_n` that CLAUDE.md §4 and the `Confidence` component (`4:66`) make
+   mandatory on screen. Every insight surface is blocked on where these are computed.
+3. **`CoachingFocus`** — no table. Area 11 is 12 views, 100% missing, and it is the
+   "did it work?" half of the manager's job that the product exists for. Needs the
+   full status machine: `assigned → acknowledged → measuring → held | not_yet | reverted`.
+4. **`OutcomeAssociation`** — no table. Without it 08 has no matrix, no outcome
+   patterns, no Behavioral Outcome Graph, and the n<30 suppression rule has nothing
+   to suppress.
+5. **`calls.coaching_value` + `stage_at_call`, and the stale `types.ts`.** Cheapest
+   items on the list. `coaching_value` drives ranking on `C1`/`H1`/`H3`; without it
+   Calls and Home cannot order anything. And `calls`, `call_insights`,
+   `call_transcripts` are absent from the generated types although the tables exist,
+   so the one well-supported area (07, 32% missing) still needs hand-written types.

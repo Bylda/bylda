@@ -12,19 +12,23 @@ product (Launchpad missions, Academy, Builder, Automations, SOP library) plus a
 full CRM (contacts, leads, pipelines, campaigns, forms).
 
 The Bylda V1 Figma is **Bylda — Behavioral Intelligence**: a different product.
-Its own screen index says *"127 VIEWS DESIGNED · NO PHASES"* across areas 04–19,
-and it contains **no** Launchpad screens and **no** CRM pipeline/contacts/deals
-screens at all.
+Pulled live: **21 pages, 128 product views** across areas 04–18, confirmed by its
+own Dev Handoff page. It contains **no** Launchpad screens and **no** CRM
+pipeline/contacts/deals screens at all.
 
 Counted against the V1 screen index:
 
 | | Routes |
 | --- | --- |
-| Map to a V1 Figma area | **21** |
+| Map to a V1 Figma area | **21** (of 128 V1 views) |
 | Redirect-only stubs (≤10 lines) → DELETE | **19** |
 | Explicitly excluded by a V1 architecture decision | **6** |
 | Marketing / public pages, outside the app shell | **8** |
 | **Launchpad Nova + CRM surface with no V1 counterpart** | **33** |
+
+Put plainly: the repo has 87 routes that cover ~21 of the 128 views V1 needs, and
+33 routes covering views V1 does not have. This is not a re-skin; it is a new
+product's frontend built beside an existing one.
 
 Those 33 routes — ~19,000 lines including `app.bylda.crm.tsx` (3,308),
 `app.launchpad.$tool.tsx` (2,397) and `app.builder.tsx` (1,818) — are **not
@@ -76,7 +80,7 @@ There is **no Rep Home today.** Area **06** is built from nothing.
 
 | Route | File | Lines | Disposition |
 | --- | --- | --- | --- |
-| `/app/crm/calls` | `app.crm.calls.tsx` | 508 | → **07** Calls Index + Call Review. Closest thing in the repo to a V1 screen. Note its `const db = supabase as any` workaround for stale types. |
+| `/app/crm/calls` | `app.crm.calls.tsx` | 508 | → **07** Calls Index + Call Review (`C1`–`C9`, 9 views). Closest thing in the repo to a V1 screen. Note its `const db = supabase as any` workaround for stale types. |
 | `/app/crm/conversations` | `app.crm.conversations.tsx` | 455 | **MERGE** → **12** Rooms & Messages (thread UI) and **07** (call context) |
 
 ### Intelligence → 08
