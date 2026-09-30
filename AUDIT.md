@@ -303,7 +303,7 @@ then hand-checking the misses.
 
 ⚠️ Five `verify_jwt=false` functions other than `book-appointment` are called from
 the signed-in app with an `org_id` in the body. Whether they validate org
-membership internally is a **backend** question — read them before Lane 3 wires
+membership internally is a **backend** question — read them before Lane 4 (Dravin) wires
 Reports, and do not change them.
 
 **Not called from `src/` (17):** webhooks (`payments-webhook`, `ingest-call-webhook`,
