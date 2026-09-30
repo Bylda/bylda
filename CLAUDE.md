@@ -10,12 +10,12 @@ Auto-loaded in every session in this repo. Read it all before your first edit.
 2. **Read page 20 Dev Handoff (`1:21`) and page 01 Foundations (`1:2`) before your
    first screen.** Dev Handoff governs. Where it disagrees with this file, it wins
    — and several values in §3 below were corrected from it already.
-3. **≈78% of the data V1 needs has no backend** (`GAPS.md`). `BehavioralEvent`,
+3. **≈69% of the data fields V1 needs have no backend (5 of 6 core objects)** (`GAPS.md`). `BehavioralEvent`,
    `Behavior`, `Insight`, `OutcomeAssociation` and `CoachingFocus` have no tables.
    You will mock more than you wire. Expected, not failure.
 4. **This repo's frontend is a different product** (`AUDIT.md`). 87 routes of
-   Launchpad Nova + CRM. Only ~21 map to a V1 screen. 33 have no V1 counterpart
-   and are **not yours to delete.**
+   Launchpad Nova + CRM. Only ~23 map to a V1 screen. 29 (plus 9 redirect stubs
+   into them) have no V1 counterpart and are **not yours to delete.**
 
 **128 product views across 21 pages.** Build from source pages 04–18 only.
 Page 19 is 101 `PROTO ·` duplicates for the clickable prototype — never build from it.
@@ -404,8 +404,8 @@ bun run build         # vite build → Nitro/Vercel. Verified green, no env need
 bun run format        # prettier --write .   ⚠️ never run repo-wide, see below
 ```
 
-**`bun run build` works with no `.env`.** Verified on this branch: `✓ built in
-12.29s`. So step 5 below includes the build — there is no env excuse.
+**`bun run build` works with no `.env`.** Verified on `Bylda/bylda` `integration`
+(base `main` @ `8339f35`, 2026-09-30): exit 0, `✓ built in 15.34s`. So step 5 below includes the build — there is no env excuse.
 
 **Package manager is `bun`** (`bun.lock`; `package-lock.json`, `yarn.lock` and
 `pnpm-lock.yaml` are gitignored). Don't switch it.
@@ -416,7 +416,8 @@ drags Deno edge code into a Node tsconfig (`Cannot find name 'Deno'`) — unfixa
 without editing backend code. The tests themselves run fine under
 `bun run test`.
 
-**Known pre-existing failures. Measured on this branch — memorise the numbers.**
+**Known pre-existing failures. Re-measured on `Bylda/bylda` `integration` (base
+`main` @ `8339f35`, 2026-09-30) — identical to the first measurement. Memorise the numbers.**
 
 `bun run typecheck` → **exactly 8 errors.** An error count of 9 is yours.
 
@@ -446,6 +447,11 @@ lints only the `.ts`/`.tsx` files your branch changed (backend paths and
 available as a call webhook connector" and "API credential fallback > preserves
 every field required by multi-credential connectors"). Verified identical on a
 clean checkout of this branch. Not yours.
+
+`src/integrations/supabase/types.ts` is **stale** — 16 tables the frontend queries
+(`calls`, `call_insights`, `call_transcripts` among them) exist in migrations but
+not in the generated types. Regenerating it is a backend change: out of scope.
+Hand-write the types you need in `src/lib/data/types/` (see `BACKEND_BOUNDARY.md`).
 
 ⚠️ **Never run `bun run format` repo-wide.** Prettier would rewrite hundreds of
 backend files and the boundary guard would — correctly — reject your PR. Format

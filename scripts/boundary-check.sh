@@ -111,14 +111,16 @@ fi
 MERGE_BASE="$(git merge-base "$BASE" HEAD 2>/dev/null || echo "$BASE")"
 
 # ── Collect changed files: commits since the merge base, plus uncommitted work ─
+# --no-renames: with rename detection on, `git mv supabase/x src/x` reports only
+# the new path and would slip past the guard. Report both sides.
 CHANGED_FILE="$(mktemp)"
 VIOL_FILE="$(mktemp)"
 trap 'rm -f "$CHANGED_FILE" "$VIOL_FILE"' EXIT
 
 {
-  git diff --name-only --diff-filter=ACMRD "$MERGE_BASE"...HEAD
-  git diff --name-only --diff-filter=ACMRD HEAD
-  git diff --name-only --diff-filter=ACMRD --cached
+  git diff --no-renames --name-only --diff-filter=ACMRD "$MERGE_BASE"...HEAD
+  git diff --no-renames --name-only --diff-filter=ACMRD HEAD
+  git diff --no-renames --name-only --diff-filter=ACMRD --cached
   git ls-files --others --exclude-standard
 } | sed '/^$/d' | sort -u > "$CHANGED_FILE"
 

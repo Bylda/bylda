@@ -18,7 +18,7 @@ Verified: `grep -rl "use server" src/` and
 
 The backend is therefore three things, none of them inside the React tree:
 
-1. **Supabase** — 106 SQL migrations, 64 edge functions, RLS policies, generated types.
+1. **Supabase** — 106 SQL migrations, 61 edge functions, RLS policies, generated types.
 2. **Cloudflare Workers** — 8 standalone HTTP APIs under `workers/`.
 3. **n8n** — automation workflow + subagent JSON definitions.
 
@@ -75,7 +75,7 @@ directories. Lines starting `#` and blank lines are comments.
 | Path | What it is | Contract the frontend reads from it |
 | --- | --- | --- |
 | `supabase/migrations/**` (106 files) | Postgres DDL, RLS policies, triggers, cron | Table + column names, check constraints, enum values, RLS scoping (`is_org_member(organization_id, auth.uid())`) |
-| `supabase/functions/**` (64 functions) | Deno edge functions | Request/response JSON shapes |
+| `supabase/functions/**` (61 functions + `_shared/`) | Deno edge functions | Request/response JSON shapes |
 | `supabase/functions/_shared/**` | Shared edge helpers (`context-engine`, `crm-adapters`, `sales-verticals`, `security`, `stripe`, …) | Payload shapes reused across functions |
 | `supabase/config.toml` | Per-function `verify_jwt` gateway auth | Which functions need a user session vs. anon |
 | `workers/bylda-context-api/` | Context package API | — |
@@ -87,18 +87,18 @@ directories. Lines starting `#` and blank lines are comments.
 | `workers/bylda-automation-consumer/` | Queue consumer | — |
 | `workers/bylda-pulse/` | Scheduled pulse | — |
 | `wrangler.jsonc` | Worker bindings, queues, public vars, secret manifest | — |
-| `n8n/**`, `N8N/**` | 14 workflows + 8 subagents (JSON) + `n8n/supabase/001_operator_schema.sql` | — |
+| `n8n/**`, `N8N/**` | `n8n/`: 15 workflows, 7 subagents, 10 launchpad tools (JSON), deploy script, `n8n/supabase/001_operator_schema.sql`. `N8N/`: 46 `bylda_ops_*` / `stripe-*` workflows + `N8N/migrations/*.sql` | — |
 | `src/integrations/supabase/types.ts` | Generated `Database` type — 105 tables, 9 views, 23 functions | The typed surface screens consume via `/lib/data` |
 | `src/integrations/supabase/client.server.ts` | Service-role client (bypasses RLS) | Never imported from a screen |
 | `src/integrations/supabase/auth-middleware.ts` | `requireSupabaseAuth` bearer-token middleware | — |
-| `.env*` | `.env.example`, `.env.development`, `.env.production` are committed; `.env`/`.env.local` are gitignored | Variable **names** only |
+| `.env*`, `.dev.vars` | `.env.example`, `.env.development`, `.env.production` are committed; `.env`/`.env.local` are gitignored. `.dev.vars` does not exist today — guarded pre-emptively (Wrangler local secrets) | Variable **names** only |
 | `scripts/demo-seed/**` | `seed-demo-account.sql`, `teardown-demo-account.sql` | — |
 | `spec_schema.ts` | `ByldaSpec` agent-executable spec type | — |
 
 ⚠️ **`src/integrations/supabase/types.ts` is stale.** It does not contain
 `calls`, `call_insights` or `call_transcripts`, even though migration
 `20260719000006_crm_phase4_calling.sql` creates all three and the frontend queries
-them. `src/routes/app.crm.calls.tsx` works around this with
+them — and 13 more queried tables are missing the same way (list in `AUDIT.md`). `src/routes/app.crm.calls.tsx` works around this with
 `const db = supabase as any` plus a file-level
 `eslint-disable @typescript-eslint/no-explicit-any`.
 Regenerating the types **is a backend change** — it is out of scope for this rebuild.

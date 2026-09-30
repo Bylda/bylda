@@ -20,19 +20,26 @@ Counted against the V1 screen index:
 
 | | Routes |
 | --- | --- |
-| Map to a V1 Figma area | **21** (of 128 V1 views) |
-| Redirect-only stubs (≤10 lines) → DELETE | **19** |
-| Explicitly excluded by a V1 architecture decision | **6** |
-| Marketing / public pages, outside the app shell | **8** |
-| **Launchpad Nova + CRM surface with no V1 counterpart** | **33** |
+| Map to a V1 Figma area (→ / MERGE / SPLIT) | **23** (of 128 V1 views) |
+| Redirect-only stubs (≤10 lines, `throw redirect`) | **21** |
+| DELETE with content — V1 decision 3 (no LMS) ×5, no V1 concept ×3 | **8** |
+| Marketing / public pages + `__root`, outside the app shell | **6** |
+| **Launchpad Nova + CRM surface with no V1 counterpart** | **29** |
+| **Total** (every file in `src/routes/`, counted once) | **87** |
 
-Put plainly: the repo has 87 routes that cover ~21 of the 128 views V1 needs, and
-33 routes covering views V1 does not have. This is not a re-skin; it is a new
-product's frontend built beside an existing one.
+Put plainly: the repo has 87 routes that cover ~23 of the 128 views V1 needs, and
+29 substantive routes covering views V1 does not have. This is not a re-skin; it
+is a new product's frontend built beside an existing one.
 
-Those 33 routes — ~19,000 lines including `app.bylda.crm.tsx` (3,308),
-`app.launchpad.$tool.tsx` (2,397) and `app.builder.tsx` (1,818) — are **not
-mine to delete**. They are marked `OWNER DECISION` below and are the single
+Of the 21 redirect stubs, 12 are marked DELETE in the sections below, 8 point
+into the OWNER DECISION surface (listed there), and `/app/bylda/workflows`
+(→ `/app/automations`) is listed under OWNER DECISION too — delete them
+together with whatever they redirect to. `/app/` (`app.index.tsx`, 6 lines) is
+*not* a stub: it renders `OperatorCanvas`.
+
+Those 29 routes — **20,053 lines** (CRM 13 routes / 9,534; Launchpad 16 / 10,519)
+including `app.bylda.crm.tsx` (3,308), `app.launchpad.$tool.tsx` (2,397) and
+`app.builder.tsx` (1,818) — are **not mine to delete**. They are marked `OWNER DECISION` below and are the single
 biggest open question in this setup. See "What blocks Step 2" in the report.
 
 ---
@@ -171,30 +178,32 @@ states + skeleton (17); mobile brief, alerts, quick call review, room, DM (18).
 | `/pricing` | `pricing.tsx` | 197 |
 | `/book/$slug` | `book.$slug.tsx` | 246 |
 | `/f/$formId` | `f.$formId.tsx` | 175 |
-| `__root` | `__root.tsx` | 154 |
+| `__root` | `__root.tsx` | 154 — root layout, not a page; kept here so every file is counted once |
 
 Public booking and form-fill pages serve live links. Do not touch them.
 
-### OWNER DECISION — 33 routes, no V1 counterpart
+### OWNER DECISION — 29 routes (+9 redirect stubs into them), no V1 counterpart
 
 Neither in the V1 screen index nor implied by it. **Do not delete without a ruling.**
 
-**CRM surface (17 routes, ~11,600 lines)** — `/app/bylda/crm` (3,308),
+**CRM surface (13 routes, 9,534 lines)** — `/app/bylda/crm` (3,308),
 `/app/contacts` (1,761), `/app/crm/campaigns` (567), `/app/crm/companies` (513),
 `/app/crm/calendar` (530), `/app/crm/forms` (498), `/app/crm/tasks` (398),
 `/app/crm/waitlist` (302), `/app/crm/duplicates` (265), `/app/crm/accounts` (226),
 `/app/crm/automations` (641), `/app/scale` (282), `/app/scale/campaigns` (243),
-`/app/leads` (9), `/app/bylda/leads` (9), `/app/bylda/clients` (9),
-`/app/scale/pipeline` (9), `/app/scale/automations` (9)
+plus redirect stubs `/app/leads`, `/app/bylda/leads`, `/app/bylda/clients`,
+`/app/scale/pipeline`, `/app/scale/automations`
 
-**Launchpad Nova surface (16 routes, ~9,200 lines)** — `/app/launchpad/$tool` (2,397),
+**Launchpad Nova surface (16 routes, 10,519 lines)** — `/app/launchpad/$tool` (2,397),
 `/app/builder` (1,818), `/app/automations` (1,162), `/app/templates` (957),
 `/app/research` (770), `/app/workflow-templates` (507), `/app/roadmap` (443),
 `/app/sop-library` (434), `/app/reputation` (319), `/app/outcomes/$category` (312),
 `/app/launchpad/bylda` (289), `/app/launchpad/first-customers` (274),
 `/app/launchpad/outputs/$id` (280), `/app/assets` (187),
 `/app/launchpad/history` (204), `/app/launchpad/missions` (166),
-plus stubs `/app/launchpad/`, `/app/launchpad-path`, `/app/mission-briefing`
+plus redirect stubs `/app/launchpad/` (→ `/app/playbook`), `/app/launchpad-path`
+and `/app/mission-briefing` (→ `/app/mission-control`), `/app/bylda/workflows`
+(→ `/app/automations`)
 
 Three options, all the owner's call: **(1)** leave them routed and untouched while
 V1 is built alongside; **(2)** move them behind a feature flag; **(3)** delete them
@@ -224,59 +233,86 @@ Three wire protocols, all from the browser:
    <access_token>`, 60s timeout, 1 retry on network/5xx, never on 4xx. Throws
    `EdgeError {message, status, code}`. `invokeEdgeStream` for SSE (no retry).
 3. **`supabase.functions.invoke(fn, {body})`** — the raw supabase-js path, used by
-   14 call sites that predate `invokeEdge`. Same endpoint, no timeout/retry.
+   18 call sites in 9 files that predate `invokeEdge` (two of them take the
+   function name as a variable: `startIntegrationOAuth` in `lib/queries.ts` and
+   `invokeFunction` in `app.context-memory.tsx`). Same endpoint, no timeout/retry.
    New code should use `invokeEdge`.
+4. **Raw `fetch`** — `src/lib/analytics.ts` POSTs to
+   `/functions/v1/log-activation-event` directly.
 
 ### Edge functions called from the frontend
 
 All **POST** to `/functions/v1/<name>`. "Auth" is `verify_jwt` from
 `supabase/config.toml` — `true` means the gateway rejects an unauthenticated call
-before the function runs. All 32 below are `verify_jwt=true` except where noted.
+before the function runs. A function with **no** `[functions.<name>]` block falls
+back to the Supabase default (`verify_jwt = true`) — flagged `default` below so
+nobody assumes it was a deliberate choice.
 
-| Function | Request shape | Response shape | Auth |
-| --- | --- | --- | --- |
-| `analyze-call` | `{call_id, analysis_job_id?, analysis_attempt_token?}` | `{ok, objections: n, competitors: n, …}`; writes `call_insights`, backfills transcript sentiment, inserts `mentor_insights` on risk | JWT |
-| `get-call-ingest-url` | `{…}` | ingest URL | JWT |
-| `get-inbound-url` | `{org_id}` | `{configured: boolean, url?: string}` | JWT |
-| `write-call-to-gohighlevel` | `{…}` | writeback result | JWT |
-| `sync-gohighlevel` | `{…}` | sync result | JWT |
-| `sync-crm` | `{…}` | sync result | JWT |
-| `sync-salesforce` | `{…}` | sync result | JWT |
-| `crm-insights` | `{…}` | `{ok, insights_written: number}` | JWT |
-| `crm-action` | `{…}` | `{ok, result: {id}}` / `{ok, result: {id, created}}` | JWT |
-| `crm-dedupe` | `{…}` | `{ok, scanned: number}` | JWT |
-| `crm-merge` | `{…}` | `{ok}` | JWT |
-| `next-best-action` | `{…}` | `{ok, actions: NbaAction[]}` | JWT |
-| `conversation-ai` | `{…}` | `{draft: string}` | JWT |
-| `bylda-action` | `{action_id, decision: "approve"\|"skip"}` | action result | JWT |
-| `bylda-chat` | `{…}` | chat response | JWT |
-| `mentor-chat` | `{…}` | **SSE stream** (`invokeEdgeStream`) | JWT |
-| `operator` | `{…}` | operator response | JWT |
-| `complete-onboarding` | `{mode, answers}` | onboarding result | JWT |
-| `advance-mission` | `{…}` | mission state | JWT |
-| `compile-workflow` | `{…}` | `{ok, workflow_id, steps: number}` | JWT |
-| `run-workflow` | `{…}` | run result | JWT |
-| `run-tool` | `{…}` | tool run | JWT |
-| `automation-dispatch` | `{body: {…}}` | dispatch result | — not in `config.toml` |
-| `generate-ai-dashboard` | `{…}` | dashboard spec | JWT |
-| `generate-course` | `{casefile_run_id}` | course | — not in `config.toml` |
-| `save-integration` | `{…}` | save result | JWT |
-| `team-invite` | `{…}` | invite result | JWT |
-| `create-checkout` | `{…}` | Stripe checkout session | JWT |
-| `manage-subscription` | `{…}` | portal session | JWT |
-| `list-invoices` | `{…}` | invoices | JWT |
-| `cs-health` | `{org_id}` | `{ok, accounts_scored: number}` | **`verify_jwt=false`** |
-| `forecast-rollup` | `{org_id}` | `{ok, period: string}` | **`verify_jwt=false`** |
-| `marketing-attribution` | `{…}` | `{ok, leads_attributed: number}` | **`verify_jwt=false`** |
-| `weekly-review` | `{…}` | review | **`verify_jwt=false`** |
+**44 of 61 functions are called from `src/`**: 32 `verify_jwt=true`, 6 default
+(not in `config.toml`), 6 `verify_jwt=false`. Derived by matching every function
+directory name against string literals within 4 lines of `invokeEdge` /
+`invokeEdgeStream` / `functions.invoke` / `invokeFunction` / `functions/v1`,
+then hand-checking the misses.
 
-⚠️ The four `verify_jwt=false` functions are called from the browser with an
-`org_id` in the body. Whether they validate org membership internally is a
-**backend** question — read them before Lane 3 wires Reports, and do not change them.
+| Function | Called from | Request shape | Response shape | Auth |
+| --- | --- | --- | --- | --- |
+| `analyze-call` | `lib/crm.ts`, `app.context-memory.tsx` | `{call_id, analysis_job_id?, analysis_attempt_token?}` | `{ok, objections, competitors, next_steps, talk_ratio, sentiment_score, …}`; writes `call_insights`, backfills transcript sentiment, inserts `mentor_insights` on risk | JWT |
+| `get-call-ingest-url` | `lib/queries.ts` | `{…}` | ingest URL | JWT |
+| `get-inbound-url` | `app.context-memory.tsx`, `app.crm.conversations.tsx` | `{org_id}` | `{configured: boolean, url?/call_url?: string}` | JWT |
+| `write-call-to-gohighlevel` | `lib/queries.ts` | `{…}` | writeback result | JWT |
+| `sync-crm` | `lib/queries.ts` | `{…}` | sync result | JWT |
+| `sync-salesforce` | `lib/queries.ts` | `{…}` | sync result | JWT |
+| `context-package` | `app.context-memory.tsx` | `{…}` | `{context: ContextPackage}` | JWT |
+| `generate-crm-intelligence-profile` | `CrmSetupGate.tsx`, `app.crm.setup.tsx` | `{…}` | profile | JWT |
+| `crm-insights` | `lib/crm.ts` | `{…}` | `{ok, insights_written: number}` | JWT |
+| `crm-action` | `lib/crm.ts`, `app.launchpad.outputs.$id.tsx` | `{…}` | `{ok, result: {id}}` / `{ok, result: {id, created}}` | JWT |
+| `crm-dedupe` | `lib/crm.ts` | `{…}` | `{ok, scanned: number}` | JWT |
+| `crm-merge` | `lib/crm.ts` | `{…}` | `{ok}` | JWT |
+| `next-best-action` | `lib/crm.ts`, `CrmNextBestAction.tsx` | `{…}` | `{ok, actions: NbaAction[]}` | JWT |
+| `conversation-ai` | `app.crm.conversations.tsx` | `{…}` | `{draft: string}` | JWT |
+| `send-campaign` | `app.crm.campaigns.tsx` | `{…}` | `{sent, recipients}` | JWT |
+| `workflow-engine` | `app.crm.automations.tsx` | `{…}` | `{results: {steps_completed, steps_total}[]}` | JWT |
+| `compile-workflow` | `lib/crm.ts` | `{…}` | `{ok, workflow_id, steps: number}` | JWT |
+| `bylda-action` | `ByldaChatModal.tsx`, `IntelligenceRail.tsx` | `{action_id, decision: "approve"\|"skip"}` | action result | JWT |
+| `bylda-chat` | `ByldaChatModal`, `IntelligenceRail`, `app.research`, `app.mentor`, `app.automations`, `app.launchpad.bylda` | `{…}` | **SSE stream** (`invokeEdgeStream`) or JSON | JWT |
+| `mentor-chat` | `app.mentor.tsx`, `app.launchpad.mentors.tsx` | `{…}` | **SSE stream** | JWT |
+| `run-tool` | `lib/runTool.ts`, `lib/operator.ts` | `{toolKey, input, organizationId, fromRunId?}` | tool run | JWT |
+| `analyze-website` | `lib/runTool.ts` | `{url}` | tool run | JWT |
+| `complete-onboarding` | `onboarding.tsx`, `WorkspaceStatusBanner.tsx` | `{mode, answers}` | onboarding result | JWT |
+| `generate-ai-dashboard` | `lib/queries.ts` | `{…}` | dashboard spec | JWT |
+| `save-integration` | `lib/queries.ts` | `{…}` | save result | JWT |
+| `integration-oauth-start` | `lib/queries.ts` | `{integration_key, …}` | OAuth redirect URL | JWT |
+| `paypal-connect-start` | `lib/queries.ts` | `{integration_key}` | OAuth redirect URL | JWT |
+| `shopify-connect-start` | `lib/queries.ts` | `{integration_key, shop}` | OAuth redirect URL | JWT |
+| `team-invite` | `app.settings.tsx` | `{…}` | invite result | JWT |
+| `create-checkout` | `lib/stripe.ts` | `{…}` | Stripe checkout session | JWT |
+| `manage-subscription` | `app.billing.tsx` | `{…}` | portal session | JWT |
+| `list-invoices` | `app.billing.tsx` | `{…}` | invoices | JWT |
+| `operator` | `lib/operator.ts` | `{…}` | operator response | default — not in `config.toml` |
+| `advance-mission` | `lib/mission-loop.ts`, `app.launchpad.course.tsx` | `{…}` | mission state | default — not in `config.toml` |
+| `run-workflow` | `lib/automation-run.ts` | `{…}` | run result | default — not in `config.toml` |
+| `automation-dispatch` | `lib/automation-run.ts` | `{body: {…}}` | dispatch result | default — not in `config.toml` |
+| `generate-course` | `app.launchpad.outputs.$id.tsx` | `{casefile_run_id}` | course | default — not in `config.toml` |
+| `log-activation-event` | `lib/analytics.ts` (raw `fetch`) | event | — | default — not in `config.toml` |
+| `cs-health` | `lib/crm.ts` | `{org_id}` | `{ok, accounts_scored: number}` | **`verify_jwt=false`** |
+| `forecast-rollup` | `lib/crm.ts` | `{org_id}` | `{ok, period: string}` | **`verify_jwt=false`** |
+| `marketing-attribution` | `lib/crm.ts` | `{…}` | `{ok, leads_attributed: number}` | **`verify_jwt=false`** |
+| `sequence-runner` | `lib/crm.ts` | `{org_id}` | `{ok, processed, advanced, completed}` | **`verify_jwt=false`** |
+| `weekly-review` | `WeeklyReviewCard.tsx` | `{…}` | review | **`verify_jwt=false`** |
+| `book-appointment` | `book.$slug.tsx` (public page) | `{…}` | `{message}` | **`verify_jwt=false`** — expected, anonymous booking |
 
-64 edge functions exist; 32 are reachable from the frontend. The other 32 are
-webhooks (`payments-webhook`, `ingest-call-webhook`, `receive-message`), OAuth
-callbacks, and cron jobs (`sequence-runner`, `process-reminders`, `feedback-loop`).
+⚠️ Five `verify_jwt=false` functions other than `book-appointment` are called from
+the signed-in app with an `org_id` in the body. Whether they validate org
+membership internally is a **backend** question — read them before Lane 3 wires
+Reports, and do not change them.
+
+**Not called from `src/` (17):** webhooks (`payments-webhook`, `ingest-call-webhook`,
+`receive-message`), OAuth callbacks (`integration-oauth-callback`,
+`paypal-connect-callback`, `shopify-connect-callback`), cron / server-to-server
+(`process-reminders`, `feedback-loop`, `sync-gohighlevel`, `send-email`,
+`send-sms`, `track-event`, `provision-workspace`, `memory-query`,
+`generate-playbook`), and `validate-idea` / `kill-my-idea` (their slugs appear in
+`src/` only as `run-tool` tool keys, not as direct invocations).
 
 ### RPCs called from the frontend
 
@@ -291,7 +327,7 @@ callbacks, and cron jobs (`sequence-runner`, `process-reminders`, `feedback-loop
 
 ### Tables read by the frontend
 
-83 distinct tables/views. Most-used: `leads` (18 call sites), `contacts` (16),
+80 distinct tables/views via literal `.from("…")` (excluding tests). Most-used: `leads` (18 call sites), `contacts` (16),
 `tool_runs` (11), `workspaces` (10), `operator_memory` (8), `subscriptions` (7),
 `tasks`/`profiles`/`missions`/`mission_steps`/`mentor_insights`/`memory_sources`/
 `automation_workflows` (6 each).
@@ -300,10 +336,20 @@ V1-relevant: `calls`, `call_transcripts`, `call_insights`, `deviation_alerts`,
 `bylda_events`, `notifications`, `organizations`, `organization_members`,
 `profiles`, `user_roles`, `workspaces`, `crm_intelligence_profiles`.
 
-Full schema: **105 tables, 9 views, 23 functions** in
+Full schema: **105 tables, 9 views, 23 functions, 19 enums** in
 `src/integrations/supabase/types.ts` — but see the stale-types warning in
-`BACKEND_BOUNDARY.md`; `calls`, `call_insights` and `call_transcripts` are
-missing from it despite existing in the database.
+`BACKEND_BOUNDARY.md`. **16 of the 80 tables the frontend queries are missing
+from it**, every one created by a migration in `supabase/migrations/`:
+`calls`, `call_insights`, `call_transcripts`, `customer_accounts`,
+`duplicate_matches`, `campaign_events`, `waitlist_signups`, `founder_streaks`,
+`playbooks`, `playbook_lessons`, `org_briefings`, `integration_raw_objects`,
+`integration_external_objects`, `context_package_runs`,
+`context_memory_chunks`, `failed_jobs`. The three `call*` tables are the ones
+V1 cares about.
+
+Realtime channels (subscriptions, not queries): `notifs:<user_id>`
+(`NotificationBell.tsx`), `leads-rt:<org_id>` (`app.bylda.crm.tsx`),
+`conversations:<org_id>` (`app.crm.conversations.tsx`).
 
 ### Cloudflare Workers
 

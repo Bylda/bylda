@@ -1,9 +1,19 @@
 # GAPS.md — data the V1 screens need vs. what the backend has
 
-# ≈ 78% MISSING
+# ≈ 69% MISSING (by field) · 83% (by core object)
 
-Counted by data field across V1 screen areas 04–18: **167 fields needed, 130
-MISSING (77.8%), 37 AVAILABLE.**
+Counted by data field across V1 screen areas 04–18: **201 fields needed, 139
+MISSING (69.2%), 62 AVAILABLE** — the sum of the per-area counts below
+(04: 3/15 · 05: 15/18 · 06: 12/14 · 07: 7/22 · 08: 19/20 · 09: 14/16 · 10: 12/14 ·
+11: 16/16 · 12: 18/18 · 13: 4/8 · 14: 4/8 · 15: 3/12 · 16: 12/20).
+By core object: **5 of 6 Dev Handoff objects have no table (83%)**, and the sixth
+is partial.
+
+> Re-derived on this repo. The earlier headline (167 fields, 130 missing, 77.8%)
+> did not match its own per-area table, which sums to 201 / 139. Every table
+> this file calls MISSING was re-checked against all 106 migrations — none has
+> appeared — and every table/RPC it calls AVAILABLE exists. The field counts per
+> area are the earlier Figma read, not re-walked here.
 
 That number is not a UI problem. The backend is a **CRM + founder-journey
 platform**. Bylda V1 is a **behavioral intelligence product**. The entire
@@ -87,14 +97,16 @@ The call pipeline is real and usable. From
 `competitor_mentions` jsonb, `talk_ratio`, `next_steps_extracted` jsonb,
 `summary`, `sales_profile`, `vertical_insights` jsonb, `crm_writeback_preview`
 jsonb, `missing_required_fields` text[], `analysis_version`, `writeback_status`,
-`approved_at`, `approved_by`, `created_at`
+`writeback_result` jsonb, `writeback_error`, `approved_at`, `approved_by`,
+`context_receipt`, `context_version`, `transcript_hash`, `created_at`
 
 Plus `call_analysis_jobs`, `call_queues`, `dial_sessions`, `deviation_alerts`,
 `bylda_events`, `bylda_actions`, `notifications`, `sales_baselines`,
 `forecast_snapshots`, `observed_metrics`, `expected_outcomes`, `outcomes`.
 
 ⚠️ `calls`, `call_insights` and `call_transcripts` are **missing from
-`src/integrations/supabase/types.ts`**. Existing code casts around it
+`src/integrations/supabase/types.ts`** (as are 13 other tables the frontend
+queries — full list in `AUDIT.md` → "Tables read by the frontend"). Existing code casts around it
 (`const db = supabase as any` in `src/routes/app.crm.calls.tsx`). Regenerating
 types is a backend change and out of scope — hand-write these types in
 `src/lib/data/types/` and tag them `// GAP: types.ts stale`.
@@ -250,7 +262,8 @@ Strong. AVAILABLE: `user_integrations`, `user_integrations_masked` view,
 `integration_oauth_states`, `integration_external_objects`,
 `integration_raw_objects`, `get_user_integration()` / `set_user_integration()`,
 and edge fns `integration-oauth-start`, `integration-oauth-callback`,
-`save-integration`, `sync-crm`, `sync-gohighlevel`, `sync-salesforce`,
+`save-integration`, `sync-crm`, `sync-salesforce`, `sync-gohighlevel` (exists
+but no frontend call today),
 `get-call-ingest-url`, `get-inbound-url` `{org_id}` → `{configured, url?}`.
 **MISSING:** HubSpot field-mapping UI state, and **delivery channels as a separate
 area** (V1 architecture decision 5) — no `delivery_channels` table.
@@ -301,8 +314,8 @@ Fixture, used by every mock so screens compose: **Acme Revenue** workspace ·
 ## Top 5 to escalate
 
 1. **`BehavioralEvent` — the atomic layer has no table.** Dev Handoff is explicit
-   that every other object is computed from it. Blocks 05, 06, 08, 09, 11 — 65 of
-   128 views. Nothing else on this list matters until this is decided.
+   that every other object is computed from it. Blocks 05, 06, 08, 09, 11 — 46 of
+   128 views (7 + 3 + 11 + 13 + 12 per `FRAMES.md`), 56 counting 10 Reports. Nothing else on this list matters until this is decided.
 2. **`Behavior` + `Insight`** — no tables. `Insight` carries the `confidence` and
    `sample_n` that CLAUDE.md §4 and the `Confidence` component (`4:66`) make
    mandatory on screen. Every insight surface is blocked on where these are computed.
@@ -317,3 +330,5 @@ Fixture, used by every mock so screens compose: **Acme Revenue** workspace ·
    Calls and Home cannot order anything. And `calls`, `call_insights`,
    `call_transcripts` are absent from the generated types although the tables exist,
    so the one well-supported area (07, 32% missing) still needs hand-written types.
+   (Top 5 unchanged on re-check: no behavioral, coaching, team, room, brief or
+   methodology table exists in any of the 106 migrations.)
