@@ -194,7 +194,7 @@ Straight from Dev Handoff (`1:21` → Implementation rules, `21:143`):
   in the org. Filter on `user_id` in `/lib/data` **and** never render a peer
   surface in a rep view. **One exception (§13.6):** the **team median** on R2 may
   render as an anonymous aggregate — one number, no names, no ranks, no
-  distribution — and is **hidden when the team has fewer than 5 reps**. The data
+  distribution — and is **hidden when the team has fewer than 8 reps**. The data
   layer returns the aggregate (and `team_size`); the rep view never receives peer
   rows. The Figma says it out loud on two frames — keep both
   lines: *"No team rankings here. This view is only about you."* (`8:2`) and
@@ -678,7 +678,7 @@ disagrees, **this section wins.** Affected specs carry the line
    cards (e.g. A1–A6 inputs at 4px). `by-badge`/`by-bar` are for badges, kbd and
    skeleton bars only.
 6. **Rep team median (R2)** — allowed as an anonymous aggregate (no names, no
-   ranks), **hidden when the team has fewer than 5 reps**. Folded into the
+   ranks), **hidden when the team has fewer than 8 reps**. Folded into the
    rep-privacy rule in §4.
 7. **Form errors use `feedback/error`, never signal colours.** Signal colours
    stay behavioral direction only. (A4's regress-red error input/message →
