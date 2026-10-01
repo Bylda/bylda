@@ -655,6 +655,17 @@ Approved 2026-10-01 by **Ansh** (owner of `src/styles`, `src/components/bylda`,
 `design-ref` spec or anything above disagrees, **this section wins.** Affected specs
 carry the line *"See CLAUDE.md §13: decision overrides Figma."*
 
+### GOAL (Ansh, 2026-10-01)
+
+**V1 is a faithful, editable UI/UX base, not a demo.**
+
+- **Match Figma; don't optimize for demo data.**
+- **Lane code uses ONLY kit components (`src/components/bylda/**`) and tokens.** No
+  inline styles, no hard-coded colors, spacing or font sizes.
+- **If the kit lacks something:** build it as `Local<Name>` in your lane folder and
+  log it in `LANE_REQUESTS.md` with the tag **`fold-into-kit`**. These get merged into
+  the kit in one pass at the end.
+
 1. **Tokens.** Three semantic tokens beyond Figma's set, in `src/styles/bylda.css`
    and `design-ref/_tokens.md`:
    - `border/strong` `#D3D0CB` (silver/300) → `border-by-border-strong`. Form inputs.
