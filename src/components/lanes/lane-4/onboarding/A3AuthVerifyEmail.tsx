@@ -107,7 +107,7 @@ export function A3AuthVerifyEmail() {
             autoFocus={i === 0}
             className={cn(
               "type-mono-metric h-16 w-14 rounded-by-control border bg-by-surface-raised text-center text-by-text-primary outline-none transition-colors duration-200 ease-by-out",
-              "border-by-border-control focus:border-by-border-focus",
+              "border-by-border-strong focus:border-by-focus-ring",
             )}
           />
         ))}

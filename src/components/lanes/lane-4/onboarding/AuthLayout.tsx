@@ -96,8 +96,8 @@ export const AuthField = forwardRef<HTMLInputElement, FieldProps>(function AuthF
         className={cn(
           "flex w-full items-center gap-2 rounded-by-control border bg-by-surface-raised px-3 py-2.5 transition-colors duration-200 ease-by-out",
           error
-            ? "border-by-signal-regress"
-            : "border-by-border-control focus-within:border-by-border-focus",
+            ? "border-by-feedback-error"
+            : "border-by-border-strong focus-within:border-by-focus-ring",
         )}
       >
         <input
@@ -114,7 +114,7 @@ export const AuthField = forwardRef<HTMLInputElement, FieldProps>(function AuthF
         {trailing}
       </div>
       {error ? (
-        <p id={msgId} role="alert" className="type-mono-micro text-by-signal-regress">
+        <p id={msgId} role="alert" className="type-mono-micro text-by-feedback-error">
           {error}
         </p>
       ) : hint ? (
