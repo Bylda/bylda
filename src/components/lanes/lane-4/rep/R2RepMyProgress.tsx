@@ -21,7 +21,7 @@ import {
   type MyProgress,
 } from "@/lib/data";
 import { LocalSparkline } from "./LocalSparkline";
-import { directionTone, formatScore, shortDate } from "./repFormat";
+import { directionTone, formatMedian, formatScore, shortDate } from "./repFormat";
 
 /**
  * R2 · Rep — My progress
@@ -181,7 +181,7 @@ function BehaviorTable({
       <p className="type-ui-label border-b border-by-border-engraved px-4 py-3 text-by-text-primary">
         YOUR BEHAVIORS
       </p>
-      <div className="type-mono-micro flex items-start gap-3 border-b border-by-border-engraved bg-by-surface-inset px-4 py-[9px] text-by-text-tertiary">
+      <div className="type-mono-micro flex items-start border-b border-by-border-engraved bg-by-surface-inset px-4 py-[9px] text-by-text-tertiary">
         <span className={COLS.behavior}>BEHAVIOR</span>
         <span className={COLS.now}>YOU NOW</span>
         <span className={COLS.trend}>TREND</span>
@@ -193,7 +193,7 @@ function BehaviorTable({
         return (
           <div
             key={s.behaviorKey}
-            className="flex items-center gap-3 border-b border-by-border-engraved px-4 py-2.5 last:border-b-0"
+            className="flex items-center border-b border-by-border-engraved px-4 py-2.5 last:border-b-0"
           >
             <span className={cn("type-ui-body-strong text-by-text-primary", COLS.behavior)}>
               {s.name}
@@ -208,12 +208,12 @@ function BehaviorTable({
               <LocalSparkline
                 sparkline={s.sparkline}
                 tone={directionTone(s.direction)}
-                className="h-4 w-full"
+                className="h-4 w-[100px]"
               />
             </span>
             {hasMedian && s.teamMedian !== null ? (
               <span className={cn("type-mono-data text-by-text-secondary", COLS.median)}>
-                {formatScore(s.teamMedian, s.unit)}
+                {formatMedian(s.teamMedian, s.unit)}
               </span>
             ) : null}
             <span className={COLS.tag}>
@@ -354,7 +354,6 @@ function Outcomes({ calls }: { calls: Call[] }) {
     ["Won", count("won")],
     ["Advanced", count("advanced")],
     ["Stalled", count("no_decision")],
-    ["Lost", count("lost")],
   ];
   return (
     <div className="flex flex-col">

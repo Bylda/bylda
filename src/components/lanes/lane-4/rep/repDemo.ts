@@ -30,20 +30,24 @@ const FOCUS: Record<string, { headline: string; why: string; tryThis: string; da
   },
 };
 
-const LISTEN: Record<string, { length: string; note: string; window: string }> = {
-  call_acme: {
-    length: "90s",
-    note: "You interrupted the CFO mid-sentence and offered a discount.",
-    window: "18:42 → 20:10",
-  },
-  call_brightline: {
-    length: "3m",
-    note: "Your best discovery sequence this month. Worth hearing why.",
-    window: "06:15 → 09:02",
-  },
-};
+// `tone` overrides the fixture top moment's tone where Figma's note reads the other way (LANE_REQUESTS 31 b).
+const LISTEN: Record<string, { length: string; note: string; window: string; tone?: SignalTone }> =
+  {
+    call_acme: {
+      length: "90s",
+      note: "You interrupted the CFO mid-sentence and offered a discount.",
+      window: "18:42 → 20:10",
+    },
+    call_brightline: {
+      length: "3m",
+      note: "Your best discovery sequence this month. Worth hearing why.",
+      window: "06:15 → 09:02",
+      tone: "improve",
+    },
+  };
 
 const WEEK: Stat[] = [
+  { label: "Calls analyzed", value: "14", tone: "neutral" },
   { label: "Talk / listen", value: "58 / 42", tone: "neutral" },
   { label: "Objections faced", value: "9", tone: "neutral" },
   { label: "Held control", value: "3 of 9", tone: "regress" },

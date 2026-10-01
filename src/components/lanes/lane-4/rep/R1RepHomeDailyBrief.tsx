@@ -359,7 +359,7 @@ function ListenRow({ call }: { call: Call }) {
           {call.account.name}
         </span>
         {moment ? (
-          <Tag tone={moment.tone}>
+          <Tag tone={demo?.tone ?? moment.tone}>
             {demo ? `Listen ${demo.length}` : `Listen ${moment.timestamp}`}
           </Tag>
         ) : null}
@@ -435,7 +435,8 @@ function RepContext({ home, focusScore }: { home: RepHome; focusScore: BehaviorS
           <PanelLabel>FOCUS PROGRESS</PanelLabel>
           <div className="flex flex-col gap-2 rounded-by-card border border-by-border-engraved bg-by-surface-inset px-3.5 py-3">
             <p className="type-mono-micro text-by-text-tertiary">
-              {focus.behaviorName.toUpperCase()} · RECENT TREND
+              {focus.behaviorName.toUpperCase()}
+              {focusScore?.unit === "seconds" ? " (SEC)" : ""} · RECENT TREND
             </p>
             {focusScore ? (
               <LocalSparkline
@@ -479,7 +480,7 @@ function RepContext({ home, focusScore }: { home: RepHome; focusScore: BehaviorS
 
       <PanelLabel>THIS WEEK · YOU</PanelLabel>
       <div className="flex flex-col">
-        <StatRow label="Calls analyzed" value={String(home.analyzedCalls)} />
+        {week.length ? null : <StatRow label="Calls analyzed" value={String(home.analyzedCalls)} />}
         {week.map((s) => (
           <StatRow key={s.label} label={s.label} value={s.value} tone={s.tone} />
         ))}

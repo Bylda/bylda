@@ -22,6 +22,10 @@ export function formatScore(value: number, unit: BehaviorScore["unit"]): string 
 export const targetLabel = (target: number, unit: BehaviorScore["unit"]) =>
   `→ ${formatScore(target, unit)} target`;
 
+/** Figma R2 sets the team median bare ("2.4", not "2.4 / call"); the YOU NOW column carries the unit. */
+export const formatMedian = (value: number, unit: BehaviorScore["unit"]) =>
+  unit === "per_call" ? value.toFixed(1) : formatScore(value, unit);
+
 export const directionTone = (d: Direction) =>
   d === "improving" ? "improve" : d === "regressing" ? "regress" : "neutral";
 

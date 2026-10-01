@@ -41,7 +41,7 @@ import { CALL_TYPE_LABEL, OUTCOME_LABEL, callDate, clock, firstName } from "./re
 /** The excerpt around the moment that matters. */
 const MOMENT_WINDOW_SEC = 90;
 /** Bars in the call strip. */
-const STRIP_BARS = 60;
+const STRIP_BARS = 69; // Figma 32:334 strip: 69 bars, 6px wide, 3px gap
 
 export function R3CallReviewRepPerspective() {
   const { callId = "" } = useParams({ strict: false });
@@ -270,8 +270,8 @@ function TranscriptLine({
 
 /**
  * The whole call as a strip of bars. A bar is coloured only where a behavioral event
- * happened (objection → attention, interruption → regress). No waveform is invented —
- * the data layer carries no amplitude, so every other bar is the same quiet height.
+ * happened (objection → attention, interruption → regress). The data layer carries no
+ * amplitude, so quiet bars use Figma's fixed 8 / 15px rhythm — not a waveform.
  */
 function CallStrip({ review, moment }: { review: CallReview; moment: Moment | null }) {
   const duration = Math.max(review.call.durationSec, 1);
@@ -305,7 +305,8 @@ function CallStrip({ review, moment }: { review: CallReview; moment: Moment | nu
             "flex-1",
             b.tone === "regress" && "h-full bg-by-signal-regress",
             b.tone === "attention" && "h-full bg-by-signal-attention",
-            b.tone === null && "h-3 bg-by-border-control",
+            b.tone === null && (b.i % 2 ? "h-[15px]" : "h-2"),
+            b.tone === null && "bg-by-border-control",
           )}
         />
       ))}
