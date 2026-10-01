@@ -26,7 +26,8 @@ Page 19 is 101 `PROTO ·` duplicates for the clickable prototype — never build
 
 Rebuild the entire frontend to the **Bylda V1** Figma
 ("Bylda — Behavioral Intelligence (V1)"), wired to the **existing backend exactly
-as it is**. Five people in parallel, one lane each.
+as it is**. Four people in parallel: Ansh (Lane 1 + Foundation), Dravin (Lane 4),
+Mayur (Lanes 5, 2 and 6, in that order) and Tirth (backend).
 
 Bylda observes sales conversations, names the behavior that matters, and measures
 whether it changed. Loop: **OBSERVE → UNDERSTAND → RECOMMEND → CHANGE → MEASURE ↺**
@@ -314,11 +315,12 @@ regenerated file.
 
 ## 8. Lane map + folder ownership
 
-**Owners as of 2026-09-30:** Lane 1 Ansh · Lane 2 Dhruv · **Lane 4 Dravin** ·
-**Lane 5 Mayur** · Lane 6 first free person · Backend track Tirth.
-(Lanes 4 and 5 swapped owners on 2026-09-30; lane numbers, folders, screens and
-order did not change. There is no Lane 3 any more — its areas moved to Lanes 2 and 4.
-Later on 2026-09-30 **10 Reports moved from Lane 4 to Lane 6**.)
+**Owners:** Lane 1 **Ansh** · Lane 2 **Mayur** · Lane 4 **Dravin** · Lane 5 **Mayur** ·
+Lane 6 **Mayur** · Backend track **Tirth**. Foundation, the data layer (`src/lib/data/**`)
+and the frozen wrappers are **Ansh**'s.
+Mayur's order: finish Lane 5 → Lane 2 (Calls → Coaching → Search & Ask) → Lane 6
+(Reports → Rooms & DMs). There is no Lane 3 — its areas are in Lanes 2 and 4. 10 Reports
+belongs to Lane 6; its placeholders live under `lane-4/reports/`.
 
 ### Foundation — frozen once merged (owner Ansh)
 
@@ -340,13 +342,13 @@ route file and a placeholder screen component (§12 G). **No route folder is sha
 | Lane | Owner | Figma areas (build order) | Route folders (URL) | Component folder |
 | --- | --- | --- | --- | --- |
 | 1 | **Ansh** | 05 Manager/Admin Home → 14 Notifications → 08 Intelligence | `src/routes/app/home/**` (`/app/home`) · `src/routes/app/notifications/**` · `src/routes/app/intelligence/**` | `src/components/lanes/lane-1/**` |
-| 2 | **Dhruv** | 07 Calls → 13 Search & Ask → 11 Coaching | `src/routes/app/calls/**` · `src/routes/app/search/**` · `src/routes/app/coaching/**` | `src/components/lanes/lane-2/**` |
+| 2 | **Mayur** | 07 Calls → 11 Coaching → 13 Search & Ask | `src/routes/app/calls/**` · `src/routes/app/search/**` · `src/routes/app/coaching/**` | `src/components/lanes/lane-2/**` |
 | 4 | **Dravin** | 04 Onboarding/Auth → 06 Rep → 09 Team | `src/routes/welcome/**` (`/welcome/*`, outside the shell) · `src/routes/app/rep/**` · `src/routes/app/team/**` | `src/components/lanes/lane-4/**` **except** `lane-4/reports/**` |
 | 5 | **Mayur** | 15 Integrations → 16 Settings + Methodology → 18 Mobile (17 States ✅ done) | `src/routes/app/connections/**` · `src/routes/app/workspace/**` · `src/routes/app/methodology/**` · `src/routes/app/states/**` · `src/routes/m/**` (390 mobile, outside the shell) | `src/components/lanes/lane-5/**` |
-| 6 | first free person | 12 Rooms & Messages — **mocks only** → 10 Reports | `src/routes/app/rooms/**` · `src/routes/app/dm/**` · `src/routes/app/reports/**` · `src/routes/doc/**` (email/push/print, outside the shell) | `src/components/lanes/lane-6/**` · `src/components/lanes/lane-4/reports/**` (Reports placeholders stay at that path) |
+| 6 | **Mayur** | 10 Reports → 12 Rooms & Messages — **mocks only** | `src/routes/app/rooms/**` · `src/routes/app/dm/**` · `src/routes/app/reports/**` · `src/routes/doc/**` (email/push/print, outside the shell) | `src/components/lanes/lane-6/**` · `src/components/lanes/lane-4/reports/**` (Reports placeholders stay at that path) |
 | — | **Tirth** (backend) | `BACKEND_BACKLOG.md`, in order | `supabase/**` etc., on `backend/*` branches only | — |
 
-**Real view counts** (`FRAMES.md`): Lane 1 **20** (7 + 2 + 11) · Lane 2 **24** (9 + 3 + 12) ·
+**Real view counts** (`FRAMES.md`): Lane 1 **20** (7 + 2 + 11) · Lane 2 **24** (9 + 12 + 3) ·
 Lane 4 **27** (11 + 3 + 13) · Lane 5 **32** (3 + 18 + 11; the 13 page-17 states are done —
 Foundation built them) · Lane 6 **24** (14 + 10).
 
@@ -607,16 +609,16 @@ wrong — fix `map.ts`.
 | Lane | Owner | Areas (build order) |
 | --- | --- | --- |
 | 1 | **Ansh** | Manager/Admin Home, Notifications, Intelligence (05, 14, 08) |
-| 2 | **Dhruv** | Calls, Search & Ask (07, 13), then Coaching (11) |
+| 2 | **Mayur** | Calls (07), Coaching (11), then Search & Ask (13) |
 | 4 | **Dravin** | Onboarding/Auth, Rep (04, 06), then Team (09) |
 | 5 | **Mayur** | Integrations, Settings, mobile (15, 16, 18); system states (17) done |
-| 6 | first free person | Rooms & Messages (12), mocks only, then Reports (10) |
+| 6 | **Mayur** | Reports (10), then Rooms & Messages (12), mocks only |
 | Backend | **Tirth** | `BACKEND_BACKLOG.md` |
 
 Each lane edits **only** its own route folders + `src/components/lanes/<lane>/**` (§8).
 One exception: `src/components/lanes/lane-4/reports/**` belongs to **Lane 6**, not Lane 4.
-Branch `lane-<n>-<name>` off `integration` (`lane-1-ansh`, `lane-2-dhruv`,
-`lane-4-dravin`, `lane-5-mayur`, `lane-6-<name>`). **Merge `integration` in every
+Branch `lane-<n>-<name>` off `integration` (`lane-1-ansh`, `lane-2-mayur`,
+`lane-4-dravin`, `lane-5-mayur`, `lane-6-mayur`). **Merge `integration` in every
 morning.** One small PR per section. Per-person start prompts: **`TEAM_START.md`**.
 
 ### G. Guards

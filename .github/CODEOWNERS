@@ -1,13 +1,12 @@
 # CODEOWNERS — who must review what. Last matching pattern wins.
 #
 # GitHub handles: Ansh = @anshpatel102104-ai · Tirth = @tirthkachhia ·
-# Dravin = @dravindilip-svg · Dhruv = @launchpadp · Mayur = @mayurnp27.
-# ⚠️ Lane 6 (first free person) is routed to Ansh FOR NOW — it has no owner yet.
+# Dravin = @dravindilip-svg · Mayur = @mayurnp27.
 # Every handle needs write access on the repo, or GitHub silently ignores its rules.
 #
-# Owners as of 2026-09-30 (CLAUDE.md §8 / §12):
-#   Lane 1 Ansh · Lane 2 Dhruv · Lane 4 Dravin · Lane 5 Mayur · Lane 6 first free · Backend Tirth
-#   (Lanes 4 and 5 swapped owners on 2026-09-30; 10 Reports moved Lane 4 → Lane 6.)
+# Owners (CLAUDE.md §8 / §12):
+#   Lane 1 Ansh · Lane 2 Mayur · Lane 4 Dravin · Lane 5 Mayur · Lane 6 Mayur · Backend Tirth
+#   Foundation + data layer: Ansh. 10 Reports is Lane 6 (placeholders under lane-4/reports/).
 
 # ── Default: anything not listed below ───────────────────────────────────────
 *                                           @anshpatel102104-ai
@@ -76,11 +75,11 @@
 /src/routes/app/intelligence/               @anshpatel102104-ai
 /src/components/lanes/lane-1/               @anshpatel102104-ai
 
-# Lane 2 — Dhruv: 07 Calls, 13 Search & Ask, 11 Coaching
-/src/routes/app/calls/                      @launchpadp
-/src/routes/app/search/                     @launchpadp
-/src/routes/app/coaching/                   @launchpadp
-/src/components/lanes/lane-2/               @launchpadp
+# Lane 2 — Mayur: 07 Calls, 11 Coaching, 13 Search & Ask
+/src/routes/app/calls/                      @mayurnp27
+/src/routes/app/search/                     @mayurnp27
+/src/routes/app/coaching/                   @mayurnp27
+/src/components/lanes/lane-2/               @mayurnp27
 
 # Lane 4 — Dravin: 04 Onboarding/Auth, 06 Rep, 09 Team
 /src/routes/welcome/                        @dravindilip-svg
@@ -96,14 +95,14 @@
 /src/routes/m/                              @mayurnp27
 /src/components/lanes/lane-5/               @mayurnp27
 
-# Lane 6 — first free person: 12 Rooms & Messages, 10 Reports
-/src/routes/app/rooms/                      @anshpatel102104-ai
-/src/routes/app/dm/                         @anshpatel102104-ai
-/src/routes/app/reports/                    @anshpatel102104-ai
-/src/routes/doc/                            @anshpatel102104-ai
-/src/components/lanes/lane-6/               @anshpatel102104-ai
+# Lane 6 — Mayur: 10 Reports, 12 Rooms & Messages
+/src/routes/app/rooms/                      @mayurnp27
+/src/routes/app/dm/                         @mayurnp27
+/src/routes/app/reports/                    @mayurnp27
+/src/routes/doc/                            @mayurnp27
+/src/components/lanes/lane-6/               @mayurnp27
 # Reports placeholders stay in lane-4's folder; must come after the lane-4 rule
-/src/components/lanes/lane-4/reports/       @anshpatel102104-ai
+/src/components/lanes/lane-4/reports/       @mayurnp27
 
 # Generated — whoever regenerates it; Ansh breaks ties
 /src/routeTree.gen.ts                       @anshpatel102104-ai

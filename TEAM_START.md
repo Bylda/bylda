@@ -1,9 +1,7 @@
 # TEAM_START.md — ready-to-paste start prompts
 
-Owners as of **2026-09-30**: Lane 1 **Ansh** · Lane 2 **Dhruv** · Lane 4 **Dravin** · Lane 5 **Mayur** ·
-Lane 6 first free person · Backend **Tirth**. (Lanes 4 and 5 swapped owners on 2026-09-30 — lane
-numbers, folders, screens and order did not change. Later on 2026-09-30 **10 Reports moved from
-Lane 4 to Lane 6**, and 17 States were marked done — Foundation built them.)
+Owners: Lane 1 **Ansh** · Lane 4 **Dravin** · Lanes 5, 2, 6 **Mayur** (in that order) · Backend **Tirth**.
+Foundation and the data layer are **Ansh**'s. 17 States are done — Foundation built them.
 
 **How to use this file:** open a **fresh** Claude Code session per section, paste your lane's prompt,
 then tell it which section to do ("do section 1"). One section per session, one PR per section,
@@ -90,83 +88,6 @@ When the section is done: commit, push, open ONE PR into integration titled
 
 ---
 
-## Lane 2 — Dhruv · 07 Calls → 13 Search & Ask → 11 Coaching
-
-24 screens in 7 sections. Branch `lane-2-dhruv`.
-
-```text
-You are building Lane 2 (Dhruv) of the Bylda V1 frontend rebuild, repo Bylda/bylda.
-
-BRANCH: lane-2-dhruv, created from origin/integration. Every morning: `git fetch origin && git merge origin/integration`.
-
-YOU OWN — edit ONLY these paths:
-  - src/routes/app/calls/**
-  - src/routes/app/search/**
-  - src/routes/app/coaching/**
-  - src/components/lanes/lane-2/**
-Everything else is frozen or another lane's. Need a shared change (component, token, hook,
-field, shell)? Add a row to LANE_REQUESTS.md and build a local copy in src/components/lanes/lane-2/.
-Never touch anything in BACKEND_BOUNDARY.md. Never edit the router config or the nav.
-
-READ ONLY THESE, don't explore elsewhere: CLAUDE.md, src/components/bylda/index.ts,
-src/lib/data/README.md. Pull Figma frames by node ID only (fileKey 8q5872jwTTRK69cOrWDOmk),
-with get_design_context. Never call get_metadata without a nodeId (it's broken on this file).
-Never build from page 19 (PROTO copies) — use it only to check links.
-
-RULES: screens import data ONLY from @/lib/data and UI ONLY from @/components/bylda.
-No fetch / supabase / invokeEdge in a screen. No hard-coded numbers. Tokens only (by-*).
-Run and verify screens with VITE_BYLDA_MOCKS=true so every field renders; never hard-code values.
-  (VITE_BYLDA_MOCKS=true bun run dev --host 127.0.0.1; switch role with ?as=rep.)
-
-SECTIONS — build in this order (demo flows first). Do exactly ONE section per session:
-1. Call Review  [Flow 1 · Manager day]
-   - **C4** Call Review — Overview — Figma `44:1375` (page `1:8`) · route `/app/calls/$callId` · file `src/components/lanes/lane-2/calls/C4CallReviewOverview.tsx` · hooks `useCallReview`
-   - **C3** Call Review — Transcript & timeline — Figma `9:2` (page `1:8`) · route `/app/calls/$callId/transcript` · file `src/components/lanes/lane-2/calls/C3CallReviewTranscriptTimeline.tsx` · hooks `useCallReview`, `useReanalyzeCall`
-   - **C5** Call Review — Analysis — Figma `44:1755` (page `1:8`) · route `/app/calls/$callId/analysis` · file `src/components/lanes/lane-2/calls/C5CallReviewAnalysis.tsx` · hooks `useCallReview`, `useBehavioralEvents`, `useReanalyzeCall`
-   - **C6** Call Review — Coaching — Figma `44:2146` (page `1:8`) · route `/app/calls/$callId/coaching` · file `src/components/lanes/lane-2/calls/C6CallReviewCoaching.tsx` · hooks `useCallReview`, `useAssignCoaching`
-2. Calls index + rep view  [Flow 1 entry · Flow 2 · Rep day]
-   - **C1** Calls Index — saved views — Figma `17:1090` (page `1:8`) · route `/app/calls` · file `src/components/lanes/lane-2/calls/C1CallsIndexSavedViews.tsx` · hooks `useSavedViews`, `useCalls`
-   - **C2** Calls Index — All calls + filters open — Figma `52:8665` (page `1:8`) · route `/app/calls/all` · file `src/components/lanes/lane-2/calls/C2CallsIndexAllCallsFiltersOpen.tsx` · hooks `useCalls`
-   - **C9** Calls — Rep view (my calls) — Figma `28:1646` (page `1:8`) · route `/app/calls/mine` · file `src/components/lanes/lane-2/calls/C9CallsRepView.tsx` · hooks `useMyCalls`
-3. Upload + comparison  [—]
-   - **C7** Calls — Manual upload — Figma `28:1263` (page `1:8`) · route `/app/calls/upload` · file `src/components/lanes/lane-2/calls/C7CallsManualUpload.tsx` · hooks `useUploadCall`
-   - **C8** Call comparison — Figma `28:1464` (page `1:8`) · route `/app/calls/compare` · file `src/components/lanes/lane-2/calls/C8CallComparison.tsx` · hooks `useCallComparison`
-4. Search & Ask  [Flow 8 · Ask & find]
-   - **S1** Search — Command palette ⌘K — Figma `31:760` (page `1:14`) · mounted by the shell · file `src/components/lanes/lane-2/search/S1CommandPalette.tsx` · hooks `usePaletteItems`
-   - **S2** Search — Natural-language results — Figma `31:909` (page `1:14`) · route `/app/search` · file `src/components/lanes/lane-2/search/S2SearchNaturalLanguageResults.tsx` · hooks `useSearch`
-   - **S3** Ask Bylda — side panel (from rail ✦) — Figma `50:26784` (page `1:14`) · mounted by the shell · file `src/components/lanes/lane-2/search/S3AskByldaPanel.tsx` · hooks `useSearch`
-5. Assign coaching + result  [Flow 1 · Manager day · Flow 3 · Pattern]
-   - **G2** Assign Coaching — modal — Figma `14:24` (page `1:12`) · route `/app/coaching/assign` · file `src/components/lanes/lane-2/coaching/G2AssignCoachingModal.tsx` · hooks `useAssignCoaching`, `useTeamMembers`, `useBehaviors`
-   - **G12** Behavior Change Result — Alex Morgan — Figma `14:224` (page `1:12`) · route `/app/coaching/$focusId/result` · file `src/components/lanes/lane-2/coaching/G12BehaviorChangeResultAlexMorgan.tsx` · hooks `useCoachingFocus`
-6. Coaching detail  [Flow 1 · Manager day]
-   - **G6** Coaching Detail — Jordan · active — Figma `30:639` (page `1:12`) · route `/app/coaching/$focusId` · file `src/components/lanes/lane-2/coaching/G6CoachingDetailJordanActive.tsx` · hooks `useCoachingFocus`
-   - **G7** Coaching Detail — Overview — Figma `46:1604` (page `1:12`) · route `/app/coaching/$focusId/overview` · file `src/components/lanes/lane-2/coaching/G7CoachingDetailOverview.tsx` · hooks `useCoachingFocus`
-   - **G8** Coaching Detail — Evidence — Figma `46:1935` (page `1:12`) · route `/app/coaching/$focusId/evidence` · file `src/components/lanes/lane-2/coaching/G8CoachingDetailEvidence.tsx` · hooks `useCoachingFocus`
-   - **G9** Coaching Detail — Progress — Figma `46:2244` (page `1:12`) · route `/app/coaching/$focusId/progress` · file `src/components/lanes/lane-2/coaching/G9CoachingDetailProgress.tsx` · hooks `useCoachingFocus`
-   - **G10** Coaching Detail — Discussion — Figma `46:2549` (page `1:12`) · route `/app/coaching/$focusId/discussion` · file `src/components/lanes/lane-2/coaching/G10CoachingDetailDiscussion.tsx` · hooks `useCoachingFocus`, `useCoachingComments`
-7. Coaching index + rep view  [Flow 2 · Rep day]
-   - **G3** Coaching — Index (Active) — Figma `30:246` (page `1:12`) · route `/app/coaching` · file `src/components/lanes/lane-2/coaching/G3CoachingIndex.tsx` · hooks `useCoachingFoci`
-   - **G4** Coaching — Needs follow-up — Figma `52:6380` (page `1:12`) · route `/app/coaching/follow-up` · file `src/components/lanes/lane-2/coaching/G4CoachingNeedsFollowUp.tsx` · hooks `useCoachingFoci`
-   - **G5** Coaching — Completed — Figma `30:430` (page `1:12`) · route `/app/coaching/completed` · file `src/components/lanes/lane-2/coaching/G5CoachingCompleted.tsx` · hooks `useCoachingFoci`
-   - **G11** Coaching — Rep view (Jordan) — Figma `30:839` (page `1:12`) · route `/app/coaching/mine` · file `src/components/lanes/lane-2/coaching/G11CoachingRepView.tsx` · hooks `useMyCoaching`, `useAcknowledgeCoaching`
-   - **G1** Coaching lifecycle — Figma `14:2` (page `1:12`) · component, no route · file `src/components/lanes/lane-2/coaching/G1CoachingLifecycle.tsx` · hooks — (static)
-
-DONE CHECKLIST for the section:
-  - [ ] Matches Figma at **1440** (390 for mobile, the frame's own width for email/print)
-  - [ ] **Tokens only** — `by-*` utilities, no raw hex / `rgb()` (`bun run tokens:check`)
-  - [ ] **Empty, loading and error states** present (`DataBoundary` + `systemStates.*`; Y9 for FORBIDDEN_FOR_ROLE)
-  - [ ] Links match the **page 19** prototype flows (13 flows, 0–12)
-  - [ ] Every insight shows confidence + sample size; low confidence = no action button; no causal language; no peer data in a rep view; sparklines on a fixed y-range; OutcomeAssociation hidden below n=30
-  - [ ] `bun run typecheck` → exactly **8** errors · `bun run lint:changed` clean · `bun run test` → only the **2** known failures · `bun run build` green
-  - [ ] `bun run boundary` clean · `bun run tokens:check` clean
-  - [ ] One screenshot per screen at the end → `design-qa/<code>.png`
-
-When the section is done: commit, push, open ONE PR into integration titled
-"Lane 2 — <section name>", with screenshots. Then write a short report and STOP.
-```
-
----
-
 ## Lane 4 — Dravin · 04 Onboarding/Auth → 06 Rep → 09 Team
 
 27 screens in 6 sections. Branch `lane-4-dravin`.
@@ -245,7 +166,19 @@ When the section is done: commit, push, open ONE PR into integration titled
 
 ---
 
-## Lane 5 — Mayur · 15 Integrations → 16 Settings + Methodology → 18 Mobile (17 States ✅ done)
+## Mayur — Lanes 5 → 2 → 6
+
+Mayur owns three lanes and builds them in this order:
+
+1. **Lane 5** — finish the open Integrations / Settings / Mobile work.
+2. **Lane 2** — Calls → Coaching → Search & Ask.
+3. **Lane 6** — Reports → Rooms & DMs (mocks only).
+
+One branch per lane (`lane-5-mayur`, `lane-2-mayur`, `lane-6-mayur`), one section per session,
+one PR per section. PR titles start **"L5 — "**, **"L2 — "** or **"L6 — "**. Paste the prompt for
+the lane you're on.
+
+### Lane 5 — 15 Integrations → 16 Settings + Methodology → 18 Mobile (17 States ✅ done) (first — finish open work)
 
 30 screens in 7 sections (+ 17 States, done). Branch `lane-5-mayur`.
 
@@ -327,20 +260,95 @@ DONE CHECKLIST for the section:
   - [ ] One screenshot per screen at the end → `design-qa/<code>.png`
 
 When the section is done: commit, push, open ONE PR into integration titled
-"Lane 5 — <section name>", with screenshots. Then write a short report and STOP.
+"L5 — <section name>", with screenshots. Then write a short report and STOP.
 ```
 
----
 
-## Lane 6 — first free person · 12 Rooms & Messages (MOCKS ONLY) → 10 Reports
+### Lane 2 — 07 Calls → 11 Coaching → 13 Search & Ask (second)
 
-24 screens in 7 sections. Branch `lane-6-<name>`.
+24 screens in 7 sections. Branch `lane-2-mayur`.
 
 ```text
-You are building Lane 6 (first free person) of the Bylda V1 frontend rebuild, repo Bylda/bylda.
-Lane 6 = 12 Rooms & Messages (mocks only), then 10 Reports.
+You are building Lane 2 (Mayur) of the Bylda V1 frontend rebuild, repo Bylda/bylda.
 
-BRANCH: lane-6-<name>, created from origin/integration. Every morning: `git fetch origin && git merge origin/integration`.
+BRANCH: lane-2-mayur, created from origin/integration. Every morning: `git fetch origin && git merge origin/integration`.
+
+YOU OWN — edit ONLY these paths:
+  - src/routes/app/calls/**
+  - src/routes/app/search/**
+  - src/routes/app/coaching/**
+  - src/components/lanes/lane-2/**
+Everything else is frozen or another lane's. Need a shared change (component, token, hook,
+field, shell)? Add a row to LANE_REQUESTS.md and build a local copy in src/components/lanes/lane-2/.
+Never touch anything in BACKEND_BOUNDARY.md. Never edit the router config or the nav.
+
+READ ONLY THESE, don't explore elsewhere: CLAUDE.md, src/components/bylda/index.ts,
+src/lib/data/README.md. Pull Figma frames by node ID only (fileKey 8q5872jwTTRK69cOrWDOmk),
+with get_design_context. Never call get_metadata without a nodeId (it's broken on this file).
+Never build from page 19 (PROTO copies) — use it only to check links.
+
+RULES: screens import data ONLY from @/lib/data and UI ONLY from @/components/bylda.
+No fetch / supabase / invokeEdge in a screen. No hard-coded numbers. Tokens only (by-*).
+Run and verify screens with VITE_BYLDA_MOCKS=true so every field renders; never hard-code values.
+  (VITE_BYLDA_MOCKS=true bun run dev --host 127.0.0.1; switch role with ?as=rep.)
+
+SECTIONS — build in this order (demo flows first). Do exactly ONE section per session:
+1. Call Review  [Flow 1 · Manager day]
+   - **C4** Call Review — Overview — Figma `44:1375` (page `1:8`) · route `/app/calls/$callId` · file `src/components/lanes/lane-2/calls/C4CallReviewOverview.tsx` · hooks `useCallReview`
+   - **C3** Call Review — Transcript & timeline — Figma `9:2` (page `1:8`) · route `/app/calls/$callId/transcript` · file `src/components/lanes/lane-2/calls/C3CallReviewTranscriptTimeline.tsx` · hooks `useCallReview`, `useReanalyzeCall`
+   - **C5** Call Review — Analysis — Figma `44:1755` (page `1:8`) · route `/app/calls/$callId/analysis` · file `src/components/lanes/lane-2/calls/C5CallReviewAnalysis.tsx` · hooks `useCallReview`, `useBehavioralEvents`, `useReanalyzeCall`
+   - **C6** Call Review — Coaching — Figma `44:2146` (page `1:8`) · route `/app/calls/$callId/coaching` · file `src/components/lanes/lane-2/calls/C6CallReviewCoaching.tsx` · hooks `useCallReview`, `useAssignCoaching`
+2. Calls index + rep view  [Flow 1 entry · Flow 2 · Rep day]
+   - **C1** Calls Index — saved views — Figma `17:1090` (page `1:8`) · route `/app/calls` · file `src/components/lanes/lane-2/calls/C1CallsIndexSavedViews.tsx` · hooks `useSavedViews`, `useCalls`
+   - **C2** Calls Index — All calls + filters open — Figma `52:8665` (page `1:8`) · route `/app/calls/all` · file `src/components/lanes/lane-2/calls/C2CallsIndexAllCallsFiltersOpen.tsx` · hooks `useCalls`
+   - **C9** Calls — Rep view (my calls) — Figma `28:1646` (page `1:8`) · route `/app/calls/mine` · file `src/components/lanes/lane-2/calls/C9CallsRepView.tsx` · hooks `useMyCalls`
+3. Upload + comparison  [—]
+   - **C7** Calls — Manual upload — Figma `28:1263` (page `1:8`) · route `/app/calls/upload` · file `src/components/lanes/lane-2/calls/C7CallsManualUpload.tsx` · hooks `useUploadCall`
+   - **C8** Call comparison — Figma `28:1464` (page `1:8`) · route `/app/calls/compare` · file `src/components/lanes/lane-2/calls/C8CallComparison.tsx` · hooks `useCallComparison`
+4. Assign coaching + result  [Flow 1 · Manager day · Flow 3 · Pattern]
+   - **G2** Assign Coaching — modal — Figma `14:24` (page `1:12`) · route `/app/coaching/assign` · file `src/components/lanes/lane-2/coaching/G2AssignCoachingModal.tsx` · hooks `useAssignCoaching`, `useTeamMembers`, `useBehaviors`
+   - **G12** Behavior Change Result — Alex Morgan — Figma `14:224` (page `1:12`) · route `/app/coaching/$focusId/result` · file `src/components/lanes/lane-2/coaching/G12BehaviorChangeResultAlexMorgan.tsx` · hooks `useCoachingFocus`
+5. Coaching detail  [Flow 1 · Manager day]
+   - **G6** Coaching Detail — Jordan · active — Figma `30:639` (page `1:12`) · route `/app/coaching/$focusId` · file `src/components/lanes/lane-2/coaching/G6CoachingDetailJordanActive.tsx` · hooks `useCoachingFocus`
+   - **G7** Coaching Detail — Overview — Figma `46:1604` (page `1:12`) · route `/app/coaching/$focusId/overview` · file `src/components/lanes/lane-2/coaching/G7CoachingDetailOverview.tsx` · hooks `useCoachingFocus`
+   - **G8** Coaching Detail — Evidence — Figma `46:1935` (page `1:12`) · route `/app/coaching/$focusId/evidence` · file `src/components/lanes/lane-2/coaching/G8CoachingDetailEvidence.tsx` · hooks `useCoachingFocus`
+   - **G9** Coaching Detail — Progress — Figma `46:2244` (page `1:12`) · route `/app/coaching/$focusId/progress` · file `src/components/lanes/lane-2/coaching/G9CoachingDetailProgress.tsx` · hooks `useCoachingFocus`
+   - **G10** Coaching Detail — Discussion — Figma `46:2549` (page `1:12`) · route `/app/coaching/$focusId/discussion` · file `src/components/lanes/lane-2/coaching/G10CoachingDetailDiscussion.tsx` · hooks `useCoachingFocus`, `useCoachingComments`
+6. Coaching index + rep view  [Flow 2 · Rep day]
+   - **G3** Coaching — Index (Active) — Figma `30:246` (page `1:12`) · route `/app/coaching` · file `src/components/lanes/lane-2/coaching/G3CoachingIndex.tsx` · hooks `useCoachingFoci`
+   - **G4** Coaching — Needs follow-up — Figma `52:6380` (page `1:12`) · route `/app/coaching/follow-up` · file `src/components/lanes/lane-2/coaching/G4CoachingNeedsFollowUp.tsx` · hooks `useCoachingFoci`
+   - **G5** Coaching — Completed — Figma `30:430` (page `1:12`) · route `/app/coaching/completed` · file `src/components/lanes/lane-2/coaching/G5CoachingCompleted.tsx` · hooks `useCoachingFoci`
+   - **G11** Coaching — Rep view (Jordan) — Figma `30:839` (page `1:12`) · route `/app/coaching/mine` · file `src/components/lanes/lane-2/coaching/G11CoachingRepView.tsx` · hooks `useMyCoaching`, `useAcknowledgeCoaching`
+   - **G1** Coaching lifecycle — Figma `14:2` (page `1:12`) · component, no route · file `src/components/lanes/lane-2/coaching/G1CoachingLifecycle.tsx` · hooks — (static)
+7. Search & Ask  [Flow 8 · Ask & find]
+   - **S1** Search — Command palette ⌘K — Figma `31:760` (page `1:14`) · mounted by the shell · file `src/components/lanes/lane-2/search/S1CommandPalette.tsx` · hooks `usePaletteItems`
+   - **S2** Search — Natural-language results — Figma `31:909` (page `1:14`) · route `/app/search` · file `src/components/lanes/lane-2/search/S2SearchNaturalLanguageResults.tsx` · hooks `useSearch`
+   - **S3** Ask Bylda — side panel (from rail ✦) — Figma `50:26784` (page `1:14`) · mounted by the shell · file `src/components/lanes/lane-2/search/S3AskByldaPanel.tsx` · hooks `useSearch`
+
+DONE CHECKLIST for the section:
+  - [ ] Matches Figma at **1440** (390 for mobile, the frame's own width for email/print)
+  - [ ] **Tokens only** — `by-*` utilities, no raw hex / `rgb()` (`bun run tokens:check`)
+  - [ ] **Empty, loading and error states** present (`DataBoundary` + `systemStates.*`; Y9 for FORBIDDEN_FOR_ROLE)
+  - [ ] Links match the **page 19** prototype flows (13 flows, 0–12)
+  - [ ] Every insight shows confidence + sample size; low confidence = no action button; no causal language; no peer data in a rep view; sparklines on a fixed y-range; OutcomeAssociation hidden below n=30
+  - [ ] `bun run typecheck` → exactly **8** errors · `bun run lint:changed` clean · `bun run test` → only the **2** known failures · `bun run build` green
+  - [ ] `bun run boundary` clean · `bun run tokens:check` clean
+  - [ ] One screenshot per screen at the end → `design-qa/<code>.png`
+
+When the section is done: commit, push, open ONE PR into integration titled
+"L2 — <section name>", with screenshots. Then write a short report and STOP.
+```
+
+
+### Lane 6 — 10 Reports → 12 Rooms & Messages (MOCKS ONLY) (third)
+
+24 screens in 7 sections. Branch `lane-6-mayur`.
+
+```text
+You are building Lane 6 (Mayur) of the Bylda V1 frontend rebuild, repo Bylda/bylda.
+Lane 6 = 10 Reports first, then 12 Rooms & Messages (mocks only).
+
+BRANCH: lane-6-mayur, created from origin/integration. Every morning: `git fetch origin && git merge origin/integration`.
 
 YOU OWN — edit ONLY these paths:
   - src/routes/app/rooms/**
@@ -364,38 +372,37 @@ Run and verify screens with VITE_BYLDA_MOCKS=true so every field renders; never 
   (VITE_BYLDA_MOCKS=true bun run dev --host 127.0.0.1; switch role with ?as=rep.)
 
 SECTIONS — build in this order (demo flows first). Do exactly ONE section per session:
-1. Rooms directory + room feed  [Flow 6 · Rooms]
+1. Reports — index, daily, weekly  [Flow 1 (H5 Reports tab)]
+   - **P1** Reports — Index — Figma `29:159` (page `1:11`) · route `/app/reports` · file `src/components/lanes/lane-4/reports/P1ReportsIndex.tsx` · hooks `useReports`
+   - **P2** Daily Manager Brief — in-app document — Figma `13:2` (page `1:11`) · route `/app/reports/daily` · file `src/components/lanes/lane-4/reports/P2DailyManagerBriefInAppDocument.tsx` · hooks `useBrief`
+   - **P5** Weekly Manager Report — living document — Figma `29:352` (page `1:11`) · route `/app/reports/weekly` · file `src/components/lanes/lane-4/reports/P5WeeklyManagerReportLivingDocument.tsx` · hooks `useBrief`
+2. Reports — rep, team, behavior, outline  [—]
+   - **P7** Weekly Rep Report — Jordan — Figma `29:625` (page `1:11`) · route `/app/reports/rep/$repId` · file `src/components/lanes/lane-4/reports/P7WeeklyRepReportJordan.tsx` · hooks `useBrief`
+   - **P8** Team Report — September — Figma `29:773` (page `1:11`) · route `/app/reports/team/$teamId` · file `src/components/lanes/lane-4/reports/P8TeamReportSeptember.tsx` · hooks `useBrief`
+   - **P9** Behavior Report — Objection handling — Figma `29:993` (page `1:11`) · route `/app/reports/behavior/$behaviorKey` · file `src/components/lanes/lane-4/reports/P9BehaviorReportObjectionHandling.tsx` · hooks `useBrief`
+   - **P6** Weekly Sales Behavior Report — outline — Figma `52:10624` (page `1:11`) · route `/app/reports/outline` · file `src/components/lanes/lane-4/reports/P6WeeklySalesBehaviorReportOutline.tsx` · hooks `useBrief`
+3. Reports — email, push, print (outside the shell)  [—]
+   - **P3** Daily Manager Brief — email (640) — Figma `13:232` (page `1:11`) · route `/doc/manager-brief-email` · file `src/components/lanes/lane-4/reports/P3DailyManagerBriefEmail.tsx` · hooks `useBrief`
+   - **P4** Daily Rep Brief — email / push (60 sec) — Figma `13:316` (page `1:11`) · route `/doc/rep-brief-push` · file `src/components/lanes/lane-4/reports/P4DailyRepBriefEmailPush.tsx` · hooks `useBrief`
+   - **P10** Weekly Report — PDF / print (A4) — Figma `29:1154` (page `1:11`) · route `/doc/weekly-print` · file `src/components/lanes/lane-4/reports/P10WeeklyReportPDFPrint.tsx` · hooks `useBrief`
+4. Rooms directory + room feed  [Flow 6 · Rooms]
    - **O1** Rooms — Directory — Figma `31:241` (page `1:13`) · route `/app/rooms` · file `src/components/lanes/lane-6/rooms/O1RoomsDirectory.tsx` · hooks `useRooms`
    - **O2** Room — #objection-watch — Figma `18:2` (page `1:13`) · route `/app/rooms/$roomId` · file `src/components/lanes/lane-6/rooms/O2RoomObjectionWatch.tsx` · hooks `useRoom`, `useRoomMessages`
-2. Room tabs  [Flow 6 · Rooms]
+5. Room tabs  [Flow 6 · Rooms]
    - **O3** Room — #objection-watch · Insights — Figma `48:1283` (page `1:13`) · route `/app/rooms/$roomId/insights` · file `src/components/lanes/lane-6/rooms/O3RoomObjectionWatchInsights.tsx` · hooks `useRoom`, `useRoomMessages`
    - **O4** Room — #objection-watch · Calls — Figma `48:1732` (page `1:13`) · route `/app/rooms/$roomId/calls` · file `src/components/lanes/lane-6/rooms/O4RoomObjectionWatchCalls.tsx` · hooks `useRoom`, `useRoomMessages`
    - **O5** Room — #objection-watch · Reports — Figma `48:2213` (page `1:13`) · route `/app/rooms/$roomId/reports` · file `src/components/lanes/lane-6/rooms/O5RoomObjectionWatchReports.tsx` · hooks `useRoom`, `useRoomMessages`
    - **O6** Room — #objection-watch · Files — Figma `48:2662` (page `1:13`) · route `/app/rooms/$roomId/files` · file `src/components/lanes/lane-6/rooms/O6RoomObjectionWatchFiles.tsx` · hooks `useRoom`
    - **O7** Room — #objection-watch · About — Figma `48:3103` (page `1:13`) · route `/app/rooms/$roomId/about` · file `src/components/lanes/lane-6/rooms/O7RoomObjectionWatchAbout.tsx` · hooks `useRoom`
-3. Room kinds  [Flow 6 · Rooms]
+6. Room kinds  [Flow 6 · Rooms]
    - **O8** Room — #daily-brief — Figma `31:403` (page `1:13`) · component, no route · file `src/components/lanes/lane-6/rooms/O8RoomDailyBrief.tsx` · hooks `useRoom`, `useRoomMessages`
    - **O9** Room — #coaching — Figma `31:586` (page `1:13`) · component, no route · file `src/components/lanes/lane-6/rooms/O9RoomCoaching.tsx` · hooks `useRoom`, `useRoomMessages`
    - **O10** Room — #mid-market-team (team room) — Figma `48:25761` (page `1:13`) · component, no route · file `src/components/lanes/lane-6/rooms/O10RoomMidMarketTeam.tsx` · hooks `useRoom`, `useRoomMessages`
    - **O11** Room — #acme-logistics (deal room) — Figma `50:3655` (page `1:13`) · component, no route · file `src/components/lanes/lane-6/rooms/O11RoomAcmeLogistics.tsx` · hooks `useRoom`, `useRoomMessages`
-4. New room + DMs + BYLDA Coach  [Flow 7 · Messages · Flow 2 · Rep day]
+7. New room + DMs + BYLDA Coach  [Flow 7 · Messages · Flow 2 · Rep day]
    - **O14** Rooms — New room modal — Figma `50:4184` (page `1:13`) · route `/app/rooms/new` · file `src/components/lanes/lane-6/rooms/O14RoomsNewRoomModal.tsx` · hooks `useRooms`
    - **O12** Direct message — Dana ↔ Jordan — Figma `49:3123` (page `1:13`) · route `/app/dm/$threadId` · file `src/components/lanes/lane-6/rooms/O12DirectMessageDanaJordan.tsx` · hooks `useDmThreads`, `useDmMessages`
    - **O13** Direct message — BYLDA Coach (rep) — Figma `49:3627` (page `1:13`) · route `/app/dm/coach` · file `src/components/lanes/lane-6/rooms/O13DirectMessageBYLDACoach.tsx` · hooks `useDmMessages`
-5. Reports — index, daily, weekly  [Flow 1 (H5 Reports tab)]
-   - **P1** Reports — Index — Figma `29:159` (page `1:11`) · route `/app/reports` · file `src/components/lanes/lane-4/reports/P1ReportsIndex.tsx` · hooks `useReports`
-   - **P2** Daily Manager Brief — in-app document — Figma `13:2` (page `1:11`) · route `/app/reports/daily` · file `src/components/lanes/lane-4/reports/P2DailyManagerBriefInAppDocument.tsx` · hooks `useBrief`
-   - **P5** Weekly Manager Report — living document — Figma `29:352` (page `1:11`) · route `/app/reports/weekly` · file `src/components/lanes/lane-4/reports/P5WeeklyManagerReportLivingDocument.tsx` · hooks `useBrief`
-6. Reports — rep, team, behavior, outline  [—]
-   - **P7** Weekly Rep Report — Jordan — Figma `29:625` (page `1:11`) · route `/app/reports/rep/$repId` · file `src/components/lanes/lane-4/reports/P7WeeklyRepReportJordan.tsx` · hooks `useBrief`
-   - **P8** Team Report — September — Figma `29:773` (page `1:11`) · route `/app/reports/team/$teamId` · file `src/components/lanes/lane-4/reports/P8TeamReportSeptember.tsx` · hooks `useBrief`
-   - **P9** Behavior Report — Objection handling — Figma `29:993` (page `1:11`) · route `/app/reports/behavior/$behaviorKey` · file `src/components/lanes/lane-4/reports/P9BehaviorReportObjectionHandling.tsx` · hooks `useBrief`
-   - **P6** Weekly Sales Behavior Report — outline — Figma `52:10624` (page `1:11`) · route `/app/reports/outline` · file `src/components/lanes/lane-4/reports/P6WeeklySalesBehaviorReportOutline.tsx` · hooks `useBrief`
-7. Reports — email, push, print (outside the shell)  [—]
-   - **P3** Daily Manager Brief — email (640) — Figma `13:232` (page `1:11`) · route `/doc/manager-brief-email` · file `src/components/lanes/lane-4/reports/P3DailyManagerBriefEmail.tsx` · hooks `useBrief`
-   - **P4** Daily Rep Brief — email / push (60 sec) — Figma `13:316` (page `1:11`) · route `/doc/rep-brief-push` · file `src/components/lanes/lane-4/reports/P4DailyRepBriefEmailPush.tsx` · hooks `useBrief`
-   - **P10** Weekly Report — PDF / print (A4) — Figma `29:1154` (page `1:11`) · route `/doc/weekly-print` · file `src/components/lanes/lane-4/reports/P10WeeklyReportPDFPrint.tsx` · hooks `useBrief`
-
 
 DONE CHECKLIST for the section:
   - [ ] Matches Figma at **1440** (390 for mobile, the frame's own width for email/print)
@@ -408,7 +415,7 @@ DONE CHECKLIST for the section:
   - [ ] One screenshot per screen at the end → `design-qa/<code>.png`
 
 When the section is done: commit, push, open ONE PR into integration titled
-"Lane 6 — <section name>", with screenshots. Then write a short report and STOP.
+"L6 — <section name>", with screenshots. Then write a short report and STOP.
 ```
 
 ---

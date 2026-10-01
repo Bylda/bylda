@@ -141,19 +141,19 @@ H2–H6 are tabs of H1 (`For You · Team Updates · Calls · Coaching · Reports
 `R1` context panel ends with *"No team rankings here. This view is only about you."*
 `R2` with *"Your manager sees this same page. No one else does."* Keep both.
 
-## Lane 2 — Dhruv · 07 Calls · `1:8` · 9 views
+## Lane 2 — Mayur · 07 Calls · `1:8` · 9 views
 
 | Frame name | Node ID | Code | Owner | V1 route |
 | --- | --- | --- | --- | --- |
-| Calls Index — saved views | `17:1090` | `C1` | Dhruv | `/app/calls` |
-| Calls Index — All calls + filters open | `52:8665` | `C2` | Dhruv | `/app/calls/all` |
-| Call Review — Transcript & timeline | `9:2` | `C3` | Dhruv | `/app/calls/$callId/transcript` |
-| Call Review — Overview | `44:1375` | `C4` | Dhruv | `/app/calls/$callId` |
-| Call Review — Analysis | `44:1755` | `C5` | Dhruv | `/app/calls/$callId/analysis` |
-| Call Review — Coaching | `44:2146` | `C6` | Dhruv | `/app/calls/$callId/coaching` |
-| Calls — Manual upload | `28:1263` | `C7` | Dhruv | `/app/calls/upload` |
-| Call comparison | `28:1464` | `C8` | Dhruv | `/app/calls/compare` |
-| Calls — Rep view (my calls) | `28:1646` | `C9` | Dhruv | `/app/calls/mine` |
+| Calls Index — saved views | `17:1090` | `C1` | Mayur | `/app/calls` |
+| Calls Index — All calls + filters open | `52:8665` | `C2` | Mayur | `/app/calls/all` |
+| Call Review — Transcript & timeline | `9:2` | `C3` | Mayur | `/app/calls/$callId/transcript` |
+| Call Review — Overview | `44:1375` | `C4` | Mayur | `/app/calls/$callId` |
+| Call Review — Analysis | `44:1755` | `C5` | Mayur | `/app/calls/$callId/analysis` |
+| Call Review — Coaching | `44:2146` | `C6` | Mayur | `/app/calls/$callId/coaching` |
+| Calls — Manual upload | `28:1263` | `C7` | Mayur | `/app/calls/upload` |
+| Call comparison | `28:1464` | `C8` | Mayur | `/app/calls/compare` |
+| Calls — Rep view (my calls) | `28:1646` | `C9` | Mayur | `/app/calls/mine` |
 
 `C3` is 1440×1476. `C4`–`C6` are tabs of the Call Review.
 
@@ -193,66 +193,66 @@ H2–H6 are tabs of H1 (`For You · Team Updates · Calls · Coaching · Reports
 | Rep Profile — Trends | `45:2142` | `T12` | Dravin | `/app/team/reps/$repId/trends` |
 | Rep Comparison | `29:1629` | `T13` | Dravin | `/app/team/compare` |
 
-## Lane 6 — first free person · 10 Reports · `1:11` · 10 views
+## Lane 6 — Mayur · 10 Reports · `1:11` · 10 views
 
 | Frame name | Node ID | Code | Owner | Width | V1 route |
 | --- | --- | --- | --- | --- | --- |
-| Reports — Index | `29:159` | `P1` | Lane 6 | 1440 | `/app/reports` |
-| Daily Manager Brief — in-app document | `13:2` | `P2` | Lane 6 | 1440×1656 | `/app/reports/daily` |
-| Daily Manager Brief — email (640) | `13:232` | `P3` | Lane 6 | **760** | `/doc/manager-brief-email` |
-| Daily Rep Brief — email / push (60 sec) | `13:316` | `P4` | Lane 6 | **420×380** | `/doc/rep-brief-push` |
-| Weekly Manager Report — living document | `29:352` | `P5` | Lane 6 | 1440×2056 | `/app/reports/weekly` |
-| Weekly Sales Behavior Report — outline | `52:10624` | `P6` | Lane 6 | 1440 | `/app/reports/outline` |
-| Weekly Rep Report — Jordan | `29:625` | `P7` | Lane 6 | 1440×1256 | `/app/reports/rep/$repId` |
-| Team Report — September | `29:773` | `P8` | Lane 6 | 1440×1256 | `/app/reports/team/$teamId` |
-| Behavior Report — Objection handling | `29:993` | `P9` | Lane 6 | 1440×1156 | `/app/reports/behavior/$behaviorKey` |
-| Weekly Report — PDF / print (A4) | `29:1154` | `P10` | Lane 6 | **794×1123** | `/doc/weekly-print` |
+| Reports — Index | `29:159` | `P1` | Mayur | 1440 | `/app/reports` |
+| Daily Manager Brief — in-app document | `13:2` | `P2` | Mayur | 1440×1656 | `/app/reports/daily` |
+| Daily Manager Brief — email (640) | `13:232` | `P3` | Mayur | **760** | `/doc/manager-brief-email` |
+| Daily Rep Brief — email / push (60 sec) | `13:316` | `P4` | Mayur | **420×380** | `/doc/rep-brief-push` |
+| Weekly Manager Report — living document | `29:352` | `P5` | Mayur | 1440×2056 | `/app/reports/weekly` |
+| Weekly Sales Behavior Report — outline | `52:10624` | `P6` | Mayur | 1440 | `/app/reports/outline` |
+| Weekly Rep Report — Jordan | `29:625` | `P7` | Mayur | 1440×1256 | `/app/reports/rep/$repId` |
+| Team Report — September | `29:773` | `P8` | Mayur | 1440×1256 | `/app/reports/team/$teamId` |
+| Behavior Report — Objection handling | `29:993` | `P9` | Mayur | 1440×1156 | `/app/reports/behavior/$behaviorKey` |
+| Weekly Report — PDF / print (A4) | `29:1154` | `P10` | Mayur | **794×1123** | `/doc/weekly-print` |
 
 `P3`, `P4`, `P10` are **not** app screens — email, push and print. Don't wrap them in the shell.
 
-## Lane 2 — Dhruv · 11 Coaching · `1:12` · 12 views
+## Lane 2 — Mayur · 11 Coaching · `1:12` · 12 views
 
 | Frame name | Node ID | Code | Owner | V1 route |
 | --- | --- | --- | --- | --- |
-| Coaching lifecycle | `14:2` | `G1` | Dhruv — 1450×70 diagram, reference | component `G1CoachingLifecycle` |
-| Assign Coaching — modal | `14:24` | `G2` | Dhruv | `/app/coaching/assign` |
-| Coaching — Index (Active) | `30:246` | `G3` | Dhruv | `/app/coaching` |
-| Coaching — Needs follow-up | `52:6380` | `G4` | Dhruv | `/app/coaching/follow-up` |
-| Coaching — Completed | `30:430` | `G5` | Dhruv | `/app/coaching/completed` |
-| Coaching Detail — Jordan · active | `30:639` | `G6` | Dhruv | `/app/coaching/$focusId` |
-| Coaching Detail — Overview | `46:1604` | `G7` | Dhruv | `/app/coaching/$focusId/overview` |
-| Coaching Detail — Evidence | `46:1935` | `G8` | Dhruv | `/app/coaching/$focusId/evidence` |
-| Coaching Detail — Progress | `46:2244` | `G9` | Dhruv | `/app/coaching/$focusId/progress` |
-| Coaching Detail — Discussion | `46:2549` | `G10` | Dhruv | `/app/coaching/$focusId/discussion` |
-| Coaching — Rep view (Jordan) | `30:839` | `G11` | Dhruv | `/app/coaching/mine` |
-| Behavior Change Result — Alex Morgan | `14:224` | `G12` | Dhruv | `/app/coaching/$focusId/result` |
+| Coaching lifecycle | `14:2` | `G1` | Mayur — 1450×70 diagram, reference | component `G1CoachingLifecycle` |
+| Assign Coaching — modal | `14:24` | `G2` | Mayur | `/app/coaching/assign` |
+| Coaching — Index (Active) | `30:246` | `G3` | Mayur | `/app/coaching` |
+| Coaching — Needs follow-up | `52:6380` | `G4` | Mayur | `/app/coaching/follow-up` |
+| Coaching — Completed | `30:430` | `G5` | Mayur | `/app/coaching/completed` |
+| Coaching Detail — Jordan · active | `30:639` | `G6` | Mayur | `/app/coaching/$focusId` |
+| Coaching Detail — Overview | `46:1604` | `G7` | Mayur | `/app/coaching/$focusId/overview` |
+| Coaching Detail — Evidence | `46:1935` | `G8` | Mayur | `/app/coaching/$focusId/evidence` |
+| Coaching Detail — Progress | `46:2244` | `G9` | Mayur | `/app/coaching/$focusId/progress` |
+| Coaching Detail — Discussion | `46:2549` | `G10` | Mayur | `/app/coaching/$focusId/discussion` |
+| Coaching — Rep view (Jordan) | `30:839` | `G11` | Mayur | `/app/coaching/mine` |
+| Behavior Change Result — Alex Morgan | `14:224` | `G12` | Mayur | `/app/coaching/$focusId/result` |
 
-## Lane 6 — first free person · 12 Rooms & Messages · `1:13` · 14 views · MOCKS ONLY
-
-| Frame name | Node ID | Code | Owner | V1 route |
-| --- | --- | --- | --- | --- |
-| Rooms — Directory | `31:241` | `O1` | Lane 6 | `/app/rooms` |
-| Room — #objection-watch | `18:2` | `O2` | Lane 6 | `/app/rooms/$roomId` |
-| Room — #objection-watch · Insights | `48:1283` | `O3` | Lane 6 | `/app/rooms/$roomId/insights` |
-| Room — #objection-watch · Calls | `48:1732` | `O4` | Lane 6 | `/app/rooms/$roomId/calls` |
-| Room — #objection-watch · Reports | `48:2213` | `O5` | Lane 6 | `/app/rooms/$roomId/reports` |
-| Room — #objection-watch · Files | `48:2662` | `O6` | Lane 6 | `/app/rooms/$roomId/files` |
-| Room — #objection-watch · About | `48:3103` | `O7` | Lane 6 | `/app/rooms/$roomId/about` |
-| Room — #daily-brief | `31:403` | `O8` | Lane 6 | component `O8RoomDailyBrief` |
-| Room — #coaching | `31:586` | `O9` | Lane 6 | component `O9RoomCoaching` |
-| Room — #mid-market-team (team room) | `48:25761` | `O10` | Lane 6 | component `O10RoomMidMarketTeam` |
-| Room — #acme-logistics (deal room) | `50:3655` | `O11` | Lane 6 | component `O11RoomAcmeLogistics` |
-| Direct message — Dana ↔ Jordan | `49:3123` | `O12` | Lane 6 | `/app/dm/$threadId` |
-| Direct message — BYLDA Coach (rep) | `49:3627` | `O13` | Lane 6 | `/app/dm/coach` |
-| Rooms — New room modal | `50:4184` | `O14` | Lane 6 | `/app/rooms/new` |
-
-## Lane 2 — Dhruv · 13 Search & Ask · `1:14` · 3 views
+## Lane 6 — Mayur · 12 Rooms & Messages · `1:13` · 14 views · MOCKS ONLY
 
 | Frame name | Node ID | Code | Owner | V1 route |
 | --- | --- | --- | --- | --- |
-| Search — Command palette ⌘K | `31:760` | `S1` | Dhruv | component `S1SearchCommandPalette` |
-| Search — Natural-language results | `31:909` | `S2` | Dhruv | `/app/search` |
-| Ask Bylda — side panel (from rail ✦) | `50:26784` | `S3` | Dhruv | component `S3AskByldaSidePanel` |
+| Rooms — Directory | `31:241` | `O1` | Mayur | `/app/rooms` |
+| Room — #objection-watch | `18:2` | `O2` | Mayur | `/app/rooms/$roomId` |
+| Room — #objection-watch · Insights | `48:1283` | `O3` | Mayur | `/app/rooms/$roomId/insights` |
+| Room — #objection-watch · Calls | `48:1732` | `O4` | Mayur | `/app/rooms/$roomId/calls` |
+| Room — #objection-watch · Reports | `48:2213` | `O5` | Mayur | `/app/rooms/$roomId/reports` |
+| Room — #objection-watch · Files | `48:2662` | `O6` | Mayur | `/app/rooms/$roomId/files` |
+| Room — #objection-watch · About | `48:3103` | `O7` | Mayur | `/app/rooms/$roomId/about` |
+| Room — #daily-brief | `31:403` | `O8` | Mayur | component `O8RoomDailyBrief` |
+| Room — #coaching | `31:586` | `O9` | Mayur | component `O9RoomCoaching` |
+| Room — #mid-market-team (team room) | `48:25761` | `O10` | Mayur | component `O10RoomMidMarketTeam` |
+| Room — #acme-logistics (deal room) | `50:3655` | `O11` | Mayur | component `O11RoomAcmeLogistics` |
+| Direct message — Dana ↔ Jordan | `49:3123` | `O12` | Mayur | `/app/dm/$threadId` |
+| Direct message — BYLDA Coach (rep) | `49:3627` | `O13` | Mayur | `/app/dm/coach` |
+| Rooms — New room modal | `50:4184` | `O14` | Mayur | `/app/rooms/new` |
+
+## Lane 2 — Mayur · 13 Search & Ask · `1:14` · 3 views
+
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Search — Command palette ⌘K | `31:760` | `S1` | Mayur | component `S1SearchCommandPalette` |
+| Search — Natural-language results | `31:909` | `S2` | Mayur | `/app/search` |
+| Ask Bylda — side panel (from rail ✦) | `50:26784` | `S3` | Mayur | component `S3AskByldaSidePanel` |
 
 `S2` states the rule: *"Bylda converts your question to filters you can see and
 edit. It never answers from memory — every result links to a call."* Build the
@@ -375,18 +375,17 @@ Hidden helpers on this page: `__lib` `25:2`, `__swap` `38:2` — skip.
 
 ## View count per lane
 
-Owners as of 2026-09-30 (Lanes 4 and 5 swapped owners that day). Later on
-2026-09-30 `10 Reports` moved from Lane 4 to Lane 6. Full ownership + folders:
+Mayur owns Lanes 5, 2 and 6, built in that order. Full ownership + folders:
 `CLAUDE.md` §8.
 
 | Lane | Owner | Areas | Views |
 | --- | --- | --- | --- |
 | Foundation | Ansh | 01, 02, 03 + all 13 states of 17 + shell breakpoints B10/B11 | tokens + 14 components + shell |
 | Lane 1 | Ansh | 05, 14, 08 | 7 + 2 + 11 = **20** |
-| Lane 2 | Dhruv | 07, 13, then 11 | 9 + 3 + 12 = **24** |
+| Lane 2 | Mayur | 07, 11, then 13 | 9 + 12 + 3 = **24** |
 | Lane 4 | Dravin | 04, 06, then 09 | 11 + 3 + 13 = **27** |
 | Lane 5 | Mayur | 15, 16, 18 (17 ✅ done) | 3 + 18 + 11 = **32** (the 13 states of 17 are built — Foundation) |
-| Lane 6 | first free | 12, then 10 | 14 + 10 = **24** |
+| Lane 6 | Mayur | 10, then 12 | 10 + 14 = **24** |
 | Backend | Tirth | `BACKEND_BACKLOG.md` | — |
 | | | | **128 product views** |
 
@@ -396,6 +395,5 @@ component in `src/components/lanes/lane-<n>/` named by its code. Rows marked
 `N1`), a reference diagram (`G1`), or room kinds rendered by `/app/rooms/$roomId`
 (`O8`–`O11`).
 
-`10 Reports` moved from Lane 4 to Lane 6 on 2026-09-30 to rebalance (Lane 4 was 37).
-Its placeholder components stay at `src/components/lanes/lane-4/reports/` — Lane 6
+`10 Reports` belongs to Lane 6. Its placeholder components stay at `src/components/lanes/lane-4/reports/` — Lane 6
 owns that folder (see `CLAUDE.md` §8).
