@@ -153,7 +153,7 @@ face and is used **only** by `Brand/Logo`. Fonts ship via `@fontsource`.
   we follow the components (logged in `LANE_REQUESTS.md` #8).
 - **Hairlines** — 1px `by-border-engraved`. Raised cards have **no shadow**.
 - **One soft shadow** — `shadow-by-float` = `0 12px 32px rgba(0,0,0,.12)`, the menus
-  and popovers on `50:27312`. Nothing else casts a shadow.
+  and popovers on `50:27312`, plus modals and hero cards (§13.3). Nothing else casts a shadow.
 
 ### Shell, motion, icons
 
@@ -192,7 +192,11 @@ Straight from Dev Handoff (`1:21` → Implementation rules, `21:143`):
   There is **no backend guarantee**: RLS on `calls` is
   `is_org_member(organization_id, auth.uid())`, so any member can read every call
   in the org. Filter on `user_id` in `/lib/data` **and** never render a peer
-  surface in a rep view. The Figma says it out loud on two frames — keep both
+  surface in a rep view. **One exception (§13.6):** the **team median** on R2 may
+  render as an anonymous aggregate — one number, no names, no ranks, no
+  distribution — and is **hidden when the team has fewer than 8 reps**. The data
+  layer returns the aggregate (and `team_size`); the rep view never receives peer
+  rows. The Figma says it out loud on two frames — keep both
   lines: *"No team rankings here. This view is only about you."* (`8:2`) and
   *"Your manager sees this same page. No one else does."* (`32:129`).
 - **Sparklines share a fixed y-range per behavior**, so a steady rep looks steady.
@@ -641,3 +645,67 @@ morning.** One small PR per section. Per-person start prompts: **`TEAM_START.md`
 `.env.example`: that file is a guarded backend path (`BACKEND_BOUNDARY.md`), so adding
 it is a `backend`-labelled change for Tirth. Set it locally in your shell or an
 untracked `.env.local`.
+
+---
+
+## 13. DESIGN DECISIONS (override Figma where they conflict)
+
+Approved 2026-10-01 by **Ansh** (owner of `src/styles`, `src/components/bylda`,
+`design-ref`, `src/lib/data`, `BACKEND_BACKLOG.md`, this file). Where Figma, a
+`design-ref` spec or anything above disagrees, **this section wins.** Affected specs
+carry the line *"See CLAUDE.md §13: decision overrides Figma."*
+
+1. **Tokens.** Three semantic tokens beyond Figma's set, in `src/styles/bylda.css`
+   and `design-ref/_tokens.md`:
+   - `border/strong` `#D3D0CB` (silver/300) → `border-by-border-strong`. Form inputs.
+     (`by-border-control` is the same value, kept for the kit.)
+   - `feedback/error` — same value as `signal/regress`, its own token →
+     `text-by-feedback-error`, `border-by-feedback-error`.
+   - `focus/ring` `#2A2A2E` (graphite/800) → `ring-by-focus-ring`, `border-by-focus-ring`.
+     Taken from the focused input on **A1** (`26:80`) — A4 only shows the error
+     state. (`by-border-focus` is the same value, kept for the kit.)
+2. **No gradients anywhere**, except the warm-metal avatar monogram
+   (`bg-by-avatar-metal`). **Block / Call**'s thumbnail is a flat surface
+   (`bg-by-surface-sidebar`); the `call-thumb` gradient token is gone.
+3. **Shadows** (`shadow-by-float`, the only one) on **menus, popovers, modals and
+   hero cards** only. The **A11 first-insight card is a hero card** — it uses
+   `shadow-by-float` (not Figma's 6% variant). Everything else is flat + hairline.
+4. **Wordmark is always Cinzel**, via `<Wordmark />` from `@/components/bylda` —
+   including the auth/onboarding art panels (A1–A10) where Figma sets
+   "B Y L D A" in Newsreader. Never hand-set it.
+5. **Radius: controls/inputs 6px (`rounded-by-control`), cards 10px
+   (`rounded-by-card`), always.** Ignore Figma's 4px/2px on inputs, buttons and
+   cards (e.g. A1–A6 inputs at 4px). `by-badge`/`by-bar` are for badges, kbd and
+   skeleton bars only.
+6. **Rep team median (R2)** — allowed as an anonymous aggregate (no names, no
+   ranks), **hidden when the team has fewer than 8 reps**. Folded into the
+   rep-privacy rule in §4.
+7. **Form errors use `feedback/error`, never signal colours.** Signal colours
+   stay behavioral direction only. (A4's regress-red error input/message →
+   `by-feedback-error`.)
+8. **Ignore the A5 art-panel 13px offset** — the art panel sits flush at `left: 0`
+   like every other auth frame.
+9. **C7** was re-exported via the saved-file path, so its spec is verbatim
+   (shell inline) like every other screen spec.
+10. **Reps never see rank or named-peer comparisons.** P7 *"one of the best on the
+    team"* → self-comparison (*"your best discovery call this month"*). O13
+    *"Me vs Theo"* → *"Me vs my last 30 days"*. Applies to **all** Coach prompt
+    suggestions.
+11. **Coach privacy:** *"Coach only sees your calls"* stays. Rep-scoped hooks must keep
+    enforcing it in the UI — there is no database guarantee yet
+    (`BACKEND_BACKLOG.md` item 0, P0).
+12. **Coach Practice / role-play tab is allowed:** practice from the rep's **own calls
+    only**. No scores, no quizzes, no lesson structure.
+13. **Insight thresholds are hard:** a rep insight needs **≥ 10 analyzed calls**
+    (`REP_INSIGHT_MIN_CALLS`), a team pattern **≥ 50** (`TEAM_PATTERN_MIN_CALLS`).
+    Below that, render the "not enough data yet" system state (`SystemState` Y3),
+    never a low-sample insight. Enforced in `@/lib/data`: `useInsights` and
+    `useRoomInsights` return `GatedInsight` (`state: "insight" | "insufficient"`,
+    the insufficient one carries no headline); the home feed and briefs drop
+    below-threshold insights. The O3 demo fixtures meet the thresholds.
+14. **Every report statement and every Coach insight line shows confidence + sample
+    size.** In Coach chat, a small *"based on N calls"* note.
+15. **Modal shadow (O14) allowed** — `shadow-by-float`, the one shadow token, which
+    §13.3 already extends to modals. There is no separate modal shadow; no other shadow.
+16. **No gradient on call thumbnails** — flat `bg-by-surface-sidebar`, same as
+    **Block / Call** (§13.2). The `call-thumb` gradient token no longer exists.

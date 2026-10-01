@@ -45,6 +45,21 @@ export const mapBehavior = (r: BehaviorRow): Behavior => ({
   higherIsBetter: r.higher_is_better,
 });
 
+// ── Team median privacy gate (CLAUDE.md §4, §13.6) ───────────────────────────
+/** Below this many reps a median is close enough to back out a peer's number. */
+export const MIN_REPS_FOR_TEAM_MEDIAN = 8;
+/**
+ * The ONLY way a team median reaches a view model. Fails closed: an unknown team
+ * size, a team under 8 reps or a non-finite median all become `null`.
+ */
+export function gateTeamMedian(
+  median: number | null | undefined,
+  teamSize: number | null | undefined,
+): number | null {
+  if (teamSize == null || teamSize < MIN_REPS_FOR_TEAM_MEDIAN) return null;
+  return typeof median === "number" && Number.isFinite(median) ? median : null;
+}
+
 // ── C-02 · proposed behavior_scores row (weekly snapshot per subject) ────────
 export type BehaviorScoreRow = {
   subject_type: "rep" | "team";
@@ -54,6 +69,8 @@ export type BehaviorScoreRow = {
   unit: BehaviorScore["unit"];
   value: number;
   team_median: number | null;
+  /** reps on the subject's team for the period — gates team_median (< 8 → null) */
+  team_size: number | null;
   direction: BehaviorScore["direction"];
   confidence: BehaviorScore["confidence"];
   sample_size: number;
@@ -68,7 +85,7 @@ export const mapBehaviorScore = (r: BehaviorScoreRow): BehaviorScore => ({
   name: r.behavior_name,
   value: r.value,
   unit: r.unit,
-  teamMedian: r.team_median,
+  teamMedian: gateTeamMedian(r.team_median, r.team_size),
   direction: r.direction,
   confidence: r.confidence,
   sampleSize: r.sample_size,

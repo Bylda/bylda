@@ -18,6 +18,7 @@ export type InsightRow = {
   confidence: Insight["confidence"];
   sample_n: number;
   sample_label: string | null;
+  calls_n: number;
   affected_rep_ids: string[];
   evidence: {
     call_id: string;
@@ -63,6 +64,7 @@ export function mapInsight(r: InsightRow): Insight {
     confidence: r.confidence,
     sampleSize: r.sample_n,
     sampleLabel: r.sample_label,
+    callsAnalyzed: r.calls_n,
     affectedRepIds: r.affected_rep_ids ?? [],
     evidence,
     action,

@@ -99,7 +99,7 @@ return (
 | Hook | Returns | Real today | Mock / GAP (contract) | Used by |
 | --- | --- | --- | --- | --- |
 | `useHomeFeed` | `HomeFeed { items, attention, coachQueue }` | — | all (C-04, C-07) · **refused to reps** | L1, L5 — `H1` `H2` `H3` `H4` `H5` `H6` `B2` |
-| `useInsights` | `Insight[]` | — | all (C-04) · reps get only insights about themselves | L1, L4 — `A11` `I1` |
+| `useInsights` | `GatedInsight[]` (`state: "insight" \| "insufficient"`) | — | all (C-04) · reps get only insights about themselves · below threshold → `insufficient` (§13.13) | L1, L4 — `A11` `I1` |
 | `useWorkspaceHealth` | `WorkspaceHealth` | `health_checks` status per endpoint | failed jobs / seats / weekly analyzed / alerts (C-31) | L1 — `H7` |
 
 ### Calls (Lane 2)
@@ -121,7 +121,7 @@ return (
 | --- | --- | --- | --- | --- |
 | `useBehaviors` | `Behavior[]` | — | all (C-02) | L1, L2, L4, L5 — `I7` `T4` `G2` `E12` |
 | `useBehaviorDetail` | `BehaviorDetail` | — | all (C-02, C-03) · refused to reps | L1 — `I2` |
-| `useRepScores` | `BehaviorScore[]` | — | all (C-03) · reps: own only · fixed y-range sparklines | L4 — `T9` `T12` |
+| `useRepScores` | `BehaviorScore[]` | — | all (C-03) · reps: own only · fixed y-range sparklines · `teamMedian` **null under 8 reps** | L4 — `T9` `T12` |
 | `usePatterns` | `Pattern[]` | — | all (C-15) · refused to reps | L1 — `I1` `I3` `I7` `I8` `I9` `I10` `I11` |
 | `useObjectionStats` | `ObjectionStat[]` | label, count, callCount from `call_insights.objections` | handledWellRate, trend (C-25) · refused to reps | L1 — `I4` |
 | `useOutcomeAssociations` | `OutcomeAssociation[]` | — | all (C-14) · returns n<30 rows too — render Y3 via `isOutcomeSufficient()` · refused to reps | L1 — `I2` `I5` `I6` `I9` |
@@ -162,6 +162,7 @@ return (
 | `useRooms` | `Room[]` | — | all (C-33) | L6 — `O1` `O14` |
 | `useRoom` | `Room (by id or slug)` | — | all (C-33) | L6 — `O2` `O3` `O4` `O5` `O6` `O7` `O8` `O9` +2 |
 | `useRoomMessages` | `Message[]` | — | all (C-34) | L5, L6 — `O2` `O3` `O4` `O5` `O8` `O9` `O10` `O11` +1 |
+| `useRoomInsights` | `GatedInsight[]` | — | all (C-33, C-04) · gated like `useInsights` · reps see only their own | L6 — `O3` |
 | `useDmThreads` | `DmThread[]` | — | all (C-35) | L6 — `O12` |
 | `useDmMessages` | `Message[]` | — | all (C-34, C-35) · someone else's DM → FORBIDDEN | L5, L6 — `O12` `O13` `B8` |
 
@@ -206,7 +207,7 @@ return (
 | `useInvoices` | `Invoice[]` | `list-invoices` edge fn | — | L5 — `E15` |
 | `useUsage` | `UsageMeter[]` | `usage_tracking` | limits | L1, L5 — `H7` `E16` |
 
-**71 hooks: 10 fully real · 19 hybrid · 42 mock-only** (mock-only = no backing table yet; each has a contract).
+**72 hooks: 10 fully real · 19 hybrid · 43 mock-only** (mock-only = no backing table yet; each has a contract).
 
 ## Rep safety — enforced here, tested
 
@@ -214,6 +215,25 @@ There is **no backend guarantee** (RLS on `calls` is org-wide). The loaders enfo
 `scopeRepId` rewrites any requested rep id to the viewer's own; `assertNotRep` refuses
 team-wide / peer / comparison data. `src/lib/data/__tests__/rep-safety.test.ts` proves
 it for every rep-reachable loader and for the rep nav.
+
+**Team median (CLAUDE.md §4, §13.6).** `BehaviorScore.teamMedian` is an anonymous
+aggregate — one number, never per-rep values — and is **`null` whenever the team has
+fewer than 8 reps** (`MIN_REPS_FOR_TEAM_MEDIAN`). It's gated in the data layer, never in
+a screen: `gateTeamMedian()` runs in `mapBehaviorScore` (real rows, via `team_size`) and
+in `loadRepScores` (mocks), and fails closed when team size is unknown. **Screens must
+hide the team-median row entirely when `teamMedian` is `null`** — no "—", no "n/a", no
+placeholder. `__tests__/team-median.test.ts` proves 7 → null, 8 → value, and that
+rep-scoped hooks never carry per-rep values.
+
+## Insight thresholds — enforced here, tested
+
+CLAUDE.md §13.13. A rep insight needs **≥ `REP_INSIGHT_MIN_CALLS` (10)** analyzed calls,
+a team pattern **≥ `TEAM_PATTERN_MIN_CALLS` (50)** (`Insight.callsAnalyzed`). `useInsights`
+and `useRoomInsights` return `GatedInsight[]`; an item with `state: "insufficient"` has
+no headline — render `SystemState` Y3 with `callsAnalyzed` / `callsNeeded`, never the
+insight. `useHomeFeed` and `useBrief` drop below-threshold insights. Helpers:
+`gateInsight`, `isInsightSufficient`, `insightScope`. Tested in
+`src/lib/data/__tests__/insight-thresholds.test.ts`.
 
 ## Contracts & tests
 
@@ -225,6 +245,7 @@ it for every rep-reachable loader and for the rep nav.
 - `__tests__/contract-guard.test.ts` — proves the contract checks catch a drifting row.
 - `__tests__/adapters-mock.test.ts` — every loader works in mock mode.
 - `__tests__/rep-safety.test.ts` — reps get only their own data; peer data is refused.
+- `__tests__/team-median.test.ts` — team median null under 8 reps; no per-rep values in rep hooks.
 - `__tests__/calls-hybrid.test.ts` — hybrid mapping of today's call rows.
 - `__tests__/contracts-doc.test.ts` — BACKEND_BACKLOG.md is not stale.
 

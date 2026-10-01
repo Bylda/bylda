@@ -1,5 +1,7 @@
 # O10 — Room — #mid-market-team (team room) · node `48:25761` · Lane 6 (Mayur) · route `component O10RoomMidMarketTeam (/app/rooms/$roomId)` · exported 2026-10-01
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.
