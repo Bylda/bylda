@@ -2,7 +2,7 @@ import { ScreenPlaceholder } from "@/components/bylda";
 
 /**
  * S3 · Ask Bylda — side panel (from rail ✦)
- * Figma 50:26784 (page 1:14) · Lane 2 — Dhruv · mounted by the shell
+ * Figma 50:26784 (page 1:14) · Lane 2 — Mayur · mounted by the shell
  * Hooks: useSearch — see src/lib/data/README.md
  *
  * PLACEHOLDER. Replace the body with the real screen; keep the export name.
@@ -24,7 +24,7 @@ export function S3AskByldaPanel({ onClose }: { onClose: () => void }) {
         name="Ask Bylda — side panel (from rail ✦)"
         node="50:26784"
         lane={2}
-        owner="Dhruv"
+        owner="Mayur"
       />
     </div>
   );

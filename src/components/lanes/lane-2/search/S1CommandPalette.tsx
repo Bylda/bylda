@@ -2,7 +2,7 @@ import { ScreenPlaceholder } from "@/components/bylda";
 
 /**
  * S1 · Search — Command palette ⌘K
- * Figma 31:760 (page 1:14) · Lane 2 — Dhruv · mounted by the shell
+ * Figma 31:760 (page 1:14) · Lane 2 — Mayur · mounted by the shell
  * Hooks: usePaletteItems — see src/lib/data/README.md
  *
  * PLACEHOLDER. Replace the body with the real screen; keep the export name.
@@ -24,7 +24,7 @@ export function S1CommandPalette({ onClose }: { onClose: () => void }) {
         name="Search — Command palette ⌘K"
         node="31:760"
         lane={2}
-        owner="Dhruv"
+        owner="Mayur"
       />
     </div>
   );

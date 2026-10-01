@@ -141,19 +141,19 @@ H2–H6 are tabs of H1 (`For You · Team Updates · Calls · Coaching · Reports
 `R1` context panel ends with *"No team rankings here. This view is only about you."*
 `R2` with *"Your manager sees this same page. No one else does."* Keep both.
 
-## Lane 2 — Dhruv · 07 Calls · `1:8` · 9 views
+## Lane 2 — Mayur · 07 Calls · `1:8` · 9 views
 
 | Frame name | Node ID | Code | Owner | V1 route |
 | --- | --- | --- | --- | --- |
-| Calls Index — saved views | `17:1090` | `C1` | Dhruv | `/app/calls` |
-| Calls Index — All calls + filters open | `52:8665` | `C2` | Dhruv | `/app/calls/all` |
-| Call Review — Transcript & timeline | `9:2` | `C3` | Dhruv | `/app/calls/$callId/transcript` |
-| Call Review — Overview | `44:1375` | `C4` | Dhruv | `/app/calls/$callId` |
-| Call Review — Analysis | `44:1755` | `C5` | Dhruv | `/app/calls/$callId/analysis` |
-| Call Review — Coaching | `44:2146` | `C6` | Dhruv | `/app/calls/$callId/coaching` |
-| Calls — Manual upload | `28:1263` | `C7` | Dhruv | `/app/calls/upload` |
-| Call comparison | `28:1464` | `C8` | Dhruv | `/app/calls/compare` |
-| Calls — Rep view (my calls) | `28:1646` | `C9` | Dhruv | `/app/calls/mine` |
+| Calls Index — saved views | `17:1090` | `C1` | Mayur | `/app/calls` |
+| Calls Index — All calls + filters open | `52:8665` | `C2` | Mayur | `/app/calls/all` |
+| Call Review — Transcript & timeline | `9:2` | `C3` | Mayur | `/app/calls/$callId/transcript` |
+| Call Review — Overview | `44:1375` | `C4` | Mayur | `/app/calls/$callId` |
+| Call Review — Analysis | `44:1755` | `C5` | Mayur | `/app/calls/$callId/analysis` |
+| Call Review — Coaching | `44:2146` | `C6` | Mayur | `/app/calls/$callId/coaching` |
+| Calls — Manual upload | `28:1263` | `C7` | Mayur | `/app/calls/upload` |
+| Call comparison | `28:1464` | `C8` | Mayur | `/app/calls/compare` |
+| Calls — Rep view (my calls) | `28:1646` | `C9` | Mayur | `/app/calls/mine` |
 
 `C3` is 1440×1476. `C4`–`C6` are tabs of the Call Review.
 
@@ -210,22 +210,22 @@ H2–H6 are tabs of H1 (`For You · Team Updates · Calls · Coaching · Reports
 
 `P3`, `P4`, `P10` are **not** app screens — email, push and print. Don't wrap them in the shell.
 
-## Lane 2 — Dhruv · 11 Coaching · `1:12` · 12 views
+## Lane 2 — Mayur · 11 Coaching · `1:12` · 12 views
 
 | Frame name | Node ID | Code | Owner | V1 route |
 | --- | --- | --- | --- | --- |
-| Coaching lifecycle | `14:2` | `G1` | Dhruv — 1450×70 diagram, reference | component `G1CoachingLifecycle` |
-| Assign Coaching — modal | `14:24` | `G2` | Dhruv | `/app/coaching/assign` |
-| Coaching — Index (Active) | `30:246` | `G3` | Dhruv | `/app/coaching` |
-| Coaching — Needs follow-up | `52:6380` | `G4` | Dhruv | `/app/coaching/follow-up` |
-| Coaching — Completed | `30:430` | `G5` | Dhruv | `/app/coaching/completed` |
-| Coaching Detail — Jordan · active | `30:639` | `G6` | Dhruv | `/app/coaching/$focusId` |
-| Coaching Detail — Overview | `46:1604` | `G7` | Dhruv | `/app/coaching/$focusId/overview` |
-| Coaching Detail — Evidence | `46:1935` | `G8` | Dhruv | `/app/coaching/$focusId/evidence` |
-| Coaching Detail — Progress | `46:2244` | `G9` | Dhruv | `/app/coaching/$focusId/progress` |
-| Coaching Detail — Discussion | `46:2549` | `G10` | Dhruv | `/app/coaching/$focusId/discussion` |
-| Coaching — Rep view (Jordan) | `30:839` | `G11` | Dhruv | `/app/coaching/mine` |
-| Behavior Change Result — Alex Morgan | `14:224` | `G12` | Dhruv | `/app/coaching/$focusId/result` |
+| Coaching lifecycle | `14:2` | `G1` | Mayur — 1450×70 diagram, reference | component `G1CoachingLifecycle` |
+| Assign Coaching — modal | `14:24` | `G2` | Mayur | `/app/coaching/assign` |
+| Coaching — Index (Active) | `30:246` | `G3` | Mayur | `/app/coaching` |
+| Coaching — Needs follow-up | `52:6380` | `G4` | Mayur | `/app/coaching/follow-up` |
+| Coaching — Completed | `30:430` | `G5` | Mayur | `/app/coaching/completed` |
+| Coaching Detail — Jordan · active | `30:639` | `G6` | Mayur | `/app/coaching/$focusId` |
+| Coaching Detail — Overview | `46:1604` | `G7` | Mayur | `/app/coaching/$focusId/overview` |
+| Coaching Detail — Evidence | `46:1935` | `G8` | Mayur | `/app/coaching/$focusId/evidence` |
+| Coaching Detail — Progress | `46:2244` | `G9` | Mayur | `/app/coaching/$focusId/progress` |
+| Coaching Detail — Discussion | `46:2549` | `G10` | Mayur | `/app/coaching/$focusId/discussion` |
+| Coaching — Rep view (Jordan) | `30:839` | `G11` | Mayur | `/app/coaching/mine` |
+| Behavior Change Result — Alex Morgan | `14:224` | `G12` | Mayur | `/app/coaching/$focusId/result` |
 
 ## Lane 6 — Mayur · 12 Rooms & Messages · `1:13` · 14 views · MOCKS ONLY
 
@@ -246,13 +246,13 @@ H2–H6 are tabs of H1 (`For You · Team Updates · Calls · Coaching · Reports
 | Direct message — BYLDA Coach (rep) | `49:3627` | `O13` | Mayur | `/app/dm/coach` |
 | Rooms — New room modal | `50:4184` | `O14` | Mayur | `/app/rooms/new` |
 
-## Lane 2 — Dhruv · 13 Search & Ask · `1:14` · 3 views
+## Lane 2 — Mayur · 13 Search & Ask · `1:14` · 3 views
 
 | Frame name | Node ID | Code | Owner | V1 route |
 | --- | --- | --- | --- | --- |
-| Search — Command palette ⌘K | `31:760` | `S1` | Dhruv | component `S1SearchCommandPalette` |
-| Search — Natural-language results | `31:909` | `S2` | Dhruv | `/app/search` |
-| Ask Bylda — side panel (from rail ✦) | `50:26784` | `S3` | Dhruv | component `S3AskByldaSidePanel` |
+| Search — Command palette ⌘K | `31:760` | `S1` | Mayur | component `S1SearchCommandPalette` |
+| Search — Natural-language results | `31:909` | `S2` | Mayur | `/app/search` |
+| Ask Bylda — side panel (from rail ✦) | `50:26784` | `S3` | Mayur | component `S3AskByldaSidePanel` |
 
 `S2` states the rule: *"Bylda converts your question to filters you can see and
 edit. It never answers from memory — every result links to a call."* Build the
@@ -375,16 +375,14 @@ Hidden helpers on this page: `__lib` `25:2`, `__swap` `38:2` — skip.
 
 ## View count per lane
 
-Owners as of 2026-09-30 (Lanes 4 and 5 swapped owners that day). Later on
-2026-09-30 `10 Reports` moved from Lane 4 to Lane 6. On 2026-10-01 Lane 6 went to Mayur
-(who keeps Lane 5). Full ownership + folders:
+Mayur owns Lanes 5, 2 and 6, built in that order. Full ownership + folders:
 `CLAUDE.md` §8.
 
 | Lane | Owner | Areas | Views |
 | --- | --- | --- | --- |
 | Foundation | Ansh | 01, 02, 03 + all 13 states of 17 + shell breakpoints B10/B11 | tokens + 14 components + shell |
 | Lane 1 | Ansh | 05, 14, 08 | 7 + 2 + 11 = **20** |
-| Lane 2 | Dhruv | 07, 13, then 11 | 9 + 3 + 12 = **24** |
+| Lane 2 | Mayur | 07, 11, then 13 | 9 + 12 + 3 = **24** |
 | Lane 4 | Dravin | 04, 06, then 09 | 11 + 3 + 13 = **27** |
 | Lane 5 | Mayur | 15, 16, 18 (17 ✅ done) | 3 + 18 + 11 = **32** (the 13 states of 17 are built — Foundation) |
 | Lane 6 | Mayur | 10, then 12 | 10 + 14 = **24** |
@@ -397,6 +395,5 @@ component in `src/components/lanes/lane-<n>/` named by its code. Rows marked
 `N1`), a reference diagram (`G1`), or room kinds rendered by `/app/rooms/$roomId`
 (`O8`–`O11`).
 
-`10 Reports` moved from Lane 4 to Lane 6 on 2026-09-30 to rebalance (Lane 4 was 37).
-Its placeholder components stay at `src/components/lanes/lane-4/reports/` — Lane 6
+`10 Reports` belongs to Lane 6. Its placeholder components stay at `src/components/lanes/lane-4/reports/` — Lane 6
 owns that folder (see `CLAUDE.md` §8).
