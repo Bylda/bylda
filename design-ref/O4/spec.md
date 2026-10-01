@@ -1,4 +1,4 @@
-# O4 — Room — #objection-watch · Calls · node `48:1732` · Lane 6 (Mayur) · route `/app/rooms/$roomId/calls` · exported 2026-10-01
+# O4 — Room — #objection-watch · Calls · node `48:1732` · Lane 6 (Dhruv) · route `/app/rooms/$roomId/calls` · exported 2026-10-01
 
 > **See CLAUDE.md §13: decision overrides Figma.**
 

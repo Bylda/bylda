@@ -14,7 +14,7 @@ export function O13DirectMessageBYLDACoach() {
       name="Direct message — BYLDA Coach (rep)"
       node="49:3627"
       lane={6}
-      owner="Lane 6"
+      owner="Dhruv"
     />
   );
 }

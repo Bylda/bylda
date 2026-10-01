@@ -1,4 +1,4 @@
-# P8 — Team Report — September · node `29:773` · Lane 6 (Mayur) · route `/app/reports/team/$teamId` · exported 2026-10-01
+# P8 — Team Report — September · node `29:773` · Lane 6 (Dhruv) · route `/app/reports/team/$teamId` · exported 2026-10-01
 
 > **See CLAUDE.md §13: decision overrides Figma.**
 

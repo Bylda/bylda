@@ -1,4 +1,4 @@
-# O12 — Direct message — Dana ↔ Jordan · node `49:3123` · Lane 6 (Mayur) · route `/app/dm/$threadId` · exported 2026-10-01
+# O12 — Direct message — Dana ↔ Jordan · node `49:3123` · Lane 6 (Dhruv) · route `/app/dm/$threadId` · exported 2026-10-01
 
 > **See CLAUDE.md §13: decision overrides Figma.**
 

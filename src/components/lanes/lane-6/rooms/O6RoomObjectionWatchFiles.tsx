@@ -14,7 +14,7 @@ export function O6RoomObjectionWatchFiles() {
       name="Room — #objection-watch · Files"
       node="48:2662"
       lane={6}
-      owner="Lane 6"
+      owner="Dhruv"
     />
   );
 }

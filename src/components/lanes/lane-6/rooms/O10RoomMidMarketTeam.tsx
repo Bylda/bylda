@@ -14,7 +14,7 @@ export function O10RoomMidMarketTeam() {
       name="Room — #mid-market-team (team room)"
       node="48:25761"
       lane={6}
-      owner="Lane 6"
+      owner="Dhruv"
     />
   );
 }

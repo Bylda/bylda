@@ -14,7 +14,7 @@ export function O7RoomObjectionWatchAbout() {
       name="Room — #objection-watch · About"
       node="48:3103"
       lane={6}
-      owner="Lane 6"
+      owner="Dhruv"
     />
   );
 }

@@ -193,20 +193,20 @@ H2–H6 are tabs of H1 (`For You · Team Updates · Calls · Coaching · Reports
 | Rep Profile — Trends | `45:2142` | `T12` | Dravin | `/app/team/reps/$repId/trends` |
 | Rep Comparison | `29:1629` | `T13` | Dravin | `/app/team/compare` |
 
-## Lane 6 — Mayur · 10 Reports · `1:11` · 10 views
+## Lane 6 — Dhruv · 10 Reports · `1:11` · 10 views
 
 | Frame name | Node ID | Code | Owner | Width | V1 route |
 | --- | --- | --- | --- | --- | --- |
-| Reports — Index | `29:159` | `P1` | Mayur | 1440 | `/app/reports` |
-| Daily Manager Brief — in-app document | `13:2` | `P2` | Mayur | 1440×1656 | `/app/reports/daily` |
-| Daily Manager Brief — email (640) | `13:232` | `P3` | Mayur | **760** | `/doc/manager-brief-email` |
-| Daily Rep Brief — email / push (60 sec) | `13:316` | `P4` | Mayur | **420×380** | `/doc/rep-brief-push` |
-| Weekly Manager Report — living document | `29:352` | `P5` | Mayur | 1440×2056 | `/app/reports/weekly` |
-| Weekly Sales Behavior Report — outline | `52:10624` | `P6` | Mayur | 1440 | `/app/reports/outline` |
-| Weekly Rep Report — Jordan | `29:625` | `P7` | Mayur | 1440×1256 | `/app/reports/rep/$repId` |
-| Team Report — September | `29:773` | `P8` | Mayur | 1440×1256 | `/app/reports/team/$teamId` |
-| Behavior Report — Objection handling | `29:993` | `P9` | Mayur | 1440×1156 | `/app/reports/behavior/$behaviorKey` |
-| Weekly Report — PDF / print (A4) | `29:1154` | `P10` | Mayur | **794×1123** | `/doc/weekly-print` |
+| Reports — Index | `29:159` | `P1` | Dhruv | 1440 | `/app/reports` |
+| Daily Manager Brief — in-app document | `13:2` | `P2` | Dhruv | 1440×1656 | `/app/reports/daily` |
+| Daily Manager Brief — email (640) | `13:232` | `P3` | Dhruv | **760** | `/doc/manager-brief-email` |
+| Daily Rep Brief — email / push (60 sec) | `13:316` | `P4` | Dhruv | **420×380** | `/doc/rep-brief-push` |
+| Weekly Manager Report — living document | `29:352` | `P5` | Dhruv | 1440×2056 | `/app/reports/weekly` |
+| Weekly Sales Behavior Report — outline | `52:10624` | `P6` | Dhruv | 1440 | `/app/reports/outline` |
+| Weekly Rep Report — Jordan | `29:625` | `P7` | Dhruv | 1440×1256 | `/app/reports/rep/$repId` |
+| Team Report — September | `29:773` | `P8` | Dhruv | 1440×1256 | `/app/reports/team/$teamId` |
+| Behavior Report — Objection handling | `29:993` | `P9` | Dhruv | 1440×1156 | `/app/reports/behavior/$behaviorKey` |
+| Weekly Report — PDF / print (A4) | `29:1154` | `P10` | Dhruv | **794×1123** | `/doc/weekly-print` |
 
 `P3`, `P4`, `P10` are **not** app screens — email, push and print. Don't wrap them in the shell.
 
@@ -227,24 +227,24 @@ H2–H6 are tabs of H1 (`For You · Team Updates · Calls · Coaching · Reports
 | Coaching — Rep view (Jordan) | `30:839` | `G11` | Dhruv | `/app/coaching/mine` |
 | Behavior Change Result — Alex Morgan | `14:224` | `G12` | Dhruv | `/app/coaching/$focusId/result` |
 
-## Lane 6 — Mayur · 12 Rooms & Messages · `1:13` · 14 views · MOCKS ONLY
+## Lane 6 — Dhruv · 12 Rooms & Messages · `1:13` · 14 views · MOCKS ONLY
 
 | Frame name | Node ID | Code | Owner | V1 route |
 | --- | --- | --- | --- | --- |
-| Rooms — Directory | `31:241` | `O1` | Mayur | `/app/rooms` |
-| Room — #objection-watch | `18:2` | `O2` | Mayur | `/app/rooms/$roomId` |
-| Room — #objection-watch · Insights | `48:1283` | `O3` | Mayur | `/app/rooms/$roomId/insights` |
-| Room — #objection-watch · Calls | `48:1732` | `O4` | Mayur | `/app/rooms/$roomId/calls` |
-| Room — #objection-watch · Reports | `48:2213` | `O5` | Mayur | `/app/rooms/$roomId/reports` |
-| Room — #objection-watch · Files | `48:2662` | `O6` | Mayur | `/app/rooms/$roomId/files` |
-| Room — #objection-watch · About | `48:3103` | `O7` | Mayur | `/app/rooms/$roomId/about` |
-| Room — #daily-brief | `31:403` | `O8` | Mayur | component `O8RoomDailyBrief` |
-| Room — #coaching | `31:586` | `O9` | Mayur | component `O9RoomCoaching` |
-| Room — #mid-market-team (team room) | `48:25761` | `O10` | Mayur | component `O10RoomMidMarketTeam` |
-| Room — #acme-logistics (deal room) | `50:3655` | `O11` | Mayur | component `O11RoomAcmeLogistics` |
-| Direct message — Dana ↔ Jordan | `49:3123` | `O12` | Mayur | `/app/dm/$threadId` |
-| Direct message — BYLDA Coach (rep) | `49:3627` | `O13` | Mayur | `/app/dm/coach` |
-| Rooms — New room modal | `50:4184` | `O14` | Mayur | `/app/rooms/new` |
+| Rooms — Directory | `31:241` | `O1` | Dhruv | `/app/rooms` |
+| Room — #objection-watch | `18:2` | `O2` | Dhruv | `/app/rooms/$roomId` |
+| Room — #objection-watch · Insights | `48:1283` | `O3` | Dhruv | `/app/rooms/$roomId/insights` |
+| Room — #objection-watch · Calls | `48:1732` | `O4` | Dhruv | `/app/rooms/$roomId/calls` |
+| Room — #objection-watch · Reports | `48:2213` | `O5` | Dhruv | `/app/rooms/$roomId/reports` |
+| Room — #objection-watch · Files | `48:2662` | `O6` | Dhruv | `/app/rooms/$roomId/files` |
+| Room — #objection-watch · About | `48:3103` | `O7` | Dhruv | `/app/rooms/$roomId/about` |
+| Room — #daily-brief | `31:403` | `O8` | Dhruv | component `O8RoomDailyBrief` |
+| Room — #coaching | `31:586` | `O9` | Dhruv | component `O9RoomCoaching` |
+| Room — #mid-market-team (team room) | `48:25761` | `O10` | Dhruv | component `O10RoomMidMarketTeam` |
+| Room — #acme-logistics (deal room) | `50:3655` | `O11` | Dhruv | component `O11RoomAcmeLogistics` |
+| Direct message — Dana ↔ Jordan | `49:3123` | `O12` | Dhruv | `/app/dm/$threadId` |
+| Direct message — BYLDA Coach (rep) | `49:3627` | `O13` | Dhruv | `/app/dm/coach` |
+| Rooms — New room modal | `50:4184` | `O14` | Dhruv | `/app/rooms/new` |
 
 ## Lane 2 — Dhruv · 13 Search & Ask · `1:14` · 3 views
 

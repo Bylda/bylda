@@ -14,7 +14,7 @@ export function O14RoomsNewRoomModal() {
       name="Rooms — New room modal"
       node="50:4184"
       lane={6}
-      owner="Lane 6"
+      owner="Dhruv"
     />
   );
 }
