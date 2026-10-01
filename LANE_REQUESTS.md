@@ -54,4 +54,6 @@ When the shared version lands, delete your copy.
 
 | 14 | Mayur | 5 | Align inherited shell on X1–X3 with Figma | Context panel currently starts below the top bar rather than at frame y=0, and breadcrumb duplicates the area label. Screens use the existing context slot; please adjust in Foundation. Integrations status tags follow Figma and Y8 despite the general behavioral-color-only wording; clarify this exception in shared guidance. See Lane 5 connections/QA.md and screenshots. | `open` — Ansh |
 
+| 15 | Dravin | 4 | Add `signInWithOAuth(provider)` and `verifyOtp(email, token)` to `useAuthActions`; decide where the password-recovery "set new password" step lives | A1/A2 show Continue with Google / Microsoft and A3 shows a 6-digit code, but `useAuthActions` only has password sign-in/up, reset, `updatePassword`, resend. Today OAuth buttons show an inline "isn't connected yet" note; A3's Verify proceeds only in mock mode and in real mode tells the user to use the emailed link. `sendReset` redirects to `/welcome/forgot` but no Figma frame covers the new-password form that `updatePassword` needs. No backend change — all three are existing Supabase auth calls. | `open` — Ansh |
+
 <!-- Add new rows above. Keep the newest at the bottom. -->
