@@ -73,7 +73,7 @@ function InviteForm() {
         title="Invite your team."
         lead={
           matched
-            ? `We matched ${matched.people.length} people from your ${matched.source} account to calls. Choose who to invite and their role.`
+            ? `We matched ${matched.matchedCount} people from your ${matched.source} account to calls. Choose who to invite and their role.`
             : "Add your team by email. Everyone joins as Rep unless you change it."
         }
       />

@@ -11,6 +11,7 @@ import {
 } from "@/lib/data";
 import { errorMessage } from "./authForm";
 import { clearDraft, readDraft } from "./onboardingDraft";
+import { teachDemoBehaviors } from "./onboardingDemo";
 import {
   Chip,
   ChipRow,
@@ -105,7 +106,7 @@ function TeachForm({
   const save = useSaveOnboarding();
   const [mode, setMode] = useState<Mode>("template");
   const [template, setTemplate] = useState<Template>(initialTemplate);
-  const methodology = methodologies.find((m) => m.template === template) ?? null;
+  const methodology = withDemoBehaviors(methodologies.find((m) => m.template === template) ?? null);
   const [stages, setStages] = useState<MethodologyStage[]>(methodology?.stages ?? []);
   const [enabled, setEnabled] = useState<string[]>(
     methodology?.behaviors.filter((b) => b.enabled).map((b) => b.key) ?? [],
@@ -126,7 +127,7 @@ function TeachForm({
 
   function pickTemplate(t: Template) {
     setTemplate(t);
-    const m = methodologies.find((x) => x.template === t) ?? null;
+    const m = withDemoBehaviors(methodologies.find((x) => x.template === t) ?? null);
     setStages(m?.stages ?? []);
     setEnabled(m?.behaviors.filter((b) => b.enabled).map((b) => b.key) ?? []);
   }
@@ -371,6 +372,28 @@ function TeachForm({
       </StepActions>
     </form>
   );
+}
+
+/** Mocks-only: Figma's 7-behavior MEDDIC starter set in place of the fixture's 4. */
+function withDemoBehaviors(m: Methodology | null): Methodology | null {
+  const demo = m ? teachDemoBehaviors(m.template) : null;
+  if (!m || !demo) return m;
+  const byKey = new Map(m.behaviors.map((b) => [b.key, b]));
+  return {
+    ...m,
+    behaviors: demo.map((d) => ({
+      ...(byKey.get(d.key) ?? {
+        key: d.key,
+        rule: {},
+        methodologyId: m.id,
+        higherIsBetter: true,
+      }),
+      key: d.key,
+      name: d.name,
+      definition: d.definition,
+      enabled: d.enabled,
+    })),
+  };
 }
 
 function Section({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {

@@ -17,6 +17,7 @@ import {
   type OnboardingState,
 } from "@/lib/data";
 import { InsetNote, OnboardingLayout, StepActions, StepHeader } from "./OnboardingLayout";
+import { analysisDemo, type AnalysisDemo } from "./onboardingDemo";
 
 /**
  * A10 · Onboarding — Analysis initializing
@@ -37,7 +38,11 @@ const STATUS_TAG: Record<StageStatus, { tone: TagTone; label: string }> = {
 
 type Stage = { title: string; detail: string; status: StageStatus };
 
-function stagesFor(a: OnboardingState["analysis"], sources: DataSource[]): Stage[] {
+function stagesFor(
+  a: OnboardingState["analysis"],
+  sources: DataSource[],
+  demo: AnalysisDemo | null,
+): Stage[] {
   const complete = a.total > 0 && a.analyzed >= a.total;
   const callSources = sources
     .filter((s) => s.category !== "crm" && s.status === "connected")
@@ -48,9 +53,11 @@ function stagesFor(a: OnboardingState["analysis"], sources: DataSource[]): Stage
   return [
     {
       title: "Import calls",
-      detail: callSources.length
-        ? `${a.total} recordings from ${callSources.join(" + ")}`
-        : `${a.total} recordings`,
+      detail:
+        demo?.importDetail ??
+        (callSources.length
+          ? `${a.total} recordings from ${callSources.join(" + ")}`
+          : `${a.total} recordings`),
       status: "done",
     },
     {
@@ -63,19 +70,23 @@ function stagesFor(a: OnboardingState["analysis"], sources: DataSource[]): Stage
       detail: "Objections, interruptions, questions, monologues",
       status: complete ? "done" : "running",
     },
-    {
-      title: "Match calls to CRM outcomes",
-      detail: crm
-        ? `Reading outcomes from ${crm.name}`
-        : crmTrouble
-          ? `${crmTrouble.name}: ${crmTrouble.error ?? "sync stopped"}`
-          : "Connect a CRM to link calls to outcomes",
-      status: crm ? (complete ? "done" : "running") : "blocked",
-    },
+    demo
+      ? { title: "Match calls to CRM outcomes", ...demo.crm }
+      : {
+          title: "Match calls to CRM outcomes",
+          detail: crm
+            ? `Reading outcomes from ${crm.name}`
+            : crmTrouble
+              ? `${crmTrouble.name}: ${crmTrouble.error ?? "sync stopped"}`
+              : "Connect a CRM to link calls to outcomes",
+          status: crm ? (complete ? "done" : "running") : "blocked",
+        },
     {
       title: "Find patterns",
       detail: `Needs ≥ ${TEAM_PATTERN_MIN_CALLS} analyzed calls per team`,
-      status: a.analyzed < TEAM_PATTERN_MIN_CALLS ? "waiting" : complete ? "done" : "running",
+      status:
+        demo?.patterns.status ??
+        (a.analyzed < TEAM_PATTERN_MIN_CALLS ? "waiting" : complete ? "done" : "running"),
     },
   ];
 }
@@ -87,6 +98,7 @@ export function A10OnboardingAnalysisInitializing() {
   const insights = useInsights({ kind: "pattern" });
   const [note, setNote] = useState<string | null>(null);
   const firstInsightReady = insights.data?.some((g) => g.state === "insight") ?? false;
+  const demo = analysisDemo();
 
   return (
     <OnboardingLayout step={4} width={700} top={80}>
@@ -121,7 +133,7 @@ export function A10OnboardingAnalysisInitializing() {
                 }
               />
               <ol className="flex w-full flex-col rounded-by-card border border-by-border-engraved bg-by-surface-raised px-5 py-2">
-                {stagesFor(a, sources.data ?? []).map((s) => (
+                {stagesFor(a, sources.data ?? [], demo).map((s) => (
                   <li
                     key={s.title}
                     className="flex w-full items-center gap-3 border-b border-by-border-engraved py-3 last:border-b-0"
@@ -151,7 +163,7 @@ export function A10OnboardingAnalysisInitializing() {
               </div>
               <InsetNote label="Already visible">
                 {/* GAP: objections detected and reps matched so far — C-16. */}
-                {a.analyzed} calls transcribed
+                {demo?.alreadyVisible ?? `${a.analyzed} calls transcribed`}
               </InsetNote>
               {note ? (
                 <InsetNote label="Heads up" role="status">
@@ -159,7 +171,7 @@ export function A10OnboardingAnalysisInitializing() {
                 </InsetNote>
               ) : null}
               <StepActions>
-                {firstInsightReady ? (
+                {firstInsightReady && !demo ? (
                   <Button asChild>
                     <Link to="/welcome/first-insight">See the first insight</Link>
                   </Button>

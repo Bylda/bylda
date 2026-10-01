@@ -15,6 +15,7 @@ import {
   type Insight,
   type InsightAction,
 } from "@/lib/data";
+import { firstInsightDemo, type FirstInsightDemo } from "./onboardingDemo";
 
 /**
  * A11 · Onboarding — First insight
@@ -71,8 +72,9 @@ export function A11OnboardingFirstInsight() {
   );
 
   return (
-    <div className="min-h-screen bg-by-surface-canvas px-4 pb-16 pt-20 sm:px-10 lg:pt-[200px]">
-      <div className="mx-auto flex w-full max-w-[760px] flex-col items-start gap-[22px]">
+    <div className="relative min-h-screen overflow-hidden bg-by-surface-canvas px-4 pb-16 pt-20 sm:px-10 lg:pt-[200px]">
+      <GridBackdrop />
+      <div className="relative mx-auto flex w-full max-w-[760px] flex-col items-start gap-[22px]">
         <DataBoundary query={{ ...insights, isEmpty: !first }} empty={notYet}>
           {() =>
             first ? (
@@ -80,6 +82,7 @@ export function A11OnboardingFirstInsight() {
                 insight={first.insight}
                 totalCalls={analysis?.total ?? null}
                 reps={viewer.data?.team?.repCount ?? null}
+                demo={firstInsightDemo()}
               />
             ) : null
           }
@@ -89,18 +92,38 @@ export function A11OnboardingFirstInsight() {
   );
 }
 
+/** Figma's 4mm grid (16px, silver/200 hairlines at 35%) behind the first insight. */
+function GridBackdrop() {
+  return (
+    <svg
+      aria-hidden
+      className="pointer-events-none absolute inset-0 size-full text-by-border-engraved opacity-35"
+    >
+      <defs>
+        <pattern id="a11-grid" width="16" height="16" patternUnits="userSpaceOnUse">
+          <path d="M 0 0 V 16 M 0 0 H 16" fill="none" stroke="currentColor" strokeWidth="0.5" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#a11-grid)" />
+    </svg>
+  );
+}
+
 function FirstInsight({
   insight,
   totalCalls,
   reps,
+  demo,
 }: {
   insight: Insight;
   totalCalls: number | null;
   reps: number | null;
+  demo: FirstInsightDemo | null;
 }) {
   const evidence = insight.evidence[0];
   const canAct = insight.confidence !== "low" && insight.action !== null;
   const calls = totalCalls ?? insight.callsAnalyzed;
+  if (demo) return <FirstInsightFigma insight={insight} calls={calls} reps={reps} demo={demo} />;
   return (
     <>
       <p className="type-mono-micro uppercase text-by-text-tertiary">
@@ -156,6 +179,80 @@ function FirstInsight({
       </article>
       <p className="type-ui-small text-by-text-secondary">
         Tomorrow morning you’ll get your first Daily Brief. Reps get theirs once you invite them.
+      </p>
+    </>
+  );
+}
+
+/** Mocks-only Figma copy (onboardingDemo.ts); confidence still comes from the insight. */
+function FirstInsightFigma({
+  insight,
+  calls,
+  reps,
+  demo,
+}: {
+  insight: Insight;
+  calls: number;
+  reps: number | null;
+  demo: FirstInsightDemo;
+}) {
+  const canAct = insight.confidence !== "low";
+  return (
+    <>
+      <p className="type-mono-micro uppercase text-by-text-tertiary">
+        Ready · {calls} calls{reps ? ` · ${reps} reps` : ""} · 90 days
+      </p>
+      <h1 className="type-display-l text-by-text-primary">
+        Here’s the first thing Bylda noticed about your team.
+      </h1>
+      <article className="flex w-full animate-by-resolve flex-col gap-4 rounded-by-card border border-by-border-focus bg-by-surface-raised px-7 py-[26px] shadow-by-float">
+        <h2 className="type-editorial-h2 text-by-text-primary">{demo.headline}</h2>
+        <dl className="flex w-full items-start">
+          {demo.metrics.map((m) => (
+            <div key={m.label} className="flex min-w-0 flex-1 flex-col gap-1 py-1">
+              <dt className="type-mono-micro uppercase text-by-text-tertiary">{m.label}</dt>
+              <dd className="type-mono-metric text-by-text-primary">{m.value}</dd>
+              <dd className="type-mono-micro text-by-text-secondary">{m.note}</dd>
+            </div>
+          ))}
+        </dl>
+        <EvidenceBlock
+          evidence={{
+            timestamp: demo.evidence.timestamp,
+            speaker: demo.evidence.speaker,
+            quote: demo.evidence.quote,
+          }}
+        />
+        <div className="flex w-full flex-wrap items-center gap-x-2.5 gap-y-1">
+          <ConfidenceMeter level={insight.confidence} sampleSize={demo.sampleSize} />
+          <span className="type-mono-micro min-w-0 flex-1 text-by-text-secondary">
+            {demo.caveat}
+          </span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {canAct ? (
+            <Button asChild>
+              <Link
+                to="/app/intelligence/behaviors/$behaviorKey"
+                params={{ behaviorKey: demo.primary.behaviorKey }}
+              >
+                {demo.primary.label}
+              </Link>
+            </Button>
+          ) : null}
+          <Button variant="secondary" asChild>
+            <Link to="/app/calls/$callId" params={{ callId: demo.evidence.callId }}>
+              Hear {demo.examples} examples
+            </Link>
+          </Button>
+          <Button variant="ghost" asChild>
+            <Link to="/app/home">Go to my Home</Link>
+          </Button>
+        </div>
+      </article>
+      <p className="type-ui-small text-by-text-secondary">
+        Tomorrow at {demo.briefAt} you’ll get your first Daily Brief. Reps get theirs once you
+        invite them.
       </p>
     </>
   );
