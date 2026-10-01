@@ -1,6 +1,6 @@
 # Lane 6 · Section 1 · Reports · draft
 
-Branch: `lane-6-mayur`, based on `origin/integration` (`787adfa`). Only P1, P2 and P5 are in scope. Section 2 is untouched.
+Branch: `lane-6-mayur`, synced with `origin/integration` (`5580b00`, including merged auth PR #13). Only P1, P2 and P5 are in scope. Section 2 is untouched.
 
 ## Implemented
 
@@ -28,6 +28,6 @@ Do not invent totals, comments, series, coaching results or report statements to
 - Browser checks pass: tab filtering; actual report ID preserved; unsupported actions disclose no write; local comment draft; Share notice; weekly collapse/contents reopening; unknown ID; rep-only index and denied manager URLs; 1024px no document overflow; no page errors.
 - Changed-file lint, token check, backend-boundary check and production build pass.
 - Typecheck remains at the documented eight unrelated baseline errors, with no Lane 6 errors.
-- Full suite has two existing integration-catalog failures (ReadyMode and GoHighLevel credential fields), outside lane scope. No fixes attempted in frozen/backend files.
+- Full suite: 394 passed, 36 skipped, two existing integration-catalog failures (ReadyMode and GoHighLevel credential fields), outside lane scope. No fixes attempted in frozen/backend files.
 
 Before ready-for-review: resolve shared report contracts/content through the owner, render the full P1/P2/P5 designs with statement evidence metadata, repeat native screenshot comparison and validation. Do not begin Section 2 before this section is reviewed and merged.
