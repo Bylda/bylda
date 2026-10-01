@@ -7,7 +7,7 @@
 #
 # Usage:
 #   scripts/boundary-check.sh                 # working tree + commits vs origin/integration
-#   BOUNDARY_HEAD_REF=lane-2-mayur scripts/boundary-check.sh   # pretend to be that branch
+#   BOUNDARY_HEAD_REF=lane-2-dhruv scripts/boundary-check.sh   # pretend to be that branch
 #   scripts/boundary-check.sh <base-ref>      # vs an explicit base
 #   BOUNDARY_BASE=main scripts/boundary-check.sh
 #

@@ -1,6 +1,6 @@
 # TEAM_START.md — ready-to-paste start prompts
 
-Owners: Lane 1 **Ansh** · Lane 4 **Dravin** · Lanes 5, 2, 6 **Mayur** (in that order) · Backend **Tirth**.
+Owners: Lane 1 **Ansh** · Lane 4 **Dravin** · Lane 5 **Mayur** · Lanes 2, 6 **Dhruv** (in that order) · Backend **Tirth**.
 Foundation and the data layer are **Ansh**'s. 17 States are done — Foundation built them.
 
 **How to use this file:** open a **fresh** Claude Code session per section, paste your lane's prompt,
@@ -168,19 +168,11 @@ When the section is done: commit, push, open ONE PR into integration titled
 
 ---
 
-## Mayur — Lanes 5 → 2 → 6
+## Mayur — Lane 5
 
-Mayur owns three lanes and builds them in this order:
+Branch `lane-5-mayur`, one section per session, one PR per section. PR titles start **"L5 — "**.
 
-1. **Lane 5** — finish the open Integrations / Settings / Mobile work.
-2. **Lane 2** — Calls → Coaching → Search & Ask.
-3. **Lane 6** — Reports → Rooms & DMs (mocks only).
-
-One branch per lane (`lane-5-mayur`, `lane-2-mayur`, `lane-6-mayur`), one section per session,
-one PR per section. PR titles start **"L5 — "**, **"L2 — "** or **"L6 — "**. Paste the prompt for
-the lane you're on.
-
-### Lane 5 — 15 Integrations → 16 Settings + Methodology → 18 Mobile (17 States ✅ done) (first — finish open work)
+### Lane 5 — 15 Integrations → 16 Settings + Methodology → 18 Mobile (17 States ✅ done)
 
 30 screens in 7 sections (+ 17 States, done). Branch `lane-5-mayur`.
 
@@ -267,14 +259,28 @@ When the section is done: commit, push, open ONE PR into integration titled
 ```
 
 
-### Lane 2 — 07 Calls → 11 Coaching → 13 Search & Ask (second)
+---
 
-24 screens in 7 sections. Branch `lane-2-mayur`.
+## Dhruv — Lanes 2 → 6
+
+Dhruv owns two lanes and builds them in this order:
+
+1. **Lane 2** — Calls → Coaching → Search & Ask.
+2. **Lane 6** — Reports → Rooms & DMs (mocks only).
+
+One branch per lane (`lane-2-dhruv`, `lane-6-dhruv`), one section per session, one PR per
+section. PR titles start **"L2 — "** or **"L6 — "**. Paste the prompt for the lane you're on.
+Some sections are already merged (Call Review C3–C6; Reports P1, P2, P5 partial) — check what
+is merged before starting, and pick up the next one.
+
+### Lane 2 — 07 Calls → 11 Coaching → 13 Search & Ask (first)
+
+24 screens in 7 sections. Branch `lane-2-dhruv`.
 
 ```text
-You are building Lane 2 (Mayur) of the Bylda V1 frontend rebuild, repo Bylda/bylda.
+You are building Lane 2 (Dhruv) of the Bylda V1 frontend rebuild, repo Bylda/bylda.
 
-BRANCH: lane-2-mayur, created from origin/integration. Every morning: `git fetch origin && git merge origin/integration`.
+BRANCH: lane-2-dhruv, created from origin/integration. Every morning: `git fetch origin && git merge origin/integration`.
 
 YOU OWN — edit ONLY these paths:
   - src/routes/app/calls/**
@@ -344,15 +350,15 @@ When the section is done: commit, push, open ONE PR into integration titled
 ```
 
 
-### Lane 6 — 10 Reports → 12 Rooms & Messages (MOCKS ONLY) (third)
+### Lane 6 — 10 Reports → 12 Rooms & Messages (MOCKS ONLY) (second)
 
-24 screens in 7 sections. Branch `lane-6-mayur`.
+24 screens in 7 sections. Branch `lane-6-dhruv`.
 
 ```text
-You are building Lane 6 (Mayur) of the Bylda V1 frontend rebuild, repo Bylda/bylda.
+You are building Lane 6 (Dhruv) of the Bylda V1 frontend rebuild, repo Bylda/bylda.
 Lane 6 = 10 Reports first, then 12 Rooms & Messages (mocks only).
 
-BRANCH: lane-6-mayur, created from origin/integration. Every morning: `git fetch origin && git merge origin/integration`.
+BRANCH: lane-6-dhruv, created from origin/integration. Every morning: `git fetch origin && git merge origin/integration`.
 
 YOU OWN — edit ONLY these paths:
   - src/routes/app/rooms/**
