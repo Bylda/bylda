@@ -1,10 +1,9 @@
 # CODEOWNERS — who must review what. Last matching pattern wins.
 #
 # GitHub handles: Ansh = @anshpatel102104-ai · Tirth = @tirthkachhia ·
-# Dravin = @dravindilip-svg · Dhruv = @launchpadp.
-# ⚠️ Mayur (Lane 5) and Lane 6 (first free person) are routed to Ansh FOR NOW —
-# Mayur's handle isn't known yet and Lane 6 has no owner. Every handle needs write
-# access on the repo, or GitHub silently ignores its rules.
+# Dravin = @dravindilip-svg · Dhruv = @launchpadp · Mayur = @mayurnp27.
+# ⚠️ Lane 6 (first free person) is routed to Ansh FOR NOW — it has no owner yet.
+# Every handle needs write access on the repo, or GitHub silently ignores its rules.
 #
 # Owners as of 2026-09-30 (CLAUDE.md §8 / §12):
 #   Lane 1 Ansh · Lane 2 Dhruv · Lane 4 Dravin · Lane 5 Mayur · Lane 6 first free · Backend Tirth
@@ -90,12 +89,12 @@
 /src/components/lanes/lane-4/               @dravindilip-svg
 
 # Lane 5 — Mayur: 15 Integrations, 16 Settings + Methodology, 17 states, 18 Mobile
-/src/routes/app/connections/                @anshpatel102104-ai
-/src/routes/app/workspace/                  @anshpatel102104-ai
-/src/routes/app/methodology/                @anshpatel102104-ai
-/src/routes/app/states/                     @anshpatel102104-ai
-/src/routes/m/                              @anshpatel102104-ai
-/src/components/lanes/lane-5/               @anshpatel102104-ai
+/src/routes/app/connections/                @mayurnp27
+/src/routes/app/workspace/                  @mayurnp27
+/src/routes/app/methodology/                @mayurnp27
+/src/routes/app/states/                     @mayurnp27
+/src/routes/m/                              @mayurnp27
+/src/components/lanes/lane-5/               @mayurnp27
 
 # Lane 6 — first free person: 12 Rooms & Messages, 10 Reports
 /src/routes/app/rooms/                      @anshpatel102104-ai
