@@ -659,12 +659,16 @@ carry the line *"See CLAUDE.md §13: decision overrides Figma."*
 
 **V1 is a faithful, editable UI/UX base, not a demo.**
 
-- **Match Figma; don't optimize for demo data.**
+- **Match Figma; don't optimize for demo data.** Fixtures stay; they exist to
+  exercise every state, not to make screens look full.
 - **Lane code uses ONLY kit components (`src/components/bylda/**`) and tokens.** No
   inline styles, no hard-coded colors, spacing or font sizes.
 - **If the kit lacks something:** build it as `Local<Name>` in your lane folder and
-  log it in `LANE_REQUESTS.md` with the tag **`fold-into-kit`**. These get merged into
-  the kit in one pass at the end.
+  log it in `LANE_REQUESTS.md` with the tag **`fold-into-kit`**.
+- **Before building a `Local<Name>`,** check `LANE_REQUESTS.md` for an existing
+  `fold-into-kit` entry; reuse it if one exists.
+- **Ansh folds `Local<Name>` components into the kit weekly;** lanes then swap to the
+  kit version.
 
 1. **Tokens.** Three semantic tokens beyond Figma's set, in `src/styles/bylda.css`
    and `design-ref/_tokens.md`:
