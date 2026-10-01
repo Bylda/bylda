@@ -37,6 +37,7 @@ READ ONLY THESE, don't explore elsewhere: CLAUDE.md, src/components/bylda/index.
 src/lib/data/README.md. Pull Figma frames by node ID only (fileKey 8q5872jwTTRK69cOrWDOmk),
 with get_design_context. Never call get_metadata without a nodeId (it's broken on this file).
 Never build from page 19 (PROTO copies) — use it only to check links.
+DESIGN-REF: Build each screen from design-ref/<screen-code>/spec.md (+ frame.png if present). Do NOT call Figma tools unless that screen's design-ref folder is missing. For the Figma check before the PR, compare your screenshot to design-ref instead of calling Figma.
 
 RULES: screens import data ONLY from @/lib/data and UI ONLY from @/components/bylda.
 No fetch / supabase / invokeEdge in a screen. No hard-coded numbers. Tokens only (by-*).
@@ -110,6 +111,7 @@ READ ONLY THESE, don't explore elsewhere: CLAUDE.md, src/components/bylda/index.
 src/lib/data/README.md. Pull Figma frames by node ID only (fileKey 8q5872jwTTRK69cOrWDOmk),
 with get_design_context. Never call get_metadata without a nodeId (it's broken on this file).
 Never build from page 19 (PROTO copies) — use it only to check links.
+DESIGN-REF: Build each screen from design-ref/<screen-code>/spec.md (+ frame.png if present). Do NOT call Figma tools unless that screen's design-ref folder is missing. For the Figma check before the PR, compare your screenshot to design-ref instead of calling Figma.
 
 RULES: screens import data ONLY from @/lib/data and UI ONLY from @/components/bylda.
 No fetch / supabase / invokeEdge in a screen. No hard-coded numbers. Tokens only (by-*).
@@ -202,6 +204,7 @@ READ ONLY THESE, don't explore elsewhere: CLAUDE.md, src/components/bylda/index.
 src/lib/data/README.md. Pull Figma frames by node ID only (fileKey 8q5872jwTTRK69cOrWDOmk),
 with get_design_context. Never call get_metadata without a nodeId (it's broken on this file).
 Never build from page 19 (PROTO copies) — use it only to check links.
+DESIGN-REF: Build each screen from design-ref/<screen-code>/spec.md (+ frame.png if present). Do NOT call Figma tools unless that screen's design-ref folder is missing. For the Figma check before the PR, compare your screenshot to design-ref instead of calling Figma.
 
 RULES: screens import data ONLY from @/lib/data and UI ONLY from @/components/bylda.
 No fetch / supabase / invokeEdge in a screen. No hard-coded numbers. Tokens only (by-*).
@@ -286,6 +289,7 @@ READ ONLY THESE, don't explore elsewhere: CLAUDE.md, src/components/bylda/index.
 src/lib/data/README.md. Pull Figma frames by node ID only (fileKey 8q5872jwTTRK69cOrWDOmk),
 with get_design_context. Never call get_metadata without a nodeId (it's broken on this file).
 Never build from page 19 (PROTO copies) — use it only to check links.
+DESIGN-REF: Build each screen from design-ref/<screen-code>/spec.md (+ frame.png if present). Do NOT call Figma tools unless that screen's design-ref folder is missing. For the Figma check before the PR, compare your screenshot to design-ref instead of calling Figma.
 
 RULES: screens import data ONLY from @/lib/data and UI ONLY from @/components/bylda.
 No fetch / supabase / invokeEdge in a screen. No hard-coded numbers. Tokens only (by-*).
@@ -365,6 +369,7 @@ READ ONLY THESE, don't explore elsewhere: CLAUDE.md, src/components/bylda/index.
 src/lib/data/README.md. Pull Figma frames by node ID only (fileKey 8q5872jwTTRK69cOrWDOmk),
 with get_design_context. Never call get_metadata without a nodeId (it's broken on this file).
 Never build from page 19 (PROTO copies) — use it only to check links.
+DESIGN-REF: Build each screen from design-ref/<screen-code>/spec.md (+ frame.png if present). Do NOT call Figma tools unless that screen's design-ref folder is missing. For the Figma check before the PR, compare your screenshot to design-ref instead of calling Figma.
 
 RULES: screens import data ONLY from @/lib/data and UI ONLY from @/components/bylda.
 No fetch / supabase / invokeEdge in a screen. No hard-coded numbers. Tokens only (by-*).

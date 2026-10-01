@@ -54,6 +54,7 @@
 /src/components/bylda/                      @anshpatel102104-ai
 /src/routes/app.tsx                         @anshpatel102104-ai
 /src/routes/dev/                            @anshpatel102104-ai
+/design-ref/                                @anshpatel102104-ai
 /src/lib/data/                              @anshpatel102104-ai
 
 # Guards and the docs everybody builds against
