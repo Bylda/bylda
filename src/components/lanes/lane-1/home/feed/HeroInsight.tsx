@@ -7,12 +7,12 @@ import {
   Icon,
   Reactions,
   Tag,
+  TrendChart,
   cn,
   type TagTone,
 } from "@/components/bylda";
 import { useRepScores, type Insight, type Person } from "@/lib/data";
 import { lastChangePct, stamp } from "../shared/format";
-import { Sparkline } from "../shared/Sparkline";
 import { useLocalReactions } from "./useLocalReactions";
 import { behaviorKeyOf, evidenceCallIds, insightRoutes } from "./links";
 
@@ -148,7 +148,13 @@ function RepTrend({ rep, behaviorKey }: { rep: Person; behaviorKey: string }) {
         <>
           <span className="type-ui-small text-by-text-secondary">{score.name}</span>
           <span className={cn("flex items-center gap-1.5", tone)}>
-            <Sparkline data={score.sparkline} />
+            <TrendChart
+              series={score.sparkline}
+              width={60}
+              height={18}
+              strokeWidth={1.5}
+              pad={1.5}
+            />
             {pct !== null ? (
               <span className="type-ui-body-strong">
                 {pct > 0 ? "↑" : pct < 0 ? "↓" : "→"} {Math.abs(pct)}%

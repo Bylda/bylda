@@ -10,6 +10,7 @@ import {
   SkeletonBlock,
   StateError,
   SystemState,
+  TrendChart,
   systemStates,
   cn,
 } from "@/components/bylda";
@@ -22,8 +23,7 @@ import {
   type OutcomeAssociation,
 } from "@/lib/data";
 import type { QueryLike } from "@/components/bylda";
-import { OUTCOME_LABEL, formatValue, pct, periodChange } from "./behavior/format";
-import { LocalTrendChart } from "./behavior/LocalTrendChart";
+import { OUTCOME_LABEL, formatValue, pct, periodChange, project } from "./behavior/format";
 import { RepsAffected } from "./behavior/RepsAffected";
 
 /**
@@ -179,8 +179,9 @@ function Loaded({ d, outcomes }: { d: BehaviorDetail; outcomes: QueryLike<Outcom
           <h2 className="type-mono-micro text-by-text-tertiary">
             TREND · {behavior.name.toUpperCase()}
           </h2>
-          <LocalTrendChart
+          <TrendChart
             series={d.sparkline}
+            projected={project(d.sparkline)}
             label={`${behavior.name} trend, measured then projected`}
             className={trendTone}
           />
