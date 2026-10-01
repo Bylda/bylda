@@ -254,6 +254,7 @@ export type BehaviorScore = {
   name: string;
   value: number;
   unit: "ratio" | "seconds" | "per_call" | "percent" | "count";
+  /** Anonymous aggregate. `null` when the team has fewer than 8 reps (§4, §13.6) — hide the row. */
   teamMedian: number | null;
   direction: Direction;
   confidence: Confidence;
@@ -273,6 +274,7 @@ export type BehaviorScore = {
 | `unit` | enum(ratio \| seconds \| per_call \| percent \| count) |  |  |
 | `value` | numeric |  |  |
 | `team_median` | numeric | yes |  |
+| `team_size` | int | yes | reps on the subject's team for the period — team_median is shown only when >= 8 |
 | `direction` | enum(improving \| regressing \| steady) |  |  |
 | `confidence` | enum(low \| medium \| high) |  |  |
 | `sample_size` | int |  |  |
@@ -302,6 +304,7 @@ Notes: Materialised weekly by a job over behavioral_events. PK (subject_type, su
   "unit": "seconds",
   "value": 0.4,
   "team_median": 1.3,
+  "team_size": 9,
   "direction": "regressing",
   "confidence": "high",
   "sample_size": 41,

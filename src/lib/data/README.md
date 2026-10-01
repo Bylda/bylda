@@ -121,7 +121,7 @@ return (
 | --- | --- | --- | --- | --- |
 | `useBehaviors` | `Behavior[]` | — | all (C-02) | L1, L2, L4, L5 — `I7` `T4` `G2` `E12` |
 | `useBehaviorDetail` | `BehaviorDetail` | — | all (C-02, C-03) · refused to reps | L1 — `I2` |
-| `useRepScores` | `BehaviorScore[]` | — | all (C-03) · reps: own only · fixed y-range sparklines | L4 — `T9` `T12` |
+| `useRepScores` | `BehaviorScore[]` | — | all (C-03) · reps: own only · fixed y-range sparklines · `teamMedian` **null under 8 reps** | L4 — `T9` `T12` |
 | `usePatterns` | `Pattern[]` | — | all (C-15) · refused to reps | L1 — `I1` `I3` `I7` `I8` `I9` `I10` `I11` |
 | `useObjectionStats` | `ObjectionStat[]` | label, count, callCount from `call_insights.objections` | handledWellRate, trend (C-25) · refused to reps | L1 — `I4` |
 | `useOutcomeAssociations` | `OutcomeAssociation[]` | — | all (C-14) · returns n<30 rows too — render Y3 via `isOutcomeSufficient()` · refused to reps | L1 — `I2` `I5` `I6` `I9` |
@@ -215,6 +215,15 @@ There is **no backend guarantee** (RLS on `calls` is org-wide). The loaders enfo
 team-wide / peer / comparison data. `src/lib/data/__tests__/rep-safety.test.ts` proves
 it for every rep-reachable loader and for the rep nav.
 
+**Team median (CLAUDE.md §4, §13.6).** `BehaviorScore.teamMedian` is an anonymous
+aggregate — one number, never per-rep values — and is **`null` whenever the team has
+fewer than 8 reps** (`MIN_REPS_FOR_TEAM_MEDIAN`). It's gated in the data layer, never in
+a screen: `gateTeamMedian()` runs in `mapBehaviorScore` (real rows, via `team_size`) and
+in `loadRepScores` (mocks), and fails closed when team size is unknown. **Screens must
+hide the team-median row entirely when `teamMedian` is `null`** — no "—", no "n/a", no
+placeholder. `__tests__/team-median.test.ts` proves 7 → null, 8 → value, and that
+rep-scoped hooks never carry per-rep values.
+
 ## Contracts & tests
 
 - `src/lib/data/contracts/` — one contract per MISSING object/field (37). Each has the
@@ -225,6 +234,7 @@ it for every rep-reachable loader and for the rep nav.
 - `__tests__/contract-guard.test.ts` — proves the contract checks catch a drifting row.
 - `__tests__/adapters-mock.test.ts` — every loader works in mock mode.
 - `__tests__/rep-safety.test.ts` — reps get only their own data; peer data is refused.
+- `__tests__/team-median.test.ts` — team median null under 8 reps; no per-rep values in rep hooks.
 - `__tests__/calls-hybrid.test.ts` — hybrid mapping of today's call rows.
 - `__tests__/contracts-doc.test.ts` — BACKEND_BACKLOG.md is not stale.
 
