@@ -9,9 +9,16 @@ import {
   PATTERNS,
   SCORES_JORDAN,
 } from "../mocks/intelligence";
+import { personById, TEAMS } from "../mocks/people";
 import type { Behavior, BehaviorDetail, BehaviorScore, ObjectionStat, Pattern } from "../types";
 import { fetchBehaviorScores, fetchBehaviors, fetchObjectionRows, fetchPatterns } from "./fetchers";
-import { aggregateObjections, mapBehavior, mapBehaviorScore, mapPattern } from "./map";
+import {
+  aggregateObjections,
+  gateTeamMedian,
+  mapBehavior,
+  mapBehaviorScore,
+  mapPattern,
+} from "./map";
 import { behaviorKeys } from "./queryKeys";
 import { OBJECTIONS_SOURCE, SOURCE } from "./source";
 
@@ -35,13 +42,22 @@ export async function loadBehaviorDetail(
   return null;
 }
 
-/** T9/T12/R2 — a rep only ever gets their own scores. */
+/**
+ * T9/T12/R2 — a rep only ever gets their own scores. `teamMedian` is null when the
+ * rep's team has fewer than 8 reps (§4, §13.6): real rows gate in mapBehaviorScore,
+ * mocks gate here, so no screen can ever receive the number.
+ */
 export async function loadRepScores(ctx: DataCtx, repId: string): Promise<BehaviorScore[]> {
   const id = scopeRepId(ctx, repId);
-  if (resolveSource(SOURCE) === "mock")
-    return id === "u_jordan"
-      ? SCORES_JORDAN
-      : SCORES_JORDAN.map((s) => ({ ...s, value: +(s.value * 1.2).toFixed(1) }));
+  if (resolveSource(SOURCE) === "mock") {
+    const teamId = id ? personById(id)?.teamId : null;
+    const teamSize = TEAMS.find((t) => t.id === teamId)?.repCount ?? null;
+    const scores =
+      id === "u_jordan"
+        ? SCORES_JORDAN
+        : SCORES_JORDAN.map((s) => ({ ...s, value: +(s.value * 1.2).toFixed(1) }));
+    return scores.map((s) => ({ ...s, teamMedian: gateTeamMedian(s.teamMedian, teamSize) }));
+  }
   return (await fetchBehaviorScores()).map(mapBehaviorScore);
 }
 

@@ -1,5 +1,7 @@
 # A3 — Auth — Verify email · node `26:139` · Lane 4 (Dravin) · route `/welcome/verify` · exported 2026-10-01
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.

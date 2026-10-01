@@ -1,5 +1,7 @@
 # A11 — Onboarding — First insight · node `16:244` · Lane 4 (Dravin) · route `/welcome/first-insight` · exported 2026-10-01
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.

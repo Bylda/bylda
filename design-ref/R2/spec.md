@@ -1,5 +1,8 @@
 # R2 — Rep — My progress · node `32:129` · Lane 4 (Dravin) · route `/app/rep/progress` · exported 2026-10-01
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+> **Team median (§4, §13.6):** anonymous aggregate only — no names, no ranks — and **hidden when the team has fewer than 8 reps**.
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.

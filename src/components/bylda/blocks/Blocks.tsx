@@ -81,7 +81,7 @@ export function CallBlock({
 }) {
   return (
     <div className={cn(SHELL, className)}>
-      <span className="flex h-[68px] w-[120px] shrink-0 items-center justify-center overflow-hidden rounded-by-control bg-by-call-thumb">
+      <span className="flex h-[68px] w-[120px] shrink-0 items-center justify-center overflow-hidden rounded-by-control bg-by-surface-sidebar">
         <span className="flex size-7 items-center justify-center rounded-by-pill bg-by-surface-raised/90 text-by-text-primary">
           <Icon name="play" size={12} />
         </span>
