@@ -18,6 +18,7 @@ export { initialsOf } from "./kit/initials";
 export { SidebarItem, type SidebarItemState } from "./kit/SidebarItem";
 export { ConfidenceMeter, type ConfidenceLevel } from "./kit/ConfidenceMeter";
 export { EvidenceBlock, type Evidence } from "./kit/EvidenceBlock";
+export { TrendChart, type TrendSeries } from "./kit/TrendChart";
 export {
   InsightCard,
   type InsightCardProps,

@@ -1,3 +1,9 @@
+import {
+  RouterProvider,
+  createMemoryHistory,
+  createRootRoute,
+  createRouter,
+} from "@tanstack/react-router";
 import { renderToString } from "react-dom/server";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { ForbiddenForRoleError, setSourceOverride, type DataCtx } from "@/lib/data";
@@ -72,6 +78,36 @@ describe("Behavior Detail — reps affected is manager-only", () => {
       />,
     );
     expect(html).toContain("doesn’t have a behavior called that");
+  });
+});
+
+describe("Behavior Detail — loaded view", () => {
+  it("renders the manager view: stats, trend, evidence links, by-rep names", async () => {
+    const full = (await loadBehaviorDetail(
+      ctx("manager"),
+      "pause_after_objection",
+    )) as BehaviorDetail;
+    const root = createRootRoute({
+      component: () => (
+        <BehaviorDetailView
+          detail={{ ...idle, data: full }}
+          outcomes={{ ...idle, data: [], isEmpty: true }}
+          behaviorKey="pause_after_objection"
+        />
+      ),
+    });
+    const router = createRouter({
+      routeTree: root,
+      history: createMemoryHistory({ initialEntries: ["/"] }),
+    });
+    await router.load();
+    const html = renderToString(<RouterProvider router={router} />);
+    expect(html).toContain(full.behavior.name);
+    expect(html).toContain("TEAM TREND");
+    expect(html).toMatch(new RegExp(`n=(<!-- -->)?${full.sampleSize}`));
+    expect(html).toContain("<svg");
+    for (const e of full.evidence) expect(html).toContain(`href="/app/calls/${e.callId}"`);
+    for (const r of full.byRep) expect(html).toContain(r.repName);
   });
 });
 

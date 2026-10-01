@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { cn } from "./cn";
 
 /** Evidence Block (4:67) — a timestamped quote on the Inset surface. */
@@ -7,7 +8,7 @@ export type Evidence = {
   /** "PROSPECT", "REP", a name… */
   speaker: string;
   quote: string;
-  /** Optional deep link to the moment. */
+  /** Optional deep link to the moment. In-app paths (/…#hash) navigate client-side; others load normally. */
   href?: string;
 };
 
@@ -30,11 +31,20 @@ export function EvidenceBlock({ evidence, className }: { evidence: Evidence; cla
     evidence.href && "transition-colors hover:border-by-border-control",
     className,
   );
-  return evidence.href ? (
-    <a href={evidence.href} className={cls}>
+  const href = evidence.href;
+  if (!href) return <div className={cls}>{body}</div>;
+  // In-app paths go through the router (client-side nav); anything else is a plain link.
+  if (href.startsWith("/") && !href.startsWith("//")) {
+    const [path, hash] = href.split("#");
+    return (
+      <Link to={path as never} hash={hash} className={cls}>
+        {body}
+      </Link>
+    );
+  }
+  return (
+    <a href={href} className={cls}>
       {body}
     </a>
-  ) : (
-    <div className={cls}>{body}</div>
   );
 }
