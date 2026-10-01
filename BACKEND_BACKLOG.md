@@ -27,14 +27,14 @@ Lanes never wait on this list — every item is mocked behind the same hook toda
 | 4 | `Behavior` (+ weekly behavior scores) | C-02, C-03 | `backend/behavior` | Not started |
 | 5 | `Insight` (+ home feed) | C-04, C-07 | `backend/insight` | Not started |
 | 6 | `CoachingFocus` (+ discussion) | C-05, C-11 | `backend/coaching-focus` | Not started |
-| 7 | `OutcomeAssociation` | C-14 | `backend/outcome-association` | Not started |
-| 8 | `calls.coaching_value` + `stage_at_call` (+ the rest of the V1 call row) | C-06 | `backend/call-fields` | Not started |
+| 7 | `calls.coaching_value` + `stage_at_call` (+ the rest of the V1 call row) | C-06 | `backend/call-fields` | Not started |
+| 8 | `OutcomeAssociation` | C-14 | `backend/outcome-association` | Not started |
 | 9+ | Every remaining contract, in contract order (C-08 teams, C-09 roles, C-10 moments, C-12, C-13 briefs, C-15…C-36) | see below | `backend/<domain>` | Not started |
 
-⚠️ **Recommendation (not applied — the order above is §12 D as decided):** swap 7 and 8.
-`OutcomeAssociation` unblocks Flow 3/9 (Intelligence); `calls.coaching_value` unblocks
-Flow 1 (it ranks `C1`, `H1`, `H3`). Swapping them completes the Flow 1 demo on real data
-one item sooner. The contract numbering below already follows flow order.
+Items 7 and 8 were **swapped on 2026-09-30** (Ansh): `calls.coaching_value` +
+`stage_at_call` unblock Flow 1 (they rank `C1`, `H1`, `H3`), so doing them before
+`OutcomeAssociation` (Flow 3/9, Intelligence) completes the Flow 1 demo on real data one
+item sooner. The contract numbering below already follows flow order.
 
 ## 1. Auth findings (from `AUDIT.md`, re-verified 2026-09-30)
 

@@ -317,7 +317,8 @@ regenerated file.
 **Owners as of 2026-09-30:** Lane 1 Ansh · Lane 2 Dhruv · **Lane 4 Dravin** ·
 **Lane 5 Mayur** · Lane 6 first free person · Backend track Tirth.
 (Lanes 4 and 5 swapped owners on 2026-09-30; lane numbers, folders, screens and
-order did not change. There is no Lane 3 any more — its areas moved to Lanes 2 and 4.)
+order did not change. There is no Lane 3 any more — its areas moved to Lanes 2 and 4.
+Later on 2026-09-30 **10 Reports moved from Lane 4 to Lane 6**.)
 
 ### Foundation — frozen once merged (owner Ansh)
 
@@ -340,15 +341,14 @@ route file and a placeholder screen component (§12 G). **No route folder is sha
 | --- | --- | --- | --- | --- |
 | 1 | **Ansh** | 05 Manager/Admin Home → 14 Notifications → 08 Intelligence | `src/routes/app/home/**` (`/app/home`) · `src/routes/app/notifications/**` · `src/routes/app/intelligence/**` | `src/components/lanes/lane-1/**` |
 | 2 | **Dhruv** | 07 Calls → 13 Search & Ask → 11 Coaching | `src/routes/app/calls/**` · `src/routes/app/search/**` · `src/routes/app/coaching/**` | `src/components/lanes/lane-2/**` |
-| 4 | **Dravin** | 04 Onboarding/Auth → 06 Rep → 09 Team → 10 Reports | `src/routes/welcome/**` (`/welcome/*`, outside the shell) · `src/routes/app/rep/**` · `src/routes/app/team/**` · `src/routes/app/reports/**` · `src/routes/doc/**` (email/push/print, outside the shell) | `src/components/lanes/lane-4/**` |
-| 5 | **Mayur** | 17 States (review) → 15 Integrations → 16 Settings + Methodology → 18 Mobile | `src/routes/app/connections/**` · `src/routes/app/workspace/**` · `src/routes/app/methodology/**` · `src/routes/app/states/**` · `src/routes/m/**` (390 mobile, outside the shell) | `src/components/lanes/lane-5/**` |
-| 6 | first free person | 12 Rooms & Messages — **mocks only** | `src/routes/app/rooms/**` · `src/routes/app/dm/**` | `src/components/lanes/lane-6/**` |
+| 4 | **Dravin** | 04 Onboarding/Auth → 06 Rep → 09 Team | `src/routes/welcome/**` (`/welcome/*`, outside the shell) · `src/routes/app/rep/**` · `src/routes/app/team/**` | `src/components/lanes/lane-4/**` **except** `lane-4/reports/**` |
+| 5 | **Mayur** | 15 Integrations → 16 Settings + Methodology → 18 Mobile (17 States ✅ done) | `src/routes/app/connections/**` · `src/routes/app/workspace/**` · `src/routes/app/methodology/**` · `src/routes/app/states/**` · `src/routes/m/**` (390 mobile, outside the shell) | `src/components/lanes/lane-5/**` |
+| 6 | first free person | 12 Rooms & Messages — **mocks only** → 10 Reports | `src/routes/app/rooms/**` · `src/routes/app/dm/**` · `src/routes/app/reports/**` · `src/routes/doc/**` (email/push/print, outside the shell) | `src/components/lanes/lane-6/**` · `src/components/lanes/lane-4/reports/**` (Reports placeholders stay at that path) |
 | — | **Tirth** (backend) | `BACKEND_BACKLOG.md`, in order | `supabase/**` etc., on `backend/*` branches only | — |
 
 **Real view counts** (`FRAMES.md`): Lane 1 **20** (7 + 2 + 11) · Lane 2 **24** (9 + 3 + 12) ·
-Lane 4 **37** (11 + 3 + 13 + 10) · Lane 5 **45** (13 states + 3 + 18 + 11) · Lane 6 **14**.
-Foundation already ships all 13 page-17 states as components, so Lane 5's real load
-is ~32. Lane 4 is now the heaviest — watch it.
+Lane 4 **27** (11 + 3 + 13) · Lane 5 **32** (3 + 18 + 11; the 13 page-17 states are done —
+Foundation built them) · Lane 6 **24** (14 + 10).
 
 ### Route conflicts — resolved
 
@@ -374,11 +374,11 @@ Cross-area screens, each assigned to exactly one lane:
 | `N1` Notifications drawer | shell overlay | **Lane 1** | component the shell mounts: `lanes/lane-1/notifications/N1NotificationsDrawer.tsx` |
 | `O8`–`O11` special rooms | same room route, different room kind | **Lane 6** | `/app/rooms/$roomId` picks the screen by kind |
 | `B10`, `B11` responsive Manager Home | shell breakpoints + Lane 1's H1 | **Foundation** builds the breakpoints; **Lane 5** QA's them | `/app/home` at 1280 / 1024 |
-| `Y1`–`Y13` system states | every lane uses them | **Foundation** built them; **Lane 5** reviews against `19:2` | `@/components/bylda` → `SystemState` |
+| `Y1`–`Y13` system states | every lane uses them | **Foundation** built them — ✅ done | `@/components/bylda` → `SystemState` |
 
 Legacy routes that map to a V1 screen (`AUDIT.md`) are **not edited during lane
 work**. At final cleanup their owner replaces each with a redirect to the V1 path:
-Lane 4 — `auth.*`, `signup`, `onboarding`, `app.bylda.reports`; Lane 1 — `app.index`,
+Lane 4 — `auth.*`, `signup`, `onboarding`; Lane 6 — `app.bylda.reports`; Lane 1 — `app.index`,
 `app.bylda-home`, `app.monitoring`; Lane 2 — `app.crm.calls`, `app.crm.conversations`;
 Lane 5 — `app.integrations`, `app.crm.setup`, `app.settings`, `app.billing*`,
 `app.playbook`, `app.admin`, `app.context-memory`, `app.memory`.
@@ -501,9 +501,11 @@ rebuild lands. The last two are Deno edge code dragged in because
 `_shared/sales-verticals`. Fixing them would mean editing a backend file, which
 §2 forbids. **Don't fix any of the 8 in a lane PR.**
 
-`bun run lint` → **208 errors, 122 warnings.** Most are Prettier formatting in
+`bun run lint` → **208 errors, 116 warnings** (re-measured 2026-10-01 on `foundation`,
+with `.vercel/` ignored — before that, a local `bun run build` left a `.vercel/`
+bundle that made full lint run 15+ minutes). Most are Prettier formatting in
 `supabase/functions/**` and `workers/**` — backend paths you may not touch. Scoped
-to `eslint src` it is still 66 errors / 121 warnings, all pre-existing.
+to `eslint src` it is still 66 errors / 115 warnings, all pre-existing.
 
 So **`bun run lint` is not a usable gate.** Use `bun run lint:changed`, which
 lints only the `.ts`/`.tsx` files your branch changed (backend paths and
@@ -561,6 +563,12 @@ This rules on every UNSURE item in `BACKEND_BOUNDARY.md`.
   still reachable by URL, listed in **`LEGACY_ROUTES.md`**. Their 9 redirect stubs too.
 - The **8 DELETE routes** (`AUDIT.md`) are deleted only in the final cleanup PR.
 - Legacy routes that map to a V1 screen become redirects at final cleanup (§8).
+- **Cutover rule.** `/app` and `/auth` switch to the V1 routes only when **Lane 1
+  sections 1–2** (Manager Home feed + tabs, Admin Home) **and Lane 4 onboarding**
+  (sections 1–3: sign in/up/verify, onboarding, invite acceptance) are all merged into
+  `integration`. Until then the demo runs from **`/app/home`** and **`/welcome`**.
+- The 29 quarantined routes (and their 9 redirect stubs) are **kept until after the
+  demo** — they are not deleted or redirected as part of cutover.
 
 ### C. Types
 
@@ -579,7 +587,7 @@ paths through on that combination — see G). Order:
    `config.toml` entry.
 2. Regenerate `types.ts` (then delete `src/lib/data/db-types.ts`).
 3. `BehavioralEvent` → 4. `Behavior` → 5. `Insight` → 6. `CoachingFocus` →
-   7. `OutcomeAssociation` → 8. `calls.coaching_value` + `stage_at_call`.
+   7. `calls.coaching_value` + `stage_at_call` → 8. `OutcomeAssociation`.
 9. Then every other contract in `BACKEND_BACKLOG.md`, in its order.
 
 He builds **to the contracts in `BACKEND_BACKLOG.md`** — the frontend defines the
@@ -600,12 +608,13 @@ wrong — fix `map.ts`.
 | --- | --- | --- |
 | 1 | **Ansh** | Manager/Admin Home, Notifications, Intelligence (05, 14, 08) |
 | 2 | **Dhruv** | Calls, Search & Ask (07, 13), then Coaching (11) |
-| 4 | **Dravin** | Onboarding/Auth, Rep (04, 06), then Team + Reports (09, 10) |
-| 5 | **Mayur** | Integrations, Settings, system states, mobile (15, 16, 17, 18) |
-| 6 | first free person | Rooms & Messages (12), mocks only |
+| 4 | **Dravin** | Onboarding/Auth, Rep (04, 06), then Team (09) |
+| 5 | **Mayur** | Integrations, Settings, mobile (15, 16, 18); system states (17) done |
+| 6 | first free person | Rooms & Messages (12), mocks only, then Reports (10) |
 | Backend | **Tirth** | `BACKEND_BACKLOG.md` |
 
 Each lane edits **only** its own route folders + `src/components/lanes/<lane>/**` (§8).
+One exception: `src/components/lanes/lane-4/reports/**` belongs to **Lane 6**, not Lane 4.
 Branch `lane-<n>-<name>` off `integration` (`lane-1-ansh`, `lane-2-dhruv`,
 `lane-4-dravin`, `lane-5-mayur`, `lane-6-<name>`). **Merge `integration` in every
 morning.** One small PR per section. Per-person start prompts: **`TEAM_START.md`**.

@@ -193,20 +193,20 @@ H2–H6 are tabs of H1 (`For You · Team Updates · Calls · Coaching · Reports
 | Rep Profile — Trends | `45:2142` | `T12` | Dravin | `/app/team/reps/$repId/trends` |
 | Rep Comparison | `29:1629` | `T13` | Dravin | `/app/team/compare` |
 
-## Lane 4 — Dravin · 10 Reports · `1:11` · 10 views
+## Lane 6 — first free person · 10 Reports · `1:11` · 10 views
 
 | Frame name | Node ID | Code | Owner | Width | V1 route |
 | --- | --- | --- | --- | --- | --- |
-| Reports — Index | `29:159` | `P1` | Dravin | 1440 | `/app/reports` |
-| Daily Manager Brief — in-app document | `13:2` | `P2` | Dravin | 1440×1656 | `/app/reports/daily` |
-| Daily Manager Brief — email (640) | `13:232` | `P3` | Dravin | **760** | `/doc/manager-brief-email` |
-| Daily Rep Brief — email / push (60 sec) | `13:316` | `P4` | Dravin | **420×380** | `/doc/rep-brief-push` |
-| Weekly Manager Report — living document | `29:352` | `P5` | Dravin | 1440×2056 | `/app/reports/weekly` |
-| Weekly Sales Behavior Report — outline | `52:10624` | `P6` | Dravin | 1440 | `/app/reports/outline` |
-| Weekly Rep Report — Jordan | `29:625` | `P7` | Dravin | 1440×1256 | `/app/reports/rep/$repId` |
-| Team Report — September | `29:773` | `P8` | Dravin | 1440×1256 | `/app/reports/team/$teamId` |
-| Behavior Report — Objection handling | `29:993` | `P9` | Dravin | 1440×1156 | `/app/reports/behavior/$behaviorKey` |
-| Weekly Report — PDF / print (A4) | `29:1154` | `P10` | Dravin | **794×1123** | `/doc/weekly-print` |
+| Reports — Index | `29:159` | `P1` | Lane 6 | 1440 | `/app/reports` |
+| Daily Manager Brief — in-app document | `13:2` | `P2` | Lane 6 | 1440×1656 | `/app/reports/daily` |
+| Daily Manager Brief — email (640) | `13:232` | `P3` | Lane 6 | **760** | `/doc/manager-brief-email` |
+| Daily Rep Brief — email / push (60 sec) | `13:316` | `P4` | Lane 6 | **420×380** | `/doc/rep-brief-push` |
+| Weekly Manager Report — living document | `29:352` | `P5` | Lane 6 | 1440×2056 | `/app/reports/weekly` |
+| Weekly Sales Behavior Report — outline | `52:10624` | `P6` | Lane 6 | 1440 | `/app/reports/outline` |
+| Weekly Rep Report — Jordan | `29:625` | `P7` | Lane 6 | 1440×1256 | `/app/reports/rep/$repId` |
+| Team Report — September | `29:773` | `P8` | Lane 6 | 1440×1256 | `/app/reports/team/$teamId` |
+| Behavior Report — Objection handling | `29:993` | `P9` | Lane 6 | 1440×1156 | `/app/reports/behavior/$behaviorKey` |
+| Weekly Report — PDF / print (A4) | `29:1154` | `P10` | Lane 6 | **794×1123** | `/doc/weekly-print` |
 
 `P3`, `P4`, `P10` are **not** app screens — email, push and print. Don't wrap them in the shell.
 
@@ -306,7 +306,7 @@ or counts that pile up."*
 | Settings — API keys | `31:9530` | `E17` | Mayur | `/app/workspace/api-keys` |
 | Settings — Audit log | `31:9715` | `E18` | Mayur | `/app/workspace/audit-log` |
 
-## Lane 5 — Mayur · 17 Empty & System States · `1:18` · BUILD FIRST
+## Lane 5 — Mayur · 17 Empty & System States · `1:18` · ✅ DONE (built in Foundation)
 
 One board frame `19:2` (1600×1424) holding **13** states. Every lane imports these.
 
@@ -375,17 +375,18 @@ Hidden helpers on this page: `__lib` `25:2`, `__swap` `38:2` — skip.
 
 ## View count per lane
 
-Owners as of 2026-09-30 (Lanes 4 and 5 swapped owners that day; lane numbers,
-folders, screens and order unchanged). Full ownership + folders: `CLAUDE.md` §8.
+Owners as of 2026-09-30 (Lanes 4 and 5 swapped owners that day). Later on
+2026-09-30 `10 Reports` moved from Lane 4 to Lane 6. Full ownership + folders:
+`CLAUDE.md` §8.
 
 | Lane | Owner | Areas | Views |
 | --- | --- | --- | --- |
 | Foundation | Ansh | 01, 02, 03 + all 13 states of 17 + shell breakpoints B10/B11 | tokens + 14 components + shell |
 | Lane 1 | Ansh | 05, 14, 08 | 7 + 2 + 11 = **20** |
 | Lane 2 | Dhruv | 07, 13, then 11 | 9 + 3 + 12 = **24** |
-| Lane 4 | Dravin | 04, 06, then 09, 10 | 11 + 3 + 13 + 10 = **37** |
-| Lane 5 | Mayur | 15, 16, 17 (review), 18 | 3 + 18 + 13 states + 11 = **45** (≈32 real — Foundation built the 13 states) |
-| Lane 6 | first free | 12 | **14** |
+| Lane 4 | Dravin | 04, 06, then 09 | 11 + 3 + 13 = **27** |
+| Lane 5 | Mayur | 15, 16, 18 (17 ✅ done) | 3 + 18 + 11 = **32** (the 13 states of 17 are built — Foundation) |
+| Lane 6 | first free | 12, then 10 | 14 + 10 = **24** |
 | Backend | Tirth | `BACKEND_BACKLOG.md` | — |
 | | | | **128 product views** |
 
@@ -395,5 +396,6 @@ component in `src/components/lanes/lane-<n>/` named by its code. Rows marked
 `N1`), a reference diagram (`G1`), or room kinds rendered by `/app/rooms/$roomId`
 (`O8`–`O11`).
 
-⚠️ Lane 4 (37) is now the heaviest. If it slips, the cheapest move is `10 Reports`
-(10 views) to Lane 1 after 08 lands.
+`10 Reports` moved from Lane 4 to Lane 6 on 2026-09-30 to rebalance (Lane 4 was 37).
+Its placeholder components stay at `src/components/lanes/lane-4/reports/` — Lane 6
+owns that folder (see `CLAUDE.md` §8).
