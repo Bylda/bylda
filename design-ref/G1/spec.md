@@ -1,4 +1,4 @@
-# G1 — Coaching lifecycle · node `14:2` · Lane 2 (Mayur) · exported 2026-10-01
+# G1 — Coaching lifecycle · node `14:2` · Lane 2 (Dhruv) · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · 1450×70 reference diagram → component `G1CoachingLifecycle` · `frame.png` = Figma render.
 

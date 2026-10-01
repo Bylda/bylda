@@ -1,4 +1,4 @@
-# S3 — Ask Bylda — side panel (from rail ✦) · node `50:26784` · Lane 2 (Mayur) · component `S3AskByldaSidePanel` (shell overlay) · exported 2026-10-01
+# S3 — Ask Bylda — side panel (from rail ✦) · node `50:26784` · Lane 2 (Dhruv) · component `S3AskByldaSidePanel` (shell overlay) · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

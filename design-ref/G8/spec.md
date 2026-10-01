@@ -1,4 +1,4 @@
-# G8 — Coaching Detail — Evidence · node `46:1935` · Lane 2 (Mayur) · route `/app/coaching/$focusId/evidence` · exported 2026-10-01
+# G8 — Coaching Detail — Evidence · node `46:1935` · Lane 2 (Dhruv) · route `/app/coaching/$focusId/evidence` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

@@ -1,4 +1,4 @@
-# G5 — Coaching — Completed · node `30:430` · Lane 2 (Mayur) · route `/app/coaching/completed` · exported 2026-10-01
+# G5 — Coaching — Completed · node `30:430` · Lane 2 (Dhruv) · route `/app/coaching/completed` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

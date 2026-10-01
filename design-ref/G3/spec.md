@@ -1,4 +1,4 @@
-# G3 — Coaching — Index (Active) · node `30:246` · Lane 2 (Mayur) · route `/app/coaching` · exported 2026-10-01
+# G3 — Coaching — Index (Active) · node `30:246` · Lane 2 (Dhruv) · route `/app/coaching` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

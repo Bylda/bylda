@@ -1,4 +1,4 @@
-# S2 — Search — Natural-language results · node `31:909` · Lane 2 (Mayur) · route `/app/search` · exported 2026-10-01
+# S2 — Search — Natural-language results · node `31:909` · Lane 2 (Dhruv) · route `/app/search` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

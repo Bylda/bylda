@@ -1,4 +1,4 @@
-# C3 — Call Review — Transcript & timeline · node `9:2` · Lane 2 (Mayur) · route `/app/calls/$callId/transcript` · exported 2026-10-01
+# C3 — Call Review — Transcript & timeline · node `9:2` · Lane 2 (Dhruv) · route `/app/calls/$callId/transcript` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
