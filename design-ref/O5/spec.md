@@ -1,5 +1,7 @@
 # O5 — Room — #objection-watch · Reports · node `48:2213` · Lane 6 (Mayur) · route `/app/rooms/$roomId/reports` · exported 2026-10-01
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.

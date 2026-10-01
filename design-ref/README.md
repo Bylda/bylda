@@ -14,9 +14,9 @@ Owner **Ansh** · frozen (CLAUDE.md §12 A) · re-export, never hand-edit.
 
 Exported 2026-10-01 from fileKey **`HWdVvVXWqJl4BFD9MZ5vgW`** ("Bylda — Behavioral Intelligence (V1) – Copy – Copy"), the link supplied for this export. Node IDs are identical to the `8q5872jwTTRK69cOrWDOmk` file in `FRAMES.md` (spot-checked on `4:66`, and all 24 frames resolved at their `FRAMES.md` IDs).
 
-Two deliberate deviations from "full output":
+Notes on "full output":
 
-- **C7** came back inline (too small to be saved by the tool) and was written by hand: its `App Shell / Navigation v2` subtree is collapsed to a one-line `{/* SHELL … */}` marker. Every other screen spec has the shell inline, verbatim.
+- **C7** was re-exported 2026-10-01 via the saved-file path (`forceCode`) and is now verbatim like every other screen spec, shell inline. (The first export came back inline and was hand-written with the shell collapsed.)
 - **`_components/app-shell-nav-v2`** (page 03, outside this batch's scope) is a pointer spec + PNG; its markup is already verbatim in every other screen spec.
 
 ## Shared

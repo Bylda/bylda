@@ -1,5 +1,7 @@
 # O14 — Rooms — New room modal · node `50:4184` · Lane 6 (Mayur) · route `/app/rooms/new` · exported 2026-10-01
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.

@@ -1,5 +1,7 @@
 # A9 — Onboarding — Invite team · node `26:496` · Lane 4 (Dravin) · route `/welcome/invite-team` · exported 2026-10-01
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.

@@ -4,7 +4,15 @@ fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · source: `get_variable_defs` on Foundations `
 
 > **Code uses `src/styles/bylda.css` — not this file.** This is the Figma side, for checking. Components bind the **semantic** layer only (`by-*` utilities, CLAUDE.md §3).
 
-⚠️ **Not in CLAUDE.md §3:** Figma defines a semantic **`border/strong` = `#D3D0CB`** (silver/300), bound on form inputs (e.g. C7 `28:1448`). Foundation's `by-border-control` is the same value — use that. Not yet in CLAUDE.md §3 — Ansh to add. `text/on-dark-muted` = `#9B9892` exists too (bound on Sidebar Item `4:47`, not on the nodes unioned below) — matches §3.
+**Decision tokens (CLAUDE.md §13.1)** — added on top of Figma's variables; code utilities in `src/styles/bylda.css`:
+
+| Token | Value | Source | Utility |
+| --- | --- | --- | --- |
+| `border/strong` | `#D3D0CB` (silver/300) | Figma variable, bound on form inputs (e.g. C7 `28:1448`) | `border-by-border-strong` (`by-border-control` is the same value, kept for the kit) |
+| `feedback/error` | `#C2413B` (= `signal/regress`, own token) | Decision — form errors only (§13.7) | `text-by-feedback-error`, `border-by-feedback-error` |
+| `focus/ring` | `#2A2A2E` (graphite/800) | Focused input border on **A1** `26:80` (A4 has no focused input — only the error state) | `ring-by-focus-ring`, `border-by-focus-ring` (`by-border-focus` is the same value) |
+
+`text/on-dark-muted` = `#9B9892` exists too (bound on Sidebar Item `4:47`, not on the nodes unioned below) — matches §3.
 
 Full frame (swatches, type ramp, spacing, radius, motion notes): `design-ref/_foundations/spec.md` + `frame.png`.
 
@@ -39,6 +47,8 @@ Full frame (swatches, type ramp, spacing, radius, motion notes): `design-ref/_fo
 | --- | --- | --- |
 | `border/engraved` | `#E5E3DF` | `primitive/silver/200` |
 | `border/strong` | `#D3D0CB` | `primitive/silver/300` |
+| `feedback/error` *(§13 decision)* | `#C2413B` | `primitive/signal/regress` |
+| `focus/ring` *(§13 decision)* | `#2A2A2E` | `primitive/graphite/800` |
 | `surface/canvas` | `#F8F7F5` | `primitive/pearl/0` |
 | `surface/inset` | `#F2F1EE` | `primitive/pearl/50` |
 | `surface/rail` | `#0B0B0C` | `primitive/ink` |

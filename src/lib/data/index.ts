@@ -4,7 +4,16 @@
  * Docs: src/lib/data/README.md.
  */
 export type * from "./types";
-export { OUTCOME_MIN_CLOSED, isOutcomeSufficient } from "./types";
+export {
+  OUTCOME_MIN_CLOSED,
+  isOutcomeSufficient,
+  REP_INSIGHT_MIN_CALLS,
+  TEAM_PATTERN_MIN_CALLS,
+  gateInsight,
+  insightMinCalls,
+  insightScope,
+  isInsightSufficient,
+} from "./types";
 
 export { mocksForced, resolveSource, setSourceOverride, type Source } from "./core/source";
 export { NotBuiltError, ForbiddenForRoleError, isNotBuilt } from "./core/errors";
@@ -58,7 +67,14 @@ export {
   type MyProgress,
 } from "./team/hooks";
 export { useReports, useBrief } from "./reports/hooks";
-export { useRooms, useRoom, useRoomMessages, useDmThreads, useDmMessages } from "./rooms/hooks";
+export {
+  useRooms,
+  useRoom,
+  useRoomMessages,
+  useRoomInsights,
+  useDmThreads,
+  useDmMessages,
+} from "./rooms/hooks";
 export {
   useNotifications,
   useMarkNotificationRead,

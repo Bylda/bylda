@@ -5,6 +5,7 @@ import { isEmptyArray } from "../core/query";
 import { resolveSource } from "../core/source";
 import { REPORTS, mockBrief } from "../mocks/collab";
 import type { Brief, ReportListItem } from "../types";
+import { isInsightSufficient } from "../types";
 import { fetchBriefs } from "./fetchers";
 import { mapBrief, toListItem } from "./map";
 import { reportKeys } from "./queryKeys";
@@ -43,7 +44,16 @@ export async function loadBrief(ctx: DataCtx, idOrKind: string): Promise<Brief |
   ) {
     throw new ForbiddenForRoleError("another person's report", ctx.role);
   }
-  return b;
+  // §13.13: a report never states a below-threshold insight.
+  return b
+    ? {
+        ...b,
+        sections: b.sections.map((s) => ({
+          ...s,
+          insights: s.insights.filter(isInsightSufficient),
+        })),
+      }
+    : null;
 }
 
 export const useReports = () => useCtxQuery(reportKeys.list(), loadReports, isEmptyArray);

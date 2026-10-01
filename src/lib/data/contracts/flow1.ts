@@ -209,6 +209,12 @@ export const C03 = defineContract<BehaviorScoreRow, ReturnType<typeof mapBehavio
       { name: "unit", type: { enum: ["ratio", "seconds", "per_call", "percent", "count"] } },
       { name: "value", type: "numeric" },
       { name: "team_median", type: "numeric", nullable: true },
+      {
+        name: "team_size",
+        type: "int",
+        nullable: true,
+        note: "reps on the subject's team for the period — team_median is shown only when >= 8",
+      },
       { name: "direction", type: { enum: ["improving", "regressing", "steady"] } },
       { name: "confidence", type: { enum: ["low", "medium", "high"] } },
       { name: "sample_size", type: "int" },
@@ -239,6 +245,7 @@ export const C03 = defineContract<BehaviorScoreRow, ReturnType<typeof mapBehavio
     unit: "seconds",
     value: 0.4,
     team_median: 1.3,
+    team_size: 9,
     direction: "regressing",
     confidence: "high",
     sample_size: 41,
@@ -292,6 +299,11 @@ export const C04 = defineContract<InsightRow, ReturnType<typeof mapInsight>>({
         type: "text",
         nullable: true,
         note: "e.g. 'n = 6 objections · 4 calls'",
+      },
+      {
+        name: "calls_n",
+        type: "int",
+        note: "analyzed calls behind it (rep's / team's). Rendered only if >= 10 rep / >= 50 team (CLAUDE.md §13.13)",
       },
       { name: "affected_rep_ids", type: "uuid[]" },
       {
@@ -348,6 +360,7 @@ export const C04 = defineContract<InsightRow, ReturnType<typeof mapInsight>>({
     confidence: "high",
     sample_n: 6,
     sample_label: "n = 6 objections · 4 calls",
+    calls_n: 41,
     affected_rep_ids: ["u_jordan"],
     evidence: [
       {

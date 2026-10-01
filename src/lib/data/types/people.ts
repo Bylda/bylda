@@ -18,6 +18,7 @@ export type BehaviorScore = {
   name: string;
   value: number;
   unit: "ratio" | "seconds" | "per_call" | "percent" | "count";
+  /** Anonymous aggregate. `null` when the team has fewer than 8 reps (§4, §13.6) — hide the row. */
   teamMedian: number | null;
   direction: Direction;
   confidence: Confidence;

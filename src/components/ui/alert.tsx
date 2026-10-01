@@ -10,7 +10,7 @@ const alertVariants = cva(
       variant: {
         default: "bg-by-surface-raised text-by-text-primary",
         destructive:
-          "border-by-signal-regress/50 text-by-signal-regress dark:border-by-signal-regress [&>svg]:text-by-signal-regress",
+          "border-by-feedback-error/50 text-by-feedback-error dark:border-by-feedback-error [&>svg]:text-by-feedback-error",
       },
     },
     defaultVariants: {

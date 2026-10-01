@@ -21,6 +21,7 @@ Lanes never wait on this list — every item is mocked behind the same hook toda
 
 | # | Item | Contract(s) | Branch | Status |
 | --- | --- | --- | --- | --- |
+| **0 · P0** | **Rep-scoped call access at the database level** (below) | C-06, C-09 | `backend/call-access` | Not started — **required before any real customer** |
 | 1 | Auth fixes (below) | — | `backend/auth-fixes` | Not started |
 | 2 | Regenerate `src/integrations/supabase/types.ts`; delete `src/lib/data/db-types.ts` | — | `backend/types-regen` | Not started |
 | 3 | `BehavioralEvent` | C-01 | `backend/behavioral-event` | Not started |
@@ -36,6 +37,26 @@ Items 7 and 8 were **swapped on 2026-09-30** (Ansh): `calls.coaching_value` +
 `OutcomeAssociation` (Flow 3/9, Intelligence) completes the Flow 1 demo on real data one
 item sooner. The contract numbering below already follows flow order.
 
+## 0. P0 — call access must be rep-scoped at the database level
+
+**Required before any real customer.** Approved 2026-10-01 (Ansh, `CLAUDE.md` §13.11).
+
+Call access must be rep-scoped in the database, not only in the UI:
+
+| Role | May read |
+| --- | --- |
+| rep | **only their own calls** (`calls.user_id = auth.uid()`) — and the transcripts, insights, events and moments of those calls |
+| manager | calls of reps on the teams they manage |
+| owner / admin | every call in the workspace |
+
+Today RLS on `calls` is `is_org_member(organization_id, auth.uid())` (migration
+`20260719000006`): any member reads every call in the org. The BYLDA Coach privacy claim
+(*"Coach only sees your calls"*, O13) and the "reps never see peer data" rule (§4) both
+depend on this; until it lands they are enforced only by `src/lib/data` filtering.
+Apply the same scoping to `call_transcripts`, `call_insights` and every per-call table
+added by C-01 / C-10. Needs C-08 teams + C-09 roles to be authoritative. Done when a
+contract test proves a rep JWT cannot read a peer's call row.
+
 ## 1. Auth findings (from `AUDIT.md`, re-verified 2026-09-30)
 
 | Finding | Where | Fix to make |
@@ -43,7 +64,7 @@ item sooner. The contract numbering below already follows flow order.
 | `sequence-runner` is `verify_jwt = false` but is called from the signed-in app (`src/lib/crm.ts`) with an `org_id` in the body | `supabase/config.toml` | Set `verify_jwt = true`, **or** keep it false for cron and add an explicit org-membership check on the caller's JWT. Decide which, document it here. |
 | 6 functions called from the frontend have **no** `[functions.<name>]` block, so they run on the platform default (`verify_jwt = true`) by accident rather than by decision: `operator`, `advance-mission`, `run-workflow`, `automation-dispatch`, `generate-course`, `log-activation-event` | `supabase/config.toml` | Add an explicit block for each. `log-activation-event` is hit by a raw `fetch` from `src/lib/analytics.ts` — confirm it sends the bearer token. |
 | `cs-health`, `forecast-rollup`, `marketing-attribution`, `weekly-review` are `verify_jwt = false`, called from the browser with `org_id` in the body | functions + config | Read each: does it verify org membership itself? If not, same fix as `sequence-runner`. (`book-appointment` is correctly public.) |
-| RLS on `calls` is `is_org_member(organization_id, auth.uid())` — any member reads every call in the org | migration `20260719000006` | Not a bug for managers, but V1's "reps never see peer data" rule is UI-only today. Consider a rep-scoped policy once `workspace_member_roles` is authoritative. |
+| RLS on `calls` is `is_org_member(organization_id, auth.uid())` — any member reads every call in the org | migration `20260719000006` | V1's "reps never see peer data" rule is UI-only today. **Now P0 — see item 0 above.** |
 
 ## Contracts
 
@@ -254,6 +275,7 @@ export type BehaviorScore = {
   name: string;
   value: number;
   unit: "ratio" | "seconds" | "per_call" | "percent" | "count";
+  /** Anonymous aggregate. `null` when the team has fewer than 8 reps (§4, §13.6) — hide the row. */
   teamMedian: number | null;
   direction: Direction;
   confidence: Confidence;
@@ -273,6 +295,7 @@ export type BehaviorScore = {
 | `unit` | enum(ratio \| seconds \| per_call \| percent \| count) |  |  |
 | `value` | numeric |  |  |
 | `team_median` | numeric | yes |  |
+| `team_size` | int | yes | reps on the subject's team for the period — team_median is shown only when >= 8 |
 | `direction` | enum(improving \| regressing \| steady) |  |  |
 | `confidence` | enum(low \| medium \| high) |  |  |
 | `sample_size` | int |  |  |
@@ -302,6 +325,7 @@ Notes: Materialised weekly by a job over behavioral_events. PK (subject_type, su
   "unit": "seconds",
   "value": 0.4,
   "team_median": 1.3,
+  "team_size": 9,
   "direction": "regressing",
   "confidence": "high",
   "sample_size": 41,
@@ -341,6 +365,11 @@ export type Insight = {
   sampleSize: number;
   /** e.g. "6 objections · 4 calls" */
   sampleLabel: string | null;
+  /**
+   * Analyzed calls behind the insight — the rep's for a rep insight, the team's for a
+   * team pattern. Gates rendering (CLAUDE.md §13.13): see `gateInsight`.
+   */
+  callsAnalyzed: number;
   affectedRepIds: ID[];
   evidence: EvidenceRef[];
   /** null when confidence is low — observation only. */
@@ -366,6 +395,7 @@ export type Insight = {
 | `confidence` | enum(low \| medium \| high) |  |  |
 | `sample_n` | int |  | REQUIRED — never render an insight without it |
 | `sample_label` | text | yes | e.g. 'n = 6 objections · 4 calls' |
+| `calls_n` | int |  | analyzed calls behind it (rep's / team's). Rendered only if >= 10 rep / >= 50 team (CLAUDE.md §13.13) |
 | `affected_rep_ids` | uuid[] |  |  |
 | `evidence` | jsonb |  | [{ call_id, t_seconds, speaker, speaker_label, quote }] |
 | `action_type` | enum(assign_coaching \| review_calls \| open_report \| open_behavior) | yes | null when confidence = low |
@@ -400,6 +430,7 @@ Notes: CHECK (confidence <> 'low' OR action_type IS NULL). CHECK (causal_tested 
   "confidence": "high",
   "sample_n": 6,
   "sample_label": "n = 6 objections · 4 calls",
+  "calls_n": 41,
   "affected_rep_ids": [
     "u_jordan"
   ],
@@ -696,6 +727,7 @@ Notes: RPC returns { items: FeedItemRow[], attention: [{id,title,severity,href}]
     "confidence": "high",
     "sample_n": 6,
     "sample_label": "n = 6 objections · 4 calls",
+    "calls_n": 41,
     "affected_rep_ids": [
       "u_jordan"
     ],
@@ -1106,6 +1138,7 @@ RLS: org members; reps only kind in (daily_rep, weekly_rep) AND subject_id = aut
           "confidence": "high",
           "sample_n": 6,
           "sample_label": "n = 6 objections · 4 calls",
+          "calls_n": 41,
           "affected_rep_ids": [
             "u_jordan"
           ],
