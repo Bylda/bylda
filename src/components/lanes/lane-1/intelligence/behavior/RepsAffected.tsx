@@ -1,4 +1,4 @@
-import { Avatar, Tag } from "@/components/bylda";
+import { Avatar, Tag, TrendChart } from "@/components/bylda";
 import type { BehaviorDetail } from "@/lib/data";
 import { formatValue } from "./format";
 
@@ -9,7 +9,7 @@ import { formatValue } from "./format";
  * it only from a successful manager fetch. Tested in BehaviorDetail.test.tsx.
  */
 export function RepsAffected({ detail }: { detail: BehaviorDetail }) {
-  const { byRep, unit } = detail;
+  const { byRep, unit, repSparklines } = detail;
   return (
     <section className="flex flex-1 flex-col rounded-by-card border border-by-border-engraved bg-by-surface-raised px-5 py-4">
       <h2 className="type-ui-label text-by-text-primary">BY REP</h2>
@@ -28,9 +28,23 @@ export function RepsAffected({ detail }: { detail: BehaviorDetail }) {
               <span className="flex min-w-0 flex-1 flex-col gap-px">
                 <span className="type-ui-small text-by-text-primary">{r.repName}</span>
                 <span className="type-mono-micro text-by-text-secondary">
-                  {formatValue(r.value, unit)} · n={r.n}
+                  {formatValue(r.value, unit)}
+                  {r.vsBaseline != null && r.vsBaseline !== 0
+                    ? ` · ${r.vsBaseline > 0 ? "+" : "−"}${Math.abs(r.vsBaseline)} vs baseline`
+                    : ""}{" "}
+                  · n={r.n}
                 </span>
               </span>
+              {repSparklines[r.repId] ? (
+                <TrendChart
+                  series={repSparklines[r.repId]}
+                  width={60}
+                  height={16}
+                  strokeWidth={1.5}
+                  pad={1.5}
+                  className="text-by-text-secondary"
+                />
+              ) : null}
               {r.n < 10 ? <Tag>Early read</Tag> : null}
             </li>
           ))}

@@ -1,4 +1,4 @@
-import type { BehaviorDetail, OutcomeAssociation, Sparkline } from "@/lib/data";
+import type { BehaviorDetail, OutcomeAssociation } from "@/lib/data";
 
 /** Display helpers for Behavior Detail. Pure — formatting only, no data. */
 
@@ -33,17 +33,3 @@ export const OUTCOME_LABEL: Record<OutcomeAssociation["outcome"], string> = {
   won: "Closed-won",
   lost: "Closed-lost",
 };
-
-/**
- * Straight-line projection from the last (up to) 3 measured points, `ahead` periods out,
- * clamped to the series' fixed y-range. A projection, never a forecast.
- */
-export function project(series: Sparkline, ahead = 2): number[] {
-  const pts = series.points.slice(-3);
-  if (pts.length < 2) return [];
-  const slope = (pts[pts.length - 1] - pts[0]) / (pts.length - 1);
-  const last = pts[pts.length - 1];
-  return Array.from({ length: ahead }, (_, i) =>
-    Math.min(series.yMax, Math.max(series.yMin, last + slope * (i + 1))),
-  );
-}
