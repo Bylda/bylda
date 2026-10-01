@@ -1,20 +1,12 @@
-import { ScreenPlaceholder } from "@/components/bylda";
+import { ReportDocument } from "@/components/lanes/lane-6/reports/ReportDocument";
 
 /**
  * P2 · Daily Manager Brief — in-app document
- * Figma 13:2 (page 1:11) · Lane 4 — Dravin · route /app/reports/daily
+ * Figma 13:2 (page 1:11) · Lane 6 — Mayur · route /app/reports/daily
  * Hooks: useBrief — see src/lib/data/README.md
  *
- * PLACEHOLDER. Replace the body with the real screen; keep the export name.
+ * Saved design reference: design-ref/P2. Shared report data is not overridden.
  */
 export function P2DailyManagerBriefInAppDocument() {
-  return (
-    <ScreenPlaceholder
-      code="P2"
-      name="Daily Manager Brief — in-app document"
-      node="13:2"
-      lane={4}
-      owner="Dravin"
-    />
-  );
+  return <ReportDocument />;
 }
