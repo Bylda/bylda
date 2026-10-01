@@ -1,14 +1,21 @@
-import { ScreenPlaceholder } from "@/components/bylda";
+import { StateEmpty } from "@/components/bylda";
+import { HomeFrame } from "./shared/HomeFrame";
 
 /**
  * H3 · Manager Home — Calls
  * Figma 43:1176 (page 1:6) · Lane 1 — Ansh · route /app/home/calls
- * Hooks: useHomeFeed, useCalls — see src/lib/data/README.md
+ * Hooks (when built out): useHomeFeed, useCalls — see src/lib/data/README.md
  *
- * PLACEHOLDER. Replace the body with the real screen; keep the export name.
+ * Tab shell only for now: greeting + tab bar from H1, body is the page-17 empty state.
  */
 export function H3ManagerHomeCalls() {
   return (
-    <ScreenPlaceholder code="H3" name="Manager Home — Calls" node="43:1176" lane={1} owner="Ansh" />
+    <HomeFrame>
+      <StateEmpty
+        eyebrow="HOME · CALLS"
+        title="No calls to surface yet."
+        body="The most coachable calls from your team will land here once they’re analyzed."
+      />
+    </HomeFrame>
   );
 }

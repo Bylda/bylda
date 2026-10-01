@@ -1,20 +1,21 @@
-import { ScreenPlaceholder } from "@/components/bylda";
+import { StateEmpty } from "@/components/bylda";
+import { HomeFrame } from "./shared/HomeFrame";
 
 /**
  * H2 · Manager Home — Team Updates
  * Figma 43:692 (page 1:6) · Lane 1 — Ansh · route /app/home/team-updates
- * Hooks: useHomeFeed — see src/lib/data/README.md
+ * Hooks (when built out): useHomeFeed — see src/lib/data/README.md
  *
- * PLACEHOLDER. Replace the body with the real screen; keep the export name.
+ * Tab shell only for now: greeting + tab bar from H1, body is the page-17 empty state.
  */
 export function H2ManagerHomeTeamUpdates() {
   return (
-    <ScreenPlaceholder
-      code="H2"
-      name="Manager Home — Team Updates"
-      node="43:692"
-      lane={1}
-      owner="Ansh"
-    />
+    <HomeFrame>
+      <StateEmpty
+        eyebrow="HOME · TEAM UPDATES"
+        title="No team updates yet."
+        body="Pattern changes across the team will post here as soon as Bylda has enough calls to see them."
+      />
+    </HomeFrame>
   );
 }
