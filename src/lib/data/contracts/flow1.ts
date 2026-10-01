@@ -300,6 +300,11 @@ export const C04 = defineContract<InsightRow, ReturnType<typeof mapInsight>>({
         nullable: true,
         note: "e.g. 'n = 6 objections · 4 calls'",
       },
+      {
+        name: "calls_n",
+        type: "int",
+        note: "analyzed calls behind it (rep's / team's). Rendered only if >= 10 rep / >= 50 team (CLAUDE.md §13.13)",
+      },
       { name: "affected_rep_ids", type: "uuid[]" },
       {
         name: "evidence",
@@ -355,6 +360,7 @@ export const C04 = defineContract<InsightRow, ReturnType<typeof mapInsight>>({
     confidence: "high",
     sample_n: 6,
     sample_label: "n = 6 objections · 4 calls",
+    calls_n: 41,
     affected_rep_ids: ["u_jordan"],
     evidence: [
       {

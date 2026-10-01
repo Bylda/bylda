@@ -4,7 +4,8 @@ import { isEmptyArray } from "../core/query";
 import { resolveSource } from "../core/source";
 import { HEALTH } from "../mocks/admin";
 import { HOME_FEED, INSIGHTS } from "../mocks/intelligence";
-import type { HomeFeed, HomeTab, Insight, WorkspaceHealth } from "../types";
+import type { GatedInsight, HomeFeed, HomeTab, Insight, WorkspaceHealth } from "../types";
+import { gateInsight, isInsightSufficient } from "../types";
 import { fetchHealthChecks, fetchHomeFeed, fetchInsights } from "./fetchers";
 import { mapFeedItem, mapInsight } from "./map";
 import { insightKeys } from "./queryKeys";
@@ -12,19 +13,23 @@ import { HEALTH_SOURCE, SOURCE } from "./source";
 
 export type InsightFilter = { repId?: string; kind?: Insight["kind"]; limit?: number };
 
-/** Insights. A rep gets only insights about themselves (affectedRepIds ∋ me). */
-export async function loadInsights(ctx: DataCtx, f: InsightFilter = {}): Promise<Insight[]> {
+/** A rep sees only insights about themselves alone — never a peer, never a team pattern. */
+export const visibleTo = (ctx: DataCtx) => (i: Insight) =>
+  ctx.role === "rep" ? i.affectedRepIds.length === 1 && i.affectedRepIds[0] === ctx.userId : true;
+
+/**
+ * Insights, gated (CLAUDE.md §13.13): below REP_INSIGHT_MIN_CALLS / TEAM_PATTERN_MIN_CALLS
+ * an item comes back `state: "insufficient"` (no headline) — render Y3, never the insight.
+ */
+export async function loadInsights(ctx: DataCtx, f: InsightFilter = {}): Promise<GatedInsight[]> {
   const all = resolveSource(SOURCE) === "mock" ? INSIGHTS : (await fetchInsights()).map(mapInsight);
   return all
-    .filter((i) =>
-      ctx.role === "rep"
-        ? i.affectedRepIds.length === 1 && i.affectedRepIds[0] === ctx.userId
-        : true,
-    )
+    .filter(visibleTo(ctx))
     .filter(
       (i) => (!f.repId || i.affectedRepIds.includes(f.repId)) && (!f.kind || i.kind === f.kind),
     )
-    .slice(0, f.limit ?? 50);
+    .slice(0, f.limit ?? 50)
+    .map(gateInsight);
 }
 
 /** H1–H6 manager feed. Never a rep's (their home is R1). */
@@ -33,10 +38,16 @@ export async function loadHomeFeed(ctx: DataCtx, tab: HomeTab | "all" = "all"): 
   if (resolveSource(SOURCE) === "mock") {
     return {
       ...HOME_FEED,
-      items: HOME_FEED.items.filter((i) => tab === "all" || tab === "for_you" || i.tab === tab),
+      items: HOME_FEED.items.filter(
+        (i) =>
+          (tab === "all" || tab === "for_you" || i.tab === tab) && isInsightSufficient(i.insight),
+      ),
     };
   }
-  const items = (await fetchHomeFeed()).map(mapFeedItem);
+  // §13.13: a below-threshold insight never reaches the feed.
+  const items = (await fetchHomeFeed())
+    .map(mapFeedItem)
+    .filter((i) => isInsightSufficient(i.insight));
   // GAP: attention items + coach queue — C-04
   return { items, attention: [], coachQueue: [] };
 }

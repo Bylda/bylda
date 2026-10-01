@@ -651,9 +651,9 @@ untracked `.env.local`.
 ## 13. DESIGN DECISIONS (override Figma where they conflict)
 
 Approved 2026-10-01 by **Ansh** (owner of `src/styles`, `src/components/bylda`,
-`design-ref`, this file). Where Figma, a `design-ref` spec or anything above
-disagrees, **this section wins.** Affected specs carry the line
-*"See CLAUDE.md §13: decision overrides Figma."*
+`design-ref`, `src/lib/data`, `BACKEND_BACKLOG.md`, this file). Where Figma, a
+`design-ref` spec or anything above disagrees, **this section wins.** Affected specs
+carry the line *"See CLAUDE.md §13: decision overrides Figma."*
 
 1. **Tokens.** Three semantic tokens beyond Figma's set, in `src/styles/bylda.css`
    and `design-ref/_tokens.md`:
@@ -687,4 +687,25 @@ disagrees, **this section wins.** Affected specs carry the line
    like every other auth frame.
 9. **C7** was re-exported via the saved-file path, so its spec is verbatim
    (shell inline) like every other screen spec.
-
+10. **Reps never see rank or named-peer comparisons.** P7 *"one of the best on the
+    team"* → self-comparison (*"your best discovery call this month"*). O13
+    *"Me vs Theo"* → *"Me vs my last 30 days"*. Applies to **all** Coach prompt
+    suggestions.
+11. **Coach privacy:** *"Coach only sees your calls"* stays. Rep-scoped hooks must keep
+    enforcing it in the UI — there is no database guarantee yet
+    (`BACKEND_BACKLOG.md` item 0, P0).
+12. **Coach Practice / role-play tab is allowed:** practice from the rep's **own calls
+    only**. No scores, no quizzes, no lesson structure.
+13. **Insight thresholds are hard:** a rep insight needs **≥ 10 analyzed calls**
+    (`REP_INSIGHT_MIN_CALLS`), a team pattern **≥ 50** (`TEAM_PATTERN_MIN_CALLS`).
+    Below that, render the "not enough data yet" system state (`SystemState` Y3),
+    never a low-sample insight. Enforced in `@/lib/data`: `useInsights` and
+    `useRoomInsights` return `GatedInsight` (`state: "insight" | "insufficient"`,
+    the insufficient one carries no headline); the home feed and briefs drop
+    below-threshold insights. The O3 demo fixtures meet the thresholds.
+14. **Every report statement and every Coach insight line shows confidence + sample
+    size.** In Coach chat, a small *"based on N calls"* note.
+15. **Modal shadow (O14) allowed** — `shadow-by-float`, the one shadow token, which
+    §13.3 already extends to modals. There is no separate modal shadow; no other shadow.
+16. **No gradient on call thumbnails** — flat `bg-by-surface-sidebar`, same as
+    **Block / Call** (§13.2). The `call-thumb` gradient token no longer exists.

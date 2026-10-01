@@ -12,7 +12,7 @@ import { MM_REP_IDS, PEOPLE, TEAMS, TEAM_MM, personById } from "../mocks/people"
 import type {
   BehaviorScore,
   CoachingFocus,
-  Insight,
+  GatedInsight,
   Person,
   RepComparison,
   RepSummary,
@@ -116,7 +116,7 @@ export async function loadRepComparison(ctx: DataCtx, teamId: string): Promise<R
 export type RepHome = {
   rep: Person;
   focus: CoachingFocus | null;
-  insights: Insight[];
+  insights: GatedInsight[];
   scores: BehaviorScore[];
   analyzedCalls: number;
   neededForInsights: number;

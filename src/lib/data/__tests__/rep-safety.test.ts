@@ -65,7 +65,10 @@ describe("rep-scoped hooks return only the rep's own data", () => {
   });
 
   it("insights: only insights about Jordan alone", async () => {
-    const ins = await loadInsights(JORDAN);
+    const ins = (await loadInsights(JORDAN)).flatMap((g) =>
+      g.state === "insight" ? [g.insight] : [],
+    );
+    expect(ins.length).toBeGreaterThan(0);
     expect(
       ins.every((i) => i.affectedRepIds.length === 1 && i.affectedRepIds[0] === "u_jordan"),
     ).toBe(true);

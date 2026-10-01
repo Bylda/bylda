@@ -3,8 +3,12 @@ import { ForbiddenForRoleError } from "../core/errors";
 import { useCtxQuery } from "../core/hook";
 import { isEmptyArray } from "../core/query";
 import { resolveSource } from "../core/source";
+import { visibleTo } from "../insights/hooks";
 import { DM_THREADS, MESSAGES, ROOMS } from "../mocks/collab";
-import type { DmThread, Message, Room } from "../types";
+import { ROOM_INSIGHTS } from "../mocks/intelligence";
+import type { DmThread, GatedInsight, Message, Room } from "../types";
+import { gateInsight } from "../types";
+import { NotBuiltError } from "../core/errors";
 import { fetchMessages, fetchRooms } from "./fetchers";
 import { mapMessage, mapRoom } from "./map";
 import { roomKeys } from "./queryKeys";
@@ -24,6 +28,17 @@ export async function loadRoomMessages(ctx: DataCtx, roomId: string): Promise<Me
   return resolveSource(SOURCE) === "mock"
     ? MESSAGES.filter((m) => m.roomId === room.id)
     : (await fetchMessages({ roomId: room.id })).map(mapMessage);
+}
+/**
+ * O3 room Insights tab. Gated like useInsights (§13.13); a rep sees only insights about
+ * themselves — never a named peer (§13.10).
+ */
+export async function loadRoomInsights(ctx: DataCtx, roomId: string): Promise<GatedInsight[]> {
+  const room = await loadRoom(ctx, roomId);
+  if (!room) return [];
+  // GAP: room ↔ insight link — C-33 / C-04
+  if (resolveSource(SOURCE) !== "mock") throw new NotBuiltError("room_insights");
+  return (ROOM_INSIGHTS[room.id] ?? []).filter(visibleTo(ctx)).map(gateInsight);
 }
 export async function loadDmThreads(ctx: DataCtx): Promise<DmThread[]> {
   return DM_THREADS.filter(
@@ -50,6 +65,8 @@ export const useRoom = (id: string) =>
   );
 export const useRoomMessages = (roomId: string) =>
   useCtxQuery(roomKeys.messages(roomId), (ctx) => loadRoomMessages(ctx, roomId), isEmptyArray);
+export const useRoomInsights = (roomId: string) =>
+  useCtxQuery(roomKeys.insights(roomId), (ctx) => loadRoomInsights(ctx, roomId), isEmptyArray);
 export const useDmThreads = () => useCtxQuery(roomKeys.dms(), loadDmThreads, isEmptyArray);
 export const useDmMessages = (threadId: string) =>
   useCtxQuery(roomKeys.dmMessages(threadId), (ctx) => loadDmMessages(ctx, threadId), isEmptyArray);
