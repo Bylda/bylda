@@ -1,11 +1,10 @@
 # CODEOWNERS — who must review what. Last matching pattern wins.
 #
 # GitHub handles: Ansh = @anshpatel102104-ai · Tirth = @tirthkachhia ·
-# Dravin = @dravindilip-svg.
-# ⚠️ Dhruv (Lane 2), Mayur (Lane 5) and Lane 6 (first free person) are routed to
-# Ansh FOR NOW — Dhruv and Mayur are not collaborators yet and Lane 6 has no owner.
-# Swap in their handles once they have write access (GitHub silently ignores
-# rules for users without it).
+# Dravin = @dravindilip-svg · Dhruv = @launchpadp.
+# ⚠️ Mayur (Lane 5) and Lane 6 (first free person) are routed to Ansh FOR NOW —
+# Mayur's handle isn't known yet and Lane 6 has no owner. Every handle needs write
+# access on the repo, or GitHub silently ignores its rules.
 #
 # Owners as of 2026-09-30 (CLAUDE.md §8 / §12):
 #   Lane 1 Ansh · Lane 2 Dhruv · Lane 4 Dravin · Lane 5 Mayur · Lane 6 first free · Backend Tirth
@@ -79,10 +78,10 @@
 /src/components/lanes/lane-1/               @anshpatel102104-ai
 
 # Lane 2 — Dhruv: 07 Calls, 13 Search & Ask, 11 Coaching
-/src/routes/app/calls/                      @anshpatel102104-ai
-/src/routes/app/search/                     @anshpatel102104-ai
-/src/routes/app/coaching/                   @anshpatel102104-ai
-/src/components/lanes/lane-2/               @anshpatel102104-ai
+/src/routes/app/calls/                      @launchpadp
+/src/routes/app/search/                     @launchpadp
+/src/routes/app/coaching/                   @launchpadp
+/src/components/lanes/lane-2/               @launchpadp
 
 # Lane 4 — Dravin: 04 Onboarding/Auth, 06 Rep, 09 Team
 /src/routes/welcome/                        @dravindilip-svg
