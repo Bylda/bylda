@@ -50,4 +50,8 @@ When the shared version lands, delete your copy.
 | 11 | Ansh | setup | Add `VITE_BYLDA_MOCKS=` to `.env.example` | Requested in the foundation brief, but `.env.*` is a guarded backend path — only a `backend/*` PR with the `backend` label may touch it. Documented in `CLAUDE.md` §12 H and `src/lib/data/README.md` instead. | `open` — Tirth |
 | 12 | Ansh | setup | Lane owner swap | 2026-09-30: Lane 4 → **Dravin**, Lane 5 → **Mayur**. Lane numbers, folders, screens and order unchanged. `CLAUDE.md` §8/§12, `FRAMES.md`, `CODEOWNERS`, `TEAM_START.md` updated. | `landed` |
 
+| 13 | Mayur | 5 | Extend Integrations presentation contracts and actions for X1–X3 | Catalog is missing Meet, Salesforce, Calendar and file sources; no syncing state, health metrics, mapping examples/totals/stages, channel routing/preview, or sync/disconnect/mapping/channel mutations. Temporary Figma fixtures live in Lane 5 and render only with forced mocks; unsupported actions explain the gap. Please add these through the shared data API; no CRM writes. Reference: copied Figma file `rOK5GQ1TzyTuHmyXiOALrD`, nodes `31:1464`, `31:1688`, `31:1915`. | `open` — Ansh / Tirth |
+
+| 14 | Mayur | 5 | Align inherited shell on X1–X3 with Figma | Context panel currently starts below the top bar rather than at frame y=0, and breadcrumb duplicates the area label. Screens use the existing context slot; please adjust in Foundation. Integrations status tags follow Figma and Y8 despite the general behavioral-color-only wording; clarify this exception in shared guidance. See Lane 5 connections/QA.md and screenshots. | `open` — Ansh |
+
 <!-- Add new rows above. Keep the newest at the bottom. -->
