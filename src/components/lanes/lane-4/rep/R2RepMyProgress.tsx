@@ -285,15 +285,13 @@ function Callout({ kind, score }: { kind: "changed" | "watch"; score: BehaviorSc
 
 function ProgressContext({ foci }: { foci: CoachingFocus[] }) {
   const calls = useMyCalls();
+  // One milestone per focus, its latest state (Figma 32:129): held, else started.
   const milestones = foci
-    .flatMap((f) => {
-      const out: { at: string; label: string }[] = [
-        { at: f.assignedAt, label: `Started: ${f.behaviorName.toLowerCase()}` },
-      ];
-      if (f.result?.verdict === "held")
-        out.push({ at: f.result.measuredOn, label: `${f.behaviorName} focus held` });
-      return out;
-    })
+    .map((f) =>
+      f.result?.verdict === "held"
+        ? { at: f.result.measuredOn, label: `${f.behaviorName} focus held` }
+        : { at: f.assignedAt, label: `Started: ${f.behaviorName.toLowerCase()}` },
+    )
     .sort((a, b) => a.at.localeCompare(b.at));
 
   return (
