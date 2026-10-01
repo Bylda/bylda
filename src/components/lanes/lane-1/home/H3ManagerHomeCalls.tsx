@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Avatar, Button, Icon, StateEmpty, Tag, type TagTone } from "@/components/bylda";
 import { useCalls, type Call } from "@/lib/data";
+import { worthYourTime } from "./calls/worthYourTime";
 import { HomeTab } from "./shared/HomeTab";
 import { ListCard, ListRow, ROW_LIST, SectionLabel } from "./shared/List";
 import { DAY_MS, callsAnalyzedSince, firstNameOf, minutesOf } from "./shared/format";
@@ -11,14 +12,11 @@ import { DAY_MS, callsAnalyzedSince, firstNameOf, minutesOf } from "./shared/for
  * Hooks: useHomeFeed (via HomeTab) + useCalls.
  *
  * Calls ranked by `coachingValue` (Dev Handoff `Call`) — the ones worth a manager's time.
- * A call with no value or no top moment has nothing to coach on, so it isn't listed here.
+ * The rule lives in `calls/worthYourTime.ts`.
  */
 export function H3ManagerHomeCalls() {
   return <HomeTab eyebrow="HOME · CALLS">{() => <WorthYourTime />}</HomeTab>;
 }
-
-/** Rows shown — Figma lists six, then "Open all calls". */
-const ROWS = 6;
 
 function tagFor(c: Call): { tone: TagTone; label: string } | null {
   if (!c.topMoment) return null;
@@ -37,10 +35,7 @@ function tagFor(c: Call): { tone: TagTone; label: string } | null {
 function WorthYourTime() {
   const calls = useCalls();
   const all = calls.data ?? [];
-  const ranked = all
-    .filter((c) => c.status === "ready" && c.coachingValue !== null && c.topMoment !== null)
-    .sort((a, b) => (b.coachingValue ?? 0) - (a.coachingValue ?? 0))
-    .slice(0, ROWS);
+  const ranked = worthYourTime(all);
   const since = callsAnalyzedSince(all, Date.now() - DAY_MS);
 
   if (calls.isLoading) return null;
