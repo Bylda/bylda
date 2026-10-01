@@ -1,6 +1,7 @@
 import type {
   Behavior,
   BehaviorDetail,
+  BehaviorExample,
   BehaviorScore,
   CoachingFocus,
   EvidenceRef,
@@ -287,12 +288,131 @@ export const BEHAVIOR_DETAIL: BehaviorDetail = {
   sampleSize: 41,
   sparkline: spark([0.5, 0.6, 0.8, 0.9], 0, 2),
   byRep: [
-    { repId: "u_jordan", repName: "Jordan Reyes", value: 1.5, n: 12 },
-    { repId: "u_sarah", repName: "Sarah Lin", value: 1.2, n: 9 },
-    { repId: "u_alex", repName: "Alex Morgan", value: 0.7, n: 11 },
-    { repId: "u_theo", repName: "Theo Brandt", value: 0.2, n: 9 },
+    { repId: "u_jordan", repName: "Jordan Reyes", value: 1.5, n: 12, vsBaseline: null },
+    { repId: "u_sarah", repName: "Sarah Lin", value: 1.2, n: 9, vsBaseline: null },
+    { repId: "u_alex", repName: "Alex Morgan", value: 0.7, n: 11, vsBaseline: null },
+    { repId: "u_theo", repName: "Theo Brandt", value: 0.2, n: 9, vsBaseline: null },
   ],
   evidence: [EV_ACME],
+  callsWithBehavior: null,
+  teamSize: null,
+  repSparklines: {},
+  projected: [],
+  examples: { avoid: null, copy: null },
+  recommendedChange: null,
+  affectedCalls: [],
+};
+
+/** I2 · Figma 11:2 sample content — Interrupting during objections (Acme Revenue fixture). */
+const INTERRUPTION_AVOID: BehaviorExample = {
+  repId: "u_jordan",
+  repName: "Jordan Reyes",
+  account: "Acme Logistics",
+  callId: "call_acme",
+  timestamp: "18:44",
+  tSeconds: 1124,
+  summary:
+    "CFO was mid-sentence on rollout risk; Jordan cut in with a 12% discount. The objection came back at 27:05.",
+  clipSeconds: 40,
+  moment: {
+    callId: "call_acme",
+    timestamp: "18:42",
+    tSeconds: 1122,
+    speaker: "prospect",
+    speakerLabel: "ACME · CFO",
+    quote: "Honestly the number isn’t the problem, it’s whether my team will actually—",
+  },
+};
+
+const INTERRUPTION_COPY: BehaviorExample = {
+  repId: "u_theo",
+  repName: "Theo Brandt",
+  account: "Brightline Freight",
+  callId: "call_brightline",
+  timestamp: "12:30",
+  tSeconds: 750,
+  summary:
+    "Theo waited 2.1s after the objection, then asked what was driving it. The prospect named the real blocker (IT review).",
+  clipSeconds: 40,
+  moment: {
+    callId: "call_brightline",
+    timestamp: "12:30",
+    tSeconds: 750,
+    speaker: "prospect",
+    speakerLabel: "BRIGHTLINE · VP OPS",
+    quote: "It’s a lot more than we planned for this quarter…",
+  },
+};
+
+export const BEHAVIOR_DETAIL_INTERRUPTING: BehaviorDetail = {
+  behavior: BEHAVIORS[1],
+  teamValue: 0.8,
+  unit: "per_call",
+  direction: "regressing",
+  confidence: "medium",
+  sampleSize: 142,
+  sparkline: spark([0.7, 0.68, 0.72, 0.74, 0.76, 0.77, 0.8, 0.826], 0, 2),
+  byRep: [
+    { repId: "u_jordan", repName: "Jordan Reyes", value: 1.5, n: 12, vsBaseline: 0.8 },
+    { repId: "u_sarah", repName: "Sarah Lin", value: 1.2, n: 9, vsBaseline: 0.5 },
+    { repId: "u_alex", repName: "Alex Morgan", value: 0.7, n: 11, vsBaseline: -0.4 },
+    { repId: "u_theo", repName: "Theo Brandt", value: 0.2, n: 6, vsBaseline: 0 },
+  ],
+  evidence: [INTERRUPTION_AVOID.moment],
+  callsWithBehavior: { withBehavior: 38, total: 142 },
+  teamSize: 9,
+  repSparklines: {
+    u_jordan: spark([0.7, 0.8, 0.9, 1.0, 1.1, 1.3, 1.4, 1.5], 0, 2),
+    u_sarah: spark([0.7, 0.7, 0.8, 0.9, 1.0, 1.0, 1.1, 1.2], 0, 2),
+    u_alex: spark([1.1, 1.1, 1.0, 0.9, 0.8, 0.8, 0.7, 0.7], 0, 2),
+    u_theo: spark([0.3, 0.2, 0.3, 0.2, 0.3, 0.2, 0.2, 0.2], 0, 2),
+  },
+  projected: [0.86, 0.9],
+  examples: { avoid: INTERRUPTION_AVOID, copy: INTERRUPTION_COPY },
+  recommendedChange:
+    "Coach one move: after any objection, let the prospect finish, pause, and ask one clarifying question before responding.",
+  affectedCalls: [
+    {
+      callId: "call_acme",
+      account: "Acme Logistics",
+      repName: "Jordan Reyes",
+      timestamp: "18:44",
+      tSeconds: 1124,
+      count: 3,
+    },
+    {
+      callId: "call_kestrel",
+      account: "Kestrel Labs",
+      repName: "Jordan Reyes",
+      timestamp: "22:10",
+      tSeconds: 1330,
+      count: 2,
+    },
+    {
+      callId: "call_ferro",
+      account: "Ferro Metals",
+      repName: "Sarah Lin",
+      timestamp: "09:31",
+      tSeconds: 571,
+      count: 2,
+    },
+    {
+      callId: "call_northwind",
+      account: "Northwind Health",
+      repName: "Sarah Lin",
+      timestamp: "15:02",
+      tSeconds: 902,
+      count: 1,
+    },
+    {
+      callId: "call_vela",
+      account: "Vela Systems",
+      repName: "Jordan Reyes",
+      timestamp: "31:18",
+      tSeconds: 1878,
+      count: 2,
+    },
+  ],
 };
 
 export const PATTERNS: Pattern[] = [

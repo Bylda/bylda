@@ -23,7 +23,8 @@ import {
   type OutcomeAssociation,
 } from "@/lib/data";
 import type { QueryLike } from "@/components/bylda";
-import { OUTCOME_LABEL, formatValue, pct, periodChange, project } from "./behavior/format";
+import { OUTCOME_LABEL, formatValue, pct, periodChange } from "./behavior/format";
+import { ExamplePair } from "./behavior/ExamplePair";
 import { RepsAffected } from "./behavior/RepsAffected";
 
 /**
@@ -154,17 +155,33 @@ function Loaded({ d, outcomes }: { d: BehaviorDetail; outcomes: QueryLike<Outcom
           <span className="type-ui-title text-by-text-primary">{change ?? "—"}</span>
           <DirectionTag direction={d.direction} />
         </Stat>
-        <Stat label="TEAM VALUE">
+        <Stat label="CALLS WITH BEHAVIOR">
+          {d.callsWithBehavior ? (
+            <>
+              <span className="type-ui-title text-by-text-primary">
+                {d.callsWithBehavior.withBehavior} / {d.callsWithBehavior.total}
+              </span>
+              <span className="type-mono-micro text-by-text-secondary">
+                {Math.round((d.callsWithBehavior.withBehavior / d.callsWithBehavior.total) * 100)}%
+                of calls
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="type-ui-title text-by-text-primary">—</span>
+              <span className="type-mono-micro text-by-text-secondary">not counted yet</span>
+            </>
+          )}
+        </Stat>
+        <Stat label="REPS AFFECTED">
           <span className="type-ui-title text-by-text-primary">
-            {formatValue(d.teamValue, d.unit)}
+            {d.teamSize ? `${d.byRep.length} of ${d.teamSize}` : d.byRep.length}
           </span>
           <span className="type-mono-micro text-by-text-secondary">
-            {behavior.higherIsBetter ? "higher is better" : "lower is better"}
+            {d.byRep.some((r) => r.vsBaseline != null)
+              ? `${d.byRep.filter((r) => (r.vsBaseline ?? 0) > 0).length} above baseline`
+              : "manager view"}
           </span>
-        </Stat>
-        <Stat label="REPS WITH DATA">
-          <span className="type-ui-title text-by-text-primary">{d.byRep.length}</span>
-          <span className="type-mono-micro text-by-text-secondary">manager view</span>
         </Stat>
         <Stat label="EVIDENCE">
           <span className="type-ui-title text-by-text-primary capitalize">{d.confidence}</span>
@@ -181,17 +198,20 @@ function Loaded({ d, outcomes }: { d: BehaviorDetail; outcomes: QueryLike<Outcom
           </h2>
           <TrendChart
             series={d.sparkline}
-            projected={project(d.sparkline)}
+            projected={d.projected}
             label={`${behavior.name} trend, measured then projected`}
             className={trendTone}
           />
           <p className="type-ui-small text-by-text-secondary">
-            Solid = measured · dashed = projected, a straight line from the last 3 points on a fixed
-            scale. Pattern detected across {d.sampleSize} calls; a projection isn’t a forecast.
+            {d.projected.length > 0 ? "Solid = measured · dashed = projected, " : "Measured, "}
+            on a fixed scale. Pattern detected across {d.sampleSize} calls
+            {d.projected.length > 0 ? "; a projection isn’t a forecast" : ""}.
           </p>
         </section>
         <RepsAffected detail={d} />
       </div>
+
+      <ExamplePair examples={d.examples} />
 
       <section className="flex flex-col gap-3">
         <h2 className="type-ui-label text-by-text-primary">EVIDENCE MOMENTS</h2>
@@ -332,14 +352,14 @@ function RateBars({ withRate, withoutRate }: { withRate: number; withoutRate: nu
 
 function Panel({ d }: { d: BehaviorDetail }) {
   const navigate = useNavigate();
-  const actionable = d.confidence !== "low";
+  // Low confidence = observation only: no action button (CLAUDE.md §4).
+  const actionable = d.confidence !== "low" && d.recommendedChange !== null;
+  const above = d.byRep.filter((r) => (r.vsBaseline ?? 0) > 0);
   return (
     <ContextPanel title="RECOMMENDED CHANGE">
       {actionable ? (
         <>
-          <p className="type-editorial-insight text-by-text-primary">
-            {d.behavior.name} is {d.direction} across {d.sampleSize} calls. Coach one move on it.
-          </p>
+          <p className="type-editorial-insight text-by-text-primary">{d.recommendedChange}</p>
           <Button
             onClick={() =>
               void navigate({
@@ -348,13 +368,14 @@ function Panel({ d }: { d: BehaviorDetail }) {
               })
             }
           >
-            Assign coaching
+            Create coaching focus
           </Button>
         </>
       ) : (
         <p className="type-ui-small text-by-text-secondary">
-          Observation only. Confidence is low at n={d.sampleSize}, so Bylda isn’t recommending a
-          change yet.
+          {d.confidence === "low"
+            ? `Observation only. Confidence is low at n=${d.sampleSize}, so Bylda isn’t recommending a change yet.`
+            : "No recommended change for this behavior yet."}
         </p>
       )}
       <h3 className="type-ui-label text-by-text-primary">HOW SURE IS BYLDA?</h3>
@@ -363,7 +384,43 @@ function Panel({ d }: { d: BehaviorDetail }) {
         <p className={cn("type-ui-small text-by-text-primary")}>
           Associated with outcomes, not shown to cause them. Based on {d.sampleSize} analyzed calls.
         </p>
+        {above.length > 0 ? (
+          <p className="type-ui-small text-by-text-secondary">
+            {above.length} of {d.byRep.length} reps are above their own baseline.
+          </p>
+        ) : null}
       </div>
+      {d.affectedCalls.length > 0 ? (
+        <>
+          <h3 className="type-ui-label text-by-text-primary">
+            AFFECTED CALLS · {d.callsWithBehavior?.withBehavior ?? d.affectedCalls.length}
+          </h3>
+          <ul>
+            {d.affectedCalls.map((c) => (
+              <li
+                key={`${c.callId}-${c.tSeconds}`}
+                className="border-b border-by-border-engraved last:border-b-0"
+              >
+                <Link
+                  to="/app/calls/$callId"
+                  params={{ callId: c.callId }}
+                  className="flex items-start gap-2 py-2 hover:bg-by-surface-hover"
+                >
+                  <span className="type-ui-small min-w-0 flex-1 text-by-text-primary">
+                    {c.account}
+                  </span>
+                  <span className="type-mono-micro whitespace-nowrap text-by-text-secondary">
+                    {c.repName.split(" ")[0]} · {c.timestamp} · {c.count}×
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link to="/app/calls" className="type-ui-small text-by-text-secondary hover:underline">
+            View all {d.callsWithBehavior?.withBehavior ?? d.affectedCalls.length} calls →
+          </Link>
+        </>
+      ) : null}
     </ContextPanel>
   );
 }
