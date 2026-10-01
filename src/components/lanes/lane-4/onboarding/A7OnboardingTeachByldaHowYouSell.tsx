@@ -67,7 +67,7 @@ export function A7OnboardingTeachByldaHowYouSell() {
   const onboarding = useOnboarding();
   const methodologies = useMethodologies();
   return (
-    <OnboardingLayout step={1} width={640} aside={<WhatThisChanges />}>
+    <OnboardingLayout step={1} width={640} top={56} aside={<WhatThisChanges />}>
       <StepHeader
         eyebrow="Step 2 of 5"
         title="Teach Bylda how your team sells."
@@ -122,6 +122,7 @@ function TeachForm({
   );
   const [dragFrom, setDragFrom] = useState<number | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [teamSized] = useState(() => typeof readDraft().team_size === "string");
 
   function pickTemplate(t: Template) {
     setTemplate(t);
@@ -207,7 +208,7 @@ function TeachForm({
       </div>
 
       {mode !== "template" ? (
-        // GAP: no question flow or playbook upload in the data layer yet (LANE_REQUESTS.md #16).
+        // GAP: no question flow or playbook upload in the data layer yet (LANE_REQUESTS.md #19).
         <InsetNote label="Not ready yet" role="status">
           {mode === "questions"
             ? "The 6-question setup isn’t live yet. Start from a template — you can edit every stage and behavior later in Methodology."
@@ -249,7 +250,7 @@ function TeachForm({
                         setDragFrom(null);
                       }}
                       className={cn(
-                        "type-ui-body flex-1 cursor-grab border-r border-by-border-engraved px-2.5 py-2.5 text-by-text-primary last:border-r-0",
+                        "type-ui-small flex-1 cursor-grab border-r border-by-border-engraved px-2.5 py-2.5 text-by-text-primary last:border-r-0",
                         dragFrom === i && "bg-by-surface-hover",
                       )}
                     >
@@ -261,9 +262,9 @@ function TeachForm({
 
               <Section
                 label="Behaviors that matter to you"
-                hint={`pre-selected from ${templateLabel(template)}`}
+                hint={`pre-selected from ${templateLabel(template)}${teamSized ? " + your team size" : ""}`}
               >
-                <ul className="flex w-full flex-col rounded-by-card border border-by-border-engraved bg-by-surface-raised px-4 py-1">
+                <ul className="flex w-full flex-col rounded-by-card border border-by-border-engraved bg-by-surface-raised px-3.5 py-1.5">
                   {methodology.behaviors.map((b) => {
                     const on = enabled.includes(b.key);
                     return (
@@ -280,7 +281,7 @@ function TeachForm({
                           />
                           <span
                             className={cn(
-                              "type-ui-body flex-1",
+                              "type-ui-small flex-1",
                               on ? "text-by-text-primary" : "text-by-text-tertiary",
                             )}
                           >

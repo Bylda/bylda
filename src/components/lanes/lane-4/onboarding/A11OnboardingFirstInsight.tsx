@@ -10,6 +10,7 @@ import {
 import {
   useInsights,
   useOnboarding,
+  useViewer,
   type GatedInsight,
   type Insight,
   type InsightAction,
@@ -27,6 +28,7 @@ export function A11OnboardingFirstInsight() {
   const navigate = useNavigate();
   const insights = useInsights({ kind: "pattern" });
   const onboarding = useOnboarding();
+  const viewer = useViewer();
   const analysis = onboarding.data?.analysis;
   const first = insights.data?.find(
     (g): g is Extract<GatedInsight, { state: "insight" }> => g.state === "insight",
@@ -74,7 +76,11 @@ export function A11OnboardingFirstInsight() {
         <DataBoundary query={{ ...insights, isEmpty: !first }} empty={notYet}>
           {() =>
             first ? (
-              <FirstInsight insight={first.insight} totalCalls={analysis?.total ?? null} />
+              <FirstInsight
+                insight={first.insight}
+                totalCalls={analysis?.total ?? null}
+                reps={viewer.data?.team?.repCount ?? null}
+              />
             ) : null
           }
         </DataBoundary>
@@ -83,14 +89,23 @@ export function A11OnboardingFirstInsight() {
   );
 }
 
-function FirstInsight({ insight, totalCalls }: { insight: Insight; totalCalls: number | null }) {
+function FirstInsight({
+  insight,
+  totalCalls,
+  reps,
+}: {
+  insight: Insight;
+  totalCalls: number | null;
+  reps: number | null;
+}) {
   const evidence = insight.evidence[0];
   const canAct = insight.confidence !== "low" && insight.action !== null;
   const calls = totalCalls ?? insight.callsAnalyzed;
   return (
     <>
       <p className="type-mono-micro uppercase text-by-text-tertiary">
-        Ready · {calls} calls analyzed
+        {/* 90 days = the import window A10 promises ("your last 90 days"). */}
+        Ready · {calls} calls{reps ? ` · ${reps} reps` : ""} · 90 days
       </p>
       <h1 className="type-display-l text-by-text-primary">
         Here’s the first thing Bylda noticed about your team.
@@ -98,7 +113,7 @@ function FirstInsight({ insight, totalCalls }: { insight: Insight; totalCalls: n
       <article className="flex w-full animate-by-resolve flex-col gap-4 rounded-by-card border border-by-border-focus bg-by-surface-raised px-7 py-[26px] shadow-by-float">
         <h2 className="type-editorial-h2 text-by-text-primary">{insight.headline}</h2>
         {/* GAP: the metric trio (with vs without, outcome rate, count) isn't on Insight —
-            C-04 / LANE_REQUESTS.md #16. The body carries the numbers until it is. */}
+            C-04 / LANE_REQUESTS.md #19. The body carries the numbers until it is. */}
         {insight.body ? (
           <p className="type-ui-body text-by-text-secondary">{insight.body}</p>
         ) : null}

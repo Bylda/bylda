@@ -1,7 +1,7 @@
 import { mocksForced } from "@/lib/data";
 
 // GAP: the data layer has no "people matched from your call source" list for A9
-// (per-person call counts, suggested role/team, invite email) — LANE_REQUESTS.md #16.
+// (per-person call counts, suggested role/team, invite email) — LANE_REQUESTS.md #19.
 // These Figma fixtures (Acme Revenue) render ONLY with VITE_BYLDA_MOCKS=true; live mode
 // shows the add-by-email form alone. Never show them against a real workspace.
 
@@ -36,6 +36,23 @@ const CANDIDATES: InviteCandidate[] = [
 }));
 
 /** Matched people + the source they were matched from, or null outside forced mocks. */
-export function inviteCandidates(): { source: string; people: InviteCandidate[] } | null {
-  return mocksForced() ? { source: "Zoom", people: CANDIDATES } : null;
+export function inviteCandidates(): {
+  source: string;
+  people: InviteCandidate[];
+  /** Pre-typed add-by-email value from the frame. */
+  emails: string;
+} | null {
+  return mocksForced()
+    ? { source: "Zoom", people: CANDIDATES, emails: "nina@acmerevenue.com, luis@acmerevenue.com" }
+    : null;
+}
+
+/** A6 answers the frame shows pre-filled — industry/motion aren't in the data layer (GAP above). */
+export function workspaceDemoDefaults(): { industry: string; motions: string[] } | null {
+  return mocksForced()
+    ? {
+        industry: "B2B SaaS · logistics software",
+        motions: ["Outbound", "Mid-market (30–60 day cycle)"],
+      }
+    : null;
 }

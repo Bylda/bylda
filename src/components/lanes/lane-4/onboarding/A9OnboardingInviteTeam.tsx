@@ -34,7 +34,7 @@ function InviteForm() {
   const [on, setOn] = useState<string[]>(
     matched?.people.filter((p) => p.suggested).map((p) => p.id) ?? [],
   );
-  const [emailsRaw, setEmailsRaw] = useState("");
+  const [emailsRaw, setEmailsRaw] = useState(matched?.emails ?? "");
   const [emailError, setEmailError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -172,7 +172,7 @@ function Switch({
       aria-label={label}
       onClick={onChange}
       className={cn(
-        "relative inline-flex h-[18px] w-8 shrink-0 items-center rounded-by-pill transition-colors duration-200 ease-by-out",
+        "relative inline-flex h-[18px] w-8 shrink-0 items-center align-middle rounded-by-pill transition-colors duration-200 ease-by-out",
         checked ? "bg-by-surface-control-dark" : "bg-by-surface-muted",
       )}
     >

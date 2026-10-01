@@ -24,7 +24,7 @@ import { InsetNote, OnboardingLayout, StepActions, StepHeader } from "./Onboardi
  *
  * A real count, not an animation (Figma: "64% · real count, not an animation"). No fake
  * progress, no shimmer. Stage statuses are derived from the analyzed/total counts and the
- * connected sources — GAP: per-stage status from the pipeline (C-16, LANE_REQUESTS.md #16).
+ * connected sources — GAP: per-stage status from the pipeline (C-16, LANE_REQUESTS.md #19).
  */
 
 type StageStatus = "done" | "running" | "blocked" | "waiting";
@@ -89,7 +89,7 @@ export function A10OnboardingAnalysisInitializing() {
   const firstInsightReady = insights.data?.some((g) => g.state === "insight") ?? false;
 
   return (
-    <OnboardingLayout step={4} width={700}>
+    <OnboardingLayout step={4} width={700} top={80}>
       <DataBoundary query={onboarding}>
         {({ analysis: a }) => {
           if (a.total === 0) {
@@ -113,9 +113,11 @@ export function A10OnboardingAnalysisInitializing() {
                 lead={
                   complete
                     ? `All ${a.total} calls are analyzed.`
-                    : `${a.analyzed} of ${a.total} calls so far${
-                        a.etaMinutes !== null ? `, about ${a.etaMinutes} minutes to go` : ""
-                      }. You don’t need to stay — the first insight shows up as soon as there’s enough evidence.`
+                    : `${
+                        a.etaMinutes !== null
+                          ? `This takes about ${a.etaMinutes} more minutes for ${a.total} calls.`
+                          : `${a.analyzed} of ${a.total} calls so far.`
+                      } You don’t need to stay — the first insight shows up here as soon as there’s enough evidence.`
                 }
               />
               <ol className="flex w-full flex-col rounded-by-card border border-by-border-engraved bg-by-surface-raised px-5 py-2">
@@ -168,7 +170,7 @@ export function A10OnboardingAnalysisInitializing() {
                 <Button
                   variant="ghost"
                   onClick={() =>
-                    // GAP: no "notify me when analysis finishes" action yet (LANE_REQUESTS.md #16).
+                    // GAP: no "notify me when analysis finishes" action yet (LANE_REQUESTS.md #19).
                     setNote(
                       "Ready alerts aren’t wired up yet. Leave this tab open, or check Home later.",
                     )

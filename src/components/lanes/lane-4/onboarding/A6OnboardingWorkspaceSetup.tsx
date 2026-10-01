@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Button, DataBoundary } from "@/components/bylda";
 import { useOnboarding, useViewer, type Role } from "@/lib/data";
 import { AuthField } from "./AuthLayout";
+import { workspaceDemoDefaults } from "./onboardingDemo";
 import { readDraft, writeDraft } from "./onboardingDraft";
 import {
   Chip,
@@ -94,10 +95,11 @@ function WorkspaceForm(defaults: { company: string; teamSize: string; role: Role
   const [draft] = useState(readDraft);
   const [company, setCompany] = useState(str(draft.business_name) ?? defaults.company);
   const [teamSize, setTeamSize] = useState(str(draft.team_size) ?? defaults.teamSize);
-  // GAP: industry, sales motion and role aren't on OnboardingState yet (LANE_REQUESTS.md #16).
-  const [industry, setIndustry] = useState(str(draft.industry) ?? "");
+  // GAP: industry, sales motion and role aren't on OnboardingState yet (LANE_REQUESTS.md #19).
+  const [demo] = useState(workspaceDemoDefaults);
+  const [industry, setIndustry] = useState(str(draft.industry) ?? demo?.industry ?? "");
   const [motions, setMotions] = useState<string[]>(
-    Array.isArray(draft.sales_motions) ? (draft.sales_motions as string[]) : [],
+    Array.isArray(draft.sales_motions) ? (draft.sales_motions as string[]) : (demo?.motions ?? []),
   );
   const [role, setRole] = useState<RoleChoice | "">(
     (ROLES as readonly string[]).includes(str(draft.role) ?? "")

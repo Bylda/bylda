@@ -32,12 +32,7 @@ function StepRail({ current }: { current: number }) {
                 active || done ? "text-by-text-on-dark" : "text-by-text-on-dark-muted",
               )}
             >
-              <span
-                className={cn(
-                  "type-mono-data w-[15px] shrink-0",
-                  done && "text-by-text-on-dark-muted",
-                )}
-              >
+              <span className={cn("type-mono-data shrink-0", !done && "w-[15px]")}>
                 {done ? "✓" : String(i + 1).padStart(2, "0")}
               </span>
               <span className={active ? "type-ui-body-strong" : "type-ui-body"}>{label}</span>
@@ -56,6 +51,7 @@ function StepRail({ current }: { current: number }) {
 export function OnboardingLayout({
   step,
   width = 680,
+  top = 64,
   aside,
   children,
 }: {
@@ -63,6 +59,8 @@ export function OnboardingLayout({
   step: number;
   /** Column width from the frame (640–760). */
   width?: number;
+  /** Column top from the frame (56–80px) — the aside card always sits at y=120. */
+  top?: number;
   /** Optional right-hand card (A7 "What this changes"). */
   aside?: ReactNode;
   children: ReactNode;
@@ -70,11 +68,18 @@ export function OnboardingLayout({
   return (
     <div className="flex min-h-screen bg-by-surface-canvas">
       <StepRail current={step} />
-      <main className="flex flex-1 gap-[60px] px-4 pb-16 pt-14 sm:px-10 lg:pl-20">
+      <main
+        className="flex flex-1 gap-[60px] px-4 pb-16 sm:px-10 lg:pl-20"
+        style={{ paddingTop: top }}
+      >
         <div className="flex w-full flex-col items-start gap-5" style={{ maxWidth: width }}>
           {children}
         </div>
-        {aside ? <div className="hidden w-[300px] shrink-0 pt-16 xl:block">{aside}</div> : null}
+        {aside ? (
+          <div className="hidden w-[300px] shrink-0 xl:block" style={{ paddingTop: 120 - top }}>
+            {aside}
+          </div>
+        ) : null}
       </main>
     </div>
   );
@@ -238,7 +243,7 @@ export function InsetNote({
   return (
     <div
       role={role}
-      className="flex w-full flex-col gap-1.5 rounded-by-card border border-by-border-engraved bg-by-surface-inset px-4 py-3.5"
+      className="flex w-full flex-col gap-1 rounded-by-card border border-by-border-engraved bg-by-surface-inset px-4 py-3"
     >
       <span className="type-mono-micro uppercase text-by-text-tertiary">{label}</span>
       <div className="type-ui-small text-by-text-primary">{children}</div>
@@ -248,5 +253,5 @@ export function InsetNote({
 
 /** Back / Skip + primary, bottom of each step. */
 export function StepActions({ children }: { children: ReactNode }) {
-  return <div className="flex items-center gap-2 pt-1">{children}</div>;
+  return <div className="flex items-center gap-2">{children}</div>;
 }

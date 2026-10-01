@@ -128,7 +128,7 @@ export function A8OnboardingConnectCalls() {
         onConnect={() => void onConnect(e)}
         onCancel={() => cancel(e.key)}
         onImport={() =>
-          // GAP: no outcomes CSV import in the data layer yet (LANE_REQUESTS.md #16).
+          // GAP: no outcomes CSV import in the data layer yet (LANE_REQUESTS.md #19).
           setNote("CSV outcome import isn’t live yet. Connect a CRM, or skip this for now.")
         }
       />
@@ -136,7 +136,7 @@ export function A8OnboardingConnectCalls() {
   }
 
   return (
-    <OnboardingLayout step={2} width={760}>
+    <OnboardingLayout step={2} width={760} top={56}>
       <StepHeader
         eyebrow="Step 3 of 5"
         title="Where do your calls live?"
@@ -233,7 +233,9 @@ function SourceRow({
             ? `${source.callsSynced} ${entry.group === "calls" ? "recordings" : "records"} synced${
                 source.waiting > 0 ? ` · ${source.waiting} waiting` : ""
               }`
-            : null;
+            : entry.group === "outcomes" && status === "not_connected"
+              ? "Needed to link calls to outcomes"
+              : null;
 
   return (
     <li className="flex w-full items-center gap-3.5 border-b border-by-border-engraved py-3 last:border-b-0">
@@ -247,7 +249,7 @@ function SourceRow({
         <span className="type-ui-body-strong text-by-text-primary">{entry.name}</span>
         <span
           className={cn(
-            "type-ui-small",
+            "type-ui-small whitespace-pre-wrap",
             status === "error" ? "text-by-feedback-error" : "text-by-text-secondary",
           )}
         >
