@@ -641,3 +641,36 @@ morning.** One small PR per section. Per-person start prompts: **`TEAM_START.md`
 `.env.example`: that file is a guarded backend path (`BACKEND_BOUNDARY.md`), so adding
 it is a `backend`-labelled change for Tirth. Set it locally in your shell or an
 untracked `.env.local`.
+
+---
+
+## 13. DESIGN DECISIONS (override Figma where they conflict)
+
+Approved 2026-10-01 by **Ansh** (owner of `src/styles`, `src/components/bylda`,
+`design-ref`, `src/lib/data`, `BACKEND_BACKLOG.md`, this file). Where Figma, a
+`design-ref` spec or anything above disagrees, **this section wins.** Affected specs
+carry the line *"See CLAUDE.md §13: decision overrides Figma."* Items 1–9 land with
+`design-decisions-1`.
+
+10. **Reps never see rank or named-peer comparisons.** P7 *"one of the best on the
+    team"* → self-comparison (*"your best discovery call this month"*). O13
+    *"Me vs Theo"* → *"Me vs my last 30 days"*. Applies to **all** Coach prompt
+    suggestions.
+11. **Coach privacy:** *"Coach only sees your calls"* stays. Rep-scoped hooks must keep
+    enforcing it in the UI — there is no database guarantee yet
+    (`BACKEND_BACKLOG.md` item 0, P0).
+12. **Coach Practice / role-play tab is allowed:** practice from the rep's **own calls
+    only**. No scores, no quizzes, no lesson structure.
+13. **Insight thresholds are hard:** a rep insight needs **≥ 10 analyzed calls**
+    (`REP_INSIGHT_MIN_CALLS`), a team pattern **≥ 50** (`TEAM_PATTERN_MIN_CALLS`).
+    Below that, render the "not enough data yet" system state (`SystemState` Y3),
+    never a low-sample insight. Enforced in `@/lib/data`: `useInsights` and
+    `useRoomInsights` return `GatedInsight` (`state: "insight" | "insufficient"`,
+    the insufficient one carries no headline); the home feed and briefs drop
+    below-threshold insights. The O3 demo fixtures meet the thresholds.
+14. **Every report statement and every Coach insight line shows confidence + sample
+    size.** In Coach chat, a small *"based on N calls"* note.
+15. **Modal shadow (O14) allowed** via the modal shadow token (`shadow-by-float`,
+    §13.3) — no other shadow.
+16. **No gradient on call thumbnails** — flat surface, same as **Block / Call**
+    (§13.2).

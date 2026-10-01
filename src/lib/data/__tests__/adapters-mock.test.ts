@@ -179,9 +179,13 @@ describe("every single-object adapter resolves in mock mode", () => {
     const statuses = new Set((await loadCalls(DANA)).map((c) => c.status));
     expect([...statuses].sort()).toEqual(["failed", "partial", "processing", "ready"]);
     expect((await loadOutcomeAssociations(DANA)).some((o) => !isOutcomeSufficient(o))).toBe(true);
+    const gated = await loadInsights(DANA);
     expect(
-      (await loadInsights(DANA)).some((i) => i.confidence === "low" && i.action === null),
+      gated.some(
+        (g) => g.state === "insight" && g.insight.confidence === "low" && g.insight.action === null,
+      ),
     ).toBe(true);
+    expect(gated.some((g) => g.state === "insufficient")).toBe(true);
   });
   it("sidebar lists", async () => {
     const s = await loadSidebar(DANA);
