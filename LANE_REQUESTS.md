@@ -54,4 +54,8 @@ When the shared version lands, delete your copy.
 
 | 14 | Mayur | 5 | Align inherited shell on X1–X3 with Figma | Context panel currently starts below the top bar rather than at frame y=0, and breadcrumb duplicates the area label. Screens use the existing context slot; please adjust in Foundation. Integrations status tags follow Figma and Y8 despite the general behavioral-color-only wording; clarify this exception in shared guidance. See Lane 5 connections/QA.md and screenshots. | `open` — Ansh |
 
+| 15 | Mayur | 2 | Shared mock call call_acme: stage should be Negotiation and next step empty, per design-ref C3/C4/C5/C6. | Shared values are used as-is in this PR; no lane-local stage, next-step, summary, transcript, duration, contact or coaching-evidence override. Mayur will fix the shared data separately. | `open` — Mayur |
+| 16 | Mayur | 2 | Extend CallReview presentation contracts for C3–C6 | Missing qualified behavioral interpretation/action, confidence/sample sizes, coach notes and note persistence, opportunity amount, continuous control/sentiment tracks, and room clip-sharing action. Gap-only typed demo presentation is isolated to call_acme with forced mocks. Existing metrics/events/methodology remain shared; low-confidence derived cards have no action. Notes are explicitly unsaved previews; unsupported sharing does not post. | `open` — Ansh / Tirth |
+| 17 | Mayur | 2 | Align inherited Call Review shell with design-ref C3/C6 | Context starts below the shared top bar instead of y=0, breadcrumb differs, and the header title can truncate beside actions. Shared shell is frozen; screenshots and deviations are recorded in Lane 2 calls/QA.md. | `open` — Ansh |
+
 <!-- Add new rows above. Keep the newest at the bottom. -->
