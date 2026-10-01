@@ -315,10 +315,11 @@ regenerated file.
 ## 8. Lane map + folder ownership
 
 **Owners as of 2026-09-30:** Lane 1 Ansh · Lane 2 Dhruv · **Lane 4 Dravin** ·
-**Lane 5 Mayur** · Lane 6 first free person · Backend track Tirth.
+**Lane 5 Mayur** · **Lane 6 Mayur** · Backend track Tirth.
 (Lanes 4 and 5 swapped owners on 2026-09-30; lane numbers, folders, screens and
 order did not change. There is no Lane 3 any more — its areas moved to Lanes 2 and 4.
-Later on 2026-09-30 **10 Reports moved from Lane 4 to Lane 6**.)
+Later on 2026-09-30 **10 Reports moved from Lane 4 to Lane 6**. On 2026-10-01 **Lane 6
+went to Mayur**, who keeps Lane 5 too; Lane 6 builds 10 Reports first, then 12 Rooms & DMs.)
 
 ### Foundation — frozen once merged (owner Ansh)
 
@@ -343,7 +344,7 @@ route file and a placeholder screen component (§12 G). **No route folder is sha
 | 2 | **Dhruv** | 07 Calls → 13 Search & Ask → 11 Coaching | `src/routes/app/calls/**` · `src/routes/app/search/**` · `src/routes/app/coaching/**` | `src/components/lanes/lane-2/**` |
 | 4 | **Dravin** | 04 Onboarding/Auth → 06 Rep → 09 Team | `src/routes/welcome/**` (`/welcome/*`, outside the shell) · `src/routes/app/rep/**` · `src/routes/app/team/**` | `src/components/lanes/lane-4/**` **except** `lane-4/reports/**` |
 | 5 | **Mayur** | 15 Integrations → 16 Settings + Methodology → 18 Mobile (17 States ✅ done) | `src/routes/app/connections/**` · `src/routes/app/workspace/**` · `src/routes/app/methodology/**` · `src/routes/app/states/**` · `src/routes/m/**` (390 mobile, outside the shell) | `src/components/lanes/lane-5/**` |
-| 6 | first free person | 12 Rooms & Messages — **mocks only** → 10 Reports | `src/routes/app/rooms/**` · `src/routes/app/dm/**` · `src/routes/app/reports/**` · `src/routes/doc/**` (email/push/print, outside the shell) | `src/components/lanes/lane-6/**` · `src/components/lanes/lane-4/reports/**` (Reports placeholders stay at that path) |
+| 6 | **Mayur** | 10 Reports → 12 Rooms & Messages — **mocks only** | `src/routes/app/rooms/**` · `src/routes/app/dm/**` · `src/routes/app/reports/**` · `src/routes/doc/**` (email/push/print, outside the shell) | `src/components/lanes/lane-6/**` · `src/components/lanes/lane-4/reports/**` (Reports placeholders stay at that path) |
 | — | **Tirth** (backend) | `BACKEND_BACKLOG.md`, in order | `supabase/**` etc., on `backend/*` branches only | — |
 
 **Real view counts** (`FRAMES.md`): Lane 1 **20** (7 + 2 + 11) · Lane 2 **24** (9 + 3 + 12) ·
@@ -610,13 +611,13 @@ wrong — fix `map.ts`.
 | 2 | **Dhruv** | Calls, Search & Ask (07, 13), then Coaching (11) |
 | 4 | **Dravin** | Onboarding/Auth, Rep (04, 06), then Team (09) |
 | 5 | **Mayur** | Integrations, Settings, mobile (15, 16, 18); system states (17) done |
-| 6 | first free person | Rooms & Messages (12), mocks only, then Reports (10) |
+| 6 | **Mayur** | Reports (10), then Rooms & Messages (12), mocks only |
 | Backend | **Tirth** | `BACKEND_BACKLOG.md` |
 
 Each lane edits **only** its own route folders + `src/components/lanes/<lane>/**` (§8).
 One exception: `src/components/lanes/lane-4/reports/**` belongs to **Lane 6**, not Lane 4.
 Branch `lane-<n>-<name>` off `integration` (`lane-1-ansh`, `lane-2-dhruv`,
-`lane-4-dravin`, `lane-5-mayur`, `lane-6-<name>`). **Merge `integration` in every
+`lane-4-dravin`, `lane-5-mayur`, `lane-6-mayur`). **Merge `integration` in every
 morning.** One small PR per section. Per-person start prompts: **`TEAM_START.md`**.
 
 ### G. Guards
