@@ -395,6 +395,8 @@ and build a **local copy in your component folder** so you're never blocked.
 
 ## 9. Working rules
 
+- **Build each screen from `design-ref/<screen-code>/spec.md` (+ `frame.png` if present). Do NOT call Figma tools unless that screen's design-ref folder is missing. For the Figma check before the PR, compare your screenshot to design-ref instead of calling Figma.**
+  Tokens: `design-ref/_tokens.md`; components: `design-ref/_components/<name>/spec.md`. Index: `design-ref/README.md`.
 - Pull Figma frames **by node ID from `FRAMES.md` only.** Never `get_metadata` on
   a whole page you don't need — node by node.
 - ⚠️ `get_metadata` with **no** `nodeId` reports only page `0:1` and hides the
@@ -555,6 +557,7 @@ Request changes in `LANE_REQUESTS.md`. Owner **Ansh** unless noted.
 | `src/lib/impersonation.ts`, `src/lib/admin.ts`, `src/lib/ownerMode.ts` | frozen |
 | `src/lib/observability.ts`, `src/lib/analytics.ts` | **callable, not editable** |
 | `vite.config.ts`, `bunfig.toml`, `.lovable/` | frozen |
+| `design-ref/**` | frozen — Figma exports (owner **Ansh**). Re-export, never hand-edit. |
 | After this PR merges: `src/styles/**`, `src/components/ui/**`, `src/components/bylda/**`, the shell layout route `src/routes/app.tsx`, `src/lib/data/**` | frozen |
 
 This rules on every UNSURE item in `BACKEND_BOUNDARY.md`.
