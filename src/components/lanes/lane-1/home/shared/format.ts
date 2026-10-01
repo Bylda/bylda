@@ -65,3 +65,20 @@ export function lastChangePct(points: number[]): number | null {
   if (prev === 0) return null;
   return Math.round(((last - prev) / Math.abs(prev)) * 100);
 }
+
+const weekday = new Intl.DateTimeFormat("en-US", { weekday: "short" });
+
+export const weekdayShort = (iso: string) => weekday.format(new Date(iso));
+
+export type DayBucket = "today" | "yesterday" | "earlier";
+
+export const dayBucket = (iso: string, now: number): DayBucket => {
+  const d = new Date(iso);
+  if (sameDay(d, new Date(now))) return "today";
+  if (sameDay(d, new Date(now - DAY_MS))) return "yesterday";
+  return "earlier";
+};
+
+/** Clock time for today's items, weekday for older ones — the right-hand time column. */
+export const whenLabel = (iso: string, now: number) =>
+  dayBucket(iso, now) === "today" ? clockTime(iso) : weekdayShort(iso);
