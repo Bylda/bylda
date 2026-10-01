@@ -153,7 +153,7 @@ face and is used **only** by `Brand/Logo`. Fonts ship via `@fontsource`.
   we follow the components (logged in `LANE_REQUESTS.md` #8).
 - **Hairlines** — 1px `by-border-engraved`. Raised cards have **no shadow**.
 - **One soft shadow** — `shadow-by-float` = `0 12px 32px rgba(0,0,0,.12)`, the menus
-  and popovers on `50:27312`. Nothing else casts a shadow.
+  and popovers on `50:27312`, plus modals and hero cards (§13.3). Nothing else casts a shadow.
 
 ### Shell, motion, icons
 
@@ -192,7 +192,11 @@ Straight from Dev Handoff (`1:21` → Implementation rules, `21:143`):
   There is **no backend guarantee**: RLS on `calls` is
   `is_org_member(organization_id, auth.uid())`, so any member can read every call
   in the org. Filter on `user_id` in `/lib/data` **and** never render a peer
-  surface in a rep view. The Figma says it out loud on two frames — keep both
+  surface in a rep view. **One exception (§13.6):** the **team median** on R2 may
+  render as an anonymous aggregate — one number, no names, no ranks, no
+  distribution — and is **hidden when the team has fewer than 5 reps**. The data
+  layer returns the aggregate (and `team_size`); the rep view never receives peer
+  rows. The Figma says it out loud on two frames — keep both
   lines: *"No team rankings here. This view is only about you."* (`8:2`) and
   *"Your manager sees this same page. No one else does."* (`32:129`).
 - **Sparklines share a fixed y-range per behavior**, so a steady rep looks steady.
@@ -641,3 +645,46 @@ morning.** One small PR per section. Per-person start prompts: **`TEAM_START.md`
 `.env.example`: that file is a guarded backend path (`BACKEND_BOUNDARY.md`), so adding
 it is a `backend`-labelled change for Tirth. Set it locally in your shell or an
 untracked `.env.local`.
+
+---
+
+## 13. DESIGN DECISIONS (override Figma where they conflict)
+
+Approved 2026-10-01 by **Ansh** (owner of `src/styles`, `src/components/bylda`,
+`design-ref`, this file). Where Figma, a `design-ref` spec or anything above
+disagrees, **this section wins.** Affected specs carry the line
+*"See CLAUDE.md §13: decision overrides Figma."*
+
+1. **Tokens.** Three semantic tokens beyond Figma's set, in `src/styles/bylda.css`
+   and `design-ref/_tokens.md`:
+   - `border/strong` `#D3D0CB` (silver/300) → `border-by-border-strong`. Form inputs.
+     (`by-border-control` is the same value, kept for the kit.)
+   - `feedback/error` — same value as `signal/regress`, its own token →
+     `text-by-feedback-error`, `border-by-feedback-error`.
+   - `focus/ring` `#2A2A2E` (graphite/800) → `ring-by-focus-ring`, `border-by-focus-ring`.
+     Taken from the focused input on **A1** (`26:80`) — A4 only shows the error
+     state. (`by-border-focus` is the same value, kept for the kit.)
+2. **No gradients anywhere**, except the warm-metal avatar monogram
+   (`bg-by-avatar-metal`). **Block / Call**'s thumbnail is a flat surface
+   (`bg-by-surface-sidebar`); the `call-thumb` gradient token is gone.
+3. **Shadows** (`shadow-by-float`, the only one) on **menus, popovers, modals and
+   hero cards** only. The **A11 first-insight card is a hero card** — it uses
+   `shadow-by-float` (not Figma's 6% variant). Everything else is flat + hairline.
+4. **Wordmark is always Cinzel**, via `<Wordmark />` from `@/components/bylda` —
+   including the auth/onboarding art panels (A1–A10) where Figma sets
+   "B Y L D A" in Newsreader. Never hand-set it.
+5. **Radius: controls/inputs 6px (`rounded-by-control`), cards 10px
+   (`rounded-by-card`), always.** Ignore Figma's 4px/2px on inputs, buttons and
+   cards (e.g. A1–A6 inputs at 4px). `by-badge`/`by-bar` are for badges, kbd and
+   skeleton bars only.
+6. **Rep team median (R2)** — allowed as an anonymous aggregate (no names, no
+   ranks), **hidden when the team has fewer than 5 reps**. Folded into the
+   rep-privacy rule in §4.
+7. **Form errors use `feedback/error`, never signal colours.** Signal colours
+   stay behavioral direction only. (A4's regress-red error input/message →
+   `by-feedback-error`.)
+8. **Ignore the A5 art-panel 13px offset** — the art panel sits flush at `left: 0`
+   like every other auth frame.
+9. **C7** was re-exported via the saved-file path, so its spec is verbatim
+   (shell inline) like every other screen spec.
+

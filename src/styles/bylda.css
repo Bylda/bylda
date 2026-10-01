@@ -56,16 +56,12 @@
   /* Modal scrim */
   --by-ink-a40: rgb(11 11 12 / 0.4);
 
-  /* The only two gradients Figma uses — both are imagery, not decoration */
+  /* The ONLY gradient in the product — the warm-metal avatar monogram (4:35).
+     CLAUDE.md §13.2: Block / Call's thumbnail gradient was removed — flat surface. */
   --by-avatar-metal: linear-gradient(135deg, rgb(222 217 209) 0%, rgb(158 153 145) 71.43%);
-  --by-call-thumb: linear-gradient(
-    142.9deg,
-    rgb(56 56 61) 0%,
-    rgb(140 138 133) 35.71%,
-    rgb(31 31 33) 71.43%
-  );
 
-  /* The one soft shadow — menus & popovers (50:27312) */
+  /* The one soft shadow (50:27312). CLAUDE.md §13.3: menus, popovers, modals
+     and hero cards (A11 first insight) only. */
   --by-shadow-float: 0 12px 32px 0 rgb(0 0 0 / 0.12);
 }
 
@@ -98,9 +94,17 @@
 
   /* border/* */
   --color-by-border-engraved: var(--by-silver-200);
-  --color-by-border-control: var(--by-silver-300);
+  --color-by-border-strong: var(--by-silver-300); /* Figma border/strong — form inputs (§13.1) */
+  --color-by-border-control: var(--by-silver-300); /* = border-strong, kept for the kit */
   --color-by-border-rail: var(--by-graphite-700);
-  --color-by-border-focus: var(--by-ink);
+  --color-by-border-focus: var(--by-graphite-800); /* = focus-ring, kept for the kit */
+
+  /* focus/* — focused input border + focus ring (A1 26:80, §13.1) */
+  --color-by-focus-ring: var(--by-graphite-800);
+
+  /* feedback/* — form errors ONLY. Same value as regress, own token, so signal
+     colours stay behavioral (§13.1, §13.7). */
+  --color-by-feedback-error: var(--by-regress);
 
   /* signal — behavioral direction ONLY */
   --color-by-signal-improve: var(--by-improve);
@@ -112,7 +116,9 @@
   --color-by-signal-info: var(--by-info);
   --color-by-signal-info-bg: var(--by-info-bg);
 
-  /* Radius — what the page-02 components use (see CLAUDE.md §3) */
+  /* Radius — controls/inputs 6, cards 10, always (CLAUDE.md §13.5). Figma's
+     4px/2px on controls and cards is ignored; badge/bar are for badges, kbd
+     and skeleton bars only — never a control or a card. */
   --radius-by-bar: 2px; /* skeleton bars (Y13) */
   --radius-by-badge: 4px; /* Badge / APP, kbd */
   --radius-by-control: 6px; /* buttons, inputs, evidence block */
@@ -121,7 +127,7 @@
   --radius-by-menu: 12px; /* menus & popovers */
   --radius-by-pill: 999px; /* tags, avatars, reactions */
 
-  /* Elevation — exactly one soft shadow */
+  /* Elevation — exactly one soft shadow: menus, popovers, modals, hero cards (§13.3) */
   --shadow-by-float: var(--by-shadow-float);
 
   /* Fonts */
@@ -282,12 +288,9 @@
   letter-spacing: -0.02em;
 }
 
-/* Imagery tokens (Figma avatar monogram, call thumbnail) */
+/* Imagery token — the avatar monogram, the only gradient (CLAUDE.md §13.2) */
 @utility bg-by-avatar-metal {
   background-image: var(--by-avatar-metal);
-}
-@utility bg-by-call-thumb {
-  background-image: var(--by-call-thumb);
 }
 
 /* V1 surfaces opt in with .bylda — sets the canvas + base type without
