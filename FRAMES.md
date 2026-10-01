@@ -98,161 +98,161 @@ The 72/240/520/300 boxes in the Foundations diagram are illustrative — use 64/
 
 ---
 
-## Lane 4 — Mayur · 04 Onboarding & Auth · `1:5` · 11 views
+## Lane 4 — Dravin · 04 Onboarding & Auth · `1:5` · 11 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Auth — Sign in | `26:40` | `A1` | Mayur |
-| Auth — Sign up | `26:91` | `A2` | Mayur |
-| Auth — Verify email | `26:139` | `A3` | Mayur |
-| Auth — Forgot password | `26:184` | `A4` | Mayur |
-| Auth — Invite acceptance | `26:224` | `A5` | Mayur |
-| Onboarding — Workspace setup | `26:784` | `A6` | Mayur |
-| Onboarding — Teach Bylda how you sell | `15:2` | `A7` | Mayur |
-| Onboarding — Connect calls (integration states) | `15:302` | `A8` | Mayur |
-| Onboarding — Invite team | `26:496` | `A9` | Mayur |
-| Onboarding — Analysis initializing | `16:21` | `A10` | Mayur |
-| Onboarding — First insight | `16:244` | `A11` | Mayur |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Auth — Sign in | `26:40` | `A1` | Dravin | `/welcome/sign-in` |
+| Auth — Sign up | `26:91` | `A2` | Dravin | `/welcome/sign-up` |
+| Auth — Verify email | `26:139` | `A3` | Dravin | `/welcome/verify` |
+| Auth — Forgot password | `26:184` | `A4` | Dravin | `/welcome/forgot` |
+| Auth — Invite acceptance | `26:224` | `A5` | Dravin | `/welcome/invite` |
+| Onboarding — Workspace setup | `26:784` | `A6` | Dravin | `/welcome/workspace` |
+| Onboarding — Teach Bylda how you sell | `15:2` | `A7` | Dravin | `/welcome/teach` |
+| Onboarding — Connect calls (integration states) | `15:302` | `A8` | Dravin | `/welcome/connect` |
+| Onboarding — Invite team | `26:496` | `A9` | Dravin | `/welcome/invite-team` |
+| Onboarding — Analysis initializing | `16:21` | `A10` | Dravin | `/welcome/analysis` |
+| Onboarding — First insight | `16:244` | `A11` | Dravin | `/welcome/first-insight` |
 
 All 1440×1024.
 
 ## Lane 1 — Ansh · 05 Manager/Admin Home · `1:6` · 7 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Manager Home — Feed | `7:2` | `H1` | Ansh |
-| Manager Home — Team Updates | `43:692` | `H2` | Ansh |
-| Manager Home — Calls | `43:1176` | `H3` | Ansh |
-| Manager Home — Coaching | `43:1670` | `H4` | Ansh |
-| Manager Home — Reports | `43:2139` | `H5` | Ansh |
-| Manager Home — Mentions | `43:2612` | `H6` | Ansh |
-| Admin Home — Owner (workspace health) | `31:9916` | `H7` | Ansh |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Manager Home — Feed | `7:2` | `H1` | Ansh | `/app/home` |
+| Manager Home — Team Updates | `43:692` | `H2` | Ansh | `/app/home/team-updates` |
+| Manager Home — Calls | `43:1176` | `H3` | Ansh | `/app/home/calls` |
+| Manager Home — Coaching | `43:1670` | `H4` | Ansh | `/app/home/coaching` |
+| Manager Home — Reports | `43:2139` | `H5` | Ansh | `/app/home/reports` |
+| Manager Home — Mentions | `43:2612` | `H6` | Ansh | `/app/home/mentions` |
+| Admin Home — Owner (workspace health) | `31:9916` | `H7` | Ansh | `/app/home/admin` |
 
 H2–H6 are tabs of H1 (`For You · Team Updates · Calls · Coaching · Reports · Mentions`).
 
-## Lane 4 — Mayur · 06 Rep · `1:7` · 3 views
+## Lane 4 — Dravin · 06 Rep · `1:7` · 3 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Rep Home — Daily Brief | `8:2` | `R1` | Mayur |
-| Rep — My progress | `32:129` | `R2` | Mayur |
-| Call Review — Rep perspective | `32:334` | `R3` | Mayur |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Rep Home — Daily Brief | `8:2` | `R1` | Dravin | `/app/rep` |
+| Rep — My progress | `32:129` | `R2` | Dravin | `/app/rep/progress` |
+| Call Review — Rep perspective | `32:334` | `R3` | Dravin | `/app/rep/calls/$callId` |
 
 `R1` context panel ends with *"No team rankings here. This view is only about you."*
 `R2` with *"Your manager sees this same page. No one else does."* Keep both.
 
 ## Lane 2 — Dhruv · 07 Calls · `1:8` · 9 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Calls Index — saved views | `17:1090` | `C1` | Dhruv |
-| Calls Index — All calls + filters open | `52:8665` | `C2` | Dhruv |
-| Call Review — Transcript & timeline | `9:2` | `C3` | Dhruv |
-| Call Review — Overview | `44:1375` | `C4` | Dhruv |
-| Call Review — Analysis | `44:1755` | `C5` | Dhruv |
-| Call Review — Coaching | `44:2146` | `C6` | Dhruv |
-| Calls — Manual upload | `28:1263` | `C7` | Dhruv |
-| Call comparison | `28:1464` | `C8` | Dhruv |
-| Calls — Rep view (my calls) | `28:1646` | `C9` | Dhruv |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Calls Index — saved views | `17:1090` | `C1` | Dhruv | `/app/calls` |
+| Calls Index — All calls + filters open | `52:8665` | `C2` | Dhruv | `/app/calls/all` |
+| Call Review — Transcript & timeline | `9:2` | `C3` | Dhruv | `/app/calls/$callId/transcript` |
+| Call Review — Overview | `44:1375` | `C4` | Dhruv | `/app/calls/$callId` |
+| Call Review — Analysis | `44:1755` | `C5` | Dhruv | `/app/calls/$callId/analysis` |
+| Call Review — Coaching | `44:2146` | `C6` | Dhruv | `/app/calls/$callId/coaching` |
+| Calls — Manual upload | `28:1263` | `C7` | Dhruv | `/app/calls/upload` |
+| Call comparison | `28:1464` | `C8` | Dhruv | `/app/calls/compare` |
+| Calls — Rep view (my calls) | `28:1646` | `C9` | Dhruv | `/app/calls/mine` |
 
 `C3` is 1440×1476. `C4`–`C6` are tabs of the Call Review.
 
 ## Lane 1 — Ansh · 08 Intelligence · `1:9` · 11 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Intelligence Home | `27:298` | `I1` | Ansh |
-| Behavior Detail — Interrupting during objections | `11:2` | `I2` | Ansh |
-| Emerging Patterns | `27:567` | `I3` | Ansh |
-| Objections | `28:378` | `I4` | Ansh |
-| Behavior × Outcome matrix | `28:641` | `I5` | Ansh |
-| Behavioral Outcome Graph | `28:857` | `I6` | Ansh |
-| Intelligence — Team behaviors | `51:1420` | `I7` | Ansh |
-| Intelligence — Methodology adherence | `51:2887` | `I8` | Ansh |
-| Intelligence — Outcome patterns | `51:1819` | `I9` | Ansh |
-| Intelligence — Rep patterns | `51:2196` | `I10` | Ansh |
-| Intelligence — Prospect patterns | `51:2556` | `I11` | Ansh |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Intelligence Home | `27:298` | `I1` | Ansh | `/app/intelligence` |
+| Behavior Detail — Interrupting during objections | `11:2` | `I2` | Ansh | `/app/intelligence/behaviors/$behaviorKey` |
+| Emerging Patterns | `27:567` | `I3` | Ansh | `/app/intelligence/patterns` |
+| Objections | `28:378` | `I4` | Ansh | `/app/intelligence/objections` |
+| Behavior × Outcome matrix | `28:641` | `I5` | Ansh | `/app/intelligence/matrix` |
+| Behavioral Outcome Graph | `28:857` | `I6` | Ansh | `/app/intelligence/graph` |
+| Intelligence — Team behaviors | `51:1420` | `I7` | Ansh | `/app/intelligence/team-behaviors` |
+| Intelligence — Methodology adherence | `51:2887` | `I8` | Ansh | `/app/intelligence/methodology` |
+| Intelligence — Outcome patterns | `51:1819` | `I9` | Ansh | `/app/intelligence/outcomes` |
+| Intelligence — Rep patterns | `51:2196` | `I10` | Ansh | `/app/intelligence/reps` |
+| Intelligence — Prospect patterns | `51:2556` | `I11` | Ansh | `/app/intelligence/prospects` |
 
 `I6` is 1600×1000 — a concept view, not shell-framed.
 
-## Lane 3 — Tirth · 09 Team · `1:10` · 13 views
+## Lane 4 — Dravin · 09 Team · `1:10` · 13 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Team Overview | `12:2` | `T1` | Tirth |
-| Team Detail — Mid-Market AE | `29:1423` | `T2` | Tirth |
-| Team Detail — Reps | `52:2125` | `T3` | Tirth |
-| Team Detail — Behaviors | `52:2520` | `T4` | Tirth |
-| Team Detail — Coaching | `52:2928` | `T5` | Tirth |
-| Team Detail — Calls | `52:3276` | `T6` | Tirth |
-| Team Detail — Settings | `52:3634` | `T7` | Tirth |
-| Rep Profile — Jordan Reyes (manager view) | `12:271` | `T8` | Tirth |
-| Rep Profile — Overview | `45:1147` | `T9` | Tirth |
-| Rep Profile — Calls | `45:1493` | `T10` | Tirth |
-| Rep Profile — Coaching | `45:1841` | `T11` | Tirth |
-| Rep Profile — Trends | `45:2142` | `T12` | Tirth |
-| Rep Comparison | `29:1629` | `T13` | Tirth |
-
-## Lane 3 — Tirth · 10 Reports · `1:11` · 10 views
-
-| Frame name | Node ID | Code | Owner | Width |
+| Frame name | Node ID | Code | Owner | V1 route |
 | --- | --- | --- | --- | --- |
-| Reports — Index | `29:159` | `P1` | Tirth | 1440 |
-| Daily Manager Brief — in-app document | `13:2` | `P2` | Tirth | 1440×1656 |
-| Daily Manager Brief — email (640) | `13:232` | `P3` | Tirth | **760** |
-| Daily Rep Brief — email / push (60 sec) | `13:316` | `P4` | Tirth | **420×380** |
-| Weekly Manager Report — living document | `29:352` | `P5` | Tirth | 1440×2056 |
-| Weekly Sales Behavior Report — outline | `52:10624` | `P6` | Tirth | 1440 |
-| Weekly Rep Report — Jordan | `29:625` | `P7` | Tirth | 1440×1256 |
-| Team Report — September | `29:773` | `P8` | Tirth | 1440×1256 |
-| Behavior Report — Objection handling | `29:993` | `P9` | Tirth | 1440×1156 |
-| Weekly Report — PDF / print (A4) | `29:1154` | `P10` | Tirth | **794×1123** |
+| Team Overview | `12:2` | `T1` | Dravin | `/app/team` |
+| Team Detail — Mid-Market AE | `29:1423` | `T2` | Dravin | `/app/team/$teamId` |
+| Team Detail — Reps | `52:2125` | `T3` | Dravin | `/app/team/$teamId/reps` |
+| Team Detail — Behaviors | `52:2520` | `T4` | Dravin | `/app/team/$teamId/behaviors` |
+| Team Detail — Coaching | `52:2928` | `T5` | Dravin | `/app/team/$teamId/coaching` |
+| Team Detail — Calls | `52:3276` | `T6` | Dravin | `/app/team/$teamId/calls` |
+| Team Detail — Settings | `52:3634` | `T7` | Dravin | `/app/team/$teamId/settings` |
+| Rep Profile — Jordan Reyes (manager view) | `12:271` | `T8` | Dravin | `/app/team/reps/$repId` |
+| Rep Profile — Overview | `45:1147` | `T9` | Dravin | `/app/team/reps/$repId/overview` |
+| Rep Profile — Calls | `45:1493` | `T10` | Dravin | `/app/team/reps/$repId/calls` |
+| Rep Profile — Coaching | `45:1841` | `T11` | Dravin | `/app/team/reps/$repId/coaching` |
+| Rep Profile — Trends | `45:2142` | `T12` | Dravin | `/app/team/reps/$repId/trends` |
+| Rep Comparison | `29:1629` | `T13` | Dravin | `/app/team/compare` |
+
+## Lane 6 — first free person · 10 Reports · `1:11` · 10 views
+
+| Frame name | Node ID | Code | Owner | Width | V1 route |
+| --- | --- | --- | --- | --- | --- |
+| Reports — Index | `29:159` | `P1` | Lane 6 | 1440 | `/app/reports` |
+| Daily Manager Brief — in-app document | `13:2` | `P2` | Lane 6 | 1440×1656 | `/app/reports/daily` |
+| Daily Manager Brief — email (640) | `13:232` | `P3` | Lane 6 | **760** | `/doc/manager-brief-email` |
+| Daily Rep Brief — email / push (60 sec) | `13:316` | `P4` | Lane 6 | **420×380** | `/doc/rep-brief-push` |
+| Weekly Manager Report — living document | `29:352` | `P5` | Lane 6 | 1440×2056 | `/app/reports/weekly` |
+| Weekly Sales Behavior Report — outline | `52:10624` | `P6` | Lane 6 | 1440 | `/app/reports/outline` |
+| Weekly Rep Report — Jordan | `29:625` | `P7` | Lane 6 | 1440×1256 | `/app/reports/rep/$repId` |
+| Team Report — September | `29:773` | `P8` | Lane 6 | 1440×1256 | `/app/reports/team/$teamId` |
+| Behavior Report — Objection handling | `29:993` | `P9` | Lane 6 | 1440×1156 | `/app/reports/behavior/$behaviorKey` |
+| Weekly Report — PDF / print (A4) | `29:1154` | `P10` | Lane 6 | **794×1123** | `/doc/weekly-print` |
 
 `P3`, `P4`, `P10` are **not** app screens — email, push and print. Don't wrap them in the shell.
 
-## Lane 3 — Tirth · 11 Coaching · `1:12` · 12 views
+## Lane 2 — Dhruv · 11 Coaching · `1:12` · 12 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Coaching lifecycle | `14:2` | `G1` | Tirth (1450×70 — diagram, reference) |
-| Assign Coaching — modal | `14:24` | `G2` | Tirth |
-| Coaching — Index (Active) | `30:246` | `G3` | Tirth |
-| Coaching — Needs follow-up | `52:6380` | `G4` | Tirth |
-| Coaching — Completed | `30:430` | `G5` | Tirth |
-| Coaching Detail — Jordan · active | `30:639` | `G6` | Tirth |
-| Coaching Detail — Overview | `46:1604` | `G7` | Tirth |
-| Coaching Detail — Evidence | `46:1935` | `G8` | Tirth |
-| Coaching Detail — Progress | `46:2244` | `G9` | Tirth |
-| Coaching Detail — Discussion | `46:2549` | `G10` | Tirth |
-| Coaching — Rep view (Jordan) | `30:839` | `G11` | Tirth |
-| Behavior Change Result — Alex Morgan | `14:224` | `G12` | Tirth |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Coaching lifecycle | `14:2` | `G1` | Dhruv — 1450×70 diagram, reference | component `G1CoachingLifecycle` |
+| Assign Coaching — modal | `14:24` | `G2` | Dhruv | `/app/coaching/assign` |
+| Coaching — Index (Active) | `30:246` | `G3` | Dhruv | `/app/coaching` |
+| Coaching — Needs follow-up | `52:6380` | `G4` | Dhruv | `/app/coaching/follow-up` |
+| Coaching — Completed | `30:430` | `G5` | Dhruv | `/app/coaching/completed` |
+| Coaching Detail — Jordan · active | `30:639` | `G6` | Dhruv | `/app/coaching/$focusId` |
+| Coaching Detail — Overview | `46:1604` | `G7` | Dhruv | `/app/coaching/$focusId/overview` |
+| Coaching Detail — Evidence | `46:1935` | `G8` | Dhruv | `/app/coaching/$focusId/evidence` |
+| Coaching Detail — Progress | `46:2244` | `G9` | Dhruv | `/app/coaching/$focusId/progress` |
+| Coaching Detail — Discussion | `46:2549` | `G10` | Dhruv | `/app/coaching/$focusId/discussion` |
+| Coaching — Rep view (Jordan) | `30:839` | `G11` | Dhruv | `/app/coaching/mine` |
+| Behavior Change Result — Alex Morgan | `14:224` | `G12` | Dhruv | `/app/coaching/$focusId/result` |
 
 ## Lane 6 — first free person · 12 Rooms & Messages · `1:13` · 14 views · MOCKS ONLY
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Rooms — Directory | `31:241` | `O1` | Lane 6 |
-| Room — #objection-watch | `18:2` | `O2` | Lane 6 |
-| Room — #objection-watch · Insights | `48:1283` | `O3` | Lane 6 |
-| Room — #objection-watch · Calls | `48:1732` | `O4` | Lane 6 |
-| Room — #objection-watch · Reports | `48:2213` | `O5` | Lane 6 |
-| Room — #objection-watch · Files | `48:2662` | `O6` | Lane 6 |
-| Room — #objection-watch · About | `48:3103` | `O7` | Lane 6 |
-| Room — #daily-brief | `31:403` | `O8` | Lane 6 |
-| Room — #coaching | `31:586` | `O9` | Lane 6 |
-| Room — #mid-market-team (team room) | `48:25761` | `O10` | Lane 6 |
-| Room — #acme-logistics (deal room) | `50:3655` | `O11` | Lane 6 |
-| Direct message — Dana ↔ Jordan | `49:3123` | `O12` | Lane 6 |
-| Direct message — BYLDA Coach (rep) | `49:3627` | `O13` | Lane 6 |
-| Rooms — New room modal | `50:4184` | `O14` | Lane 6 |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Rooms — Directory | `31:241` | `O1` | Lane 6 | `/app/rooms` |
+| Room — #objection-watch | `18:2` | `O2` | Lane 6 | `/app/rooms/$roomId` |
+| Room — #objection-watch · Insights | `48:1283` | `O3` | Lane 6 | `/app/rooms/$roomId/insights` |
+| Room — #objection-watch · Calls | `48:1732` | `O4` | Lane 6 | `/app/rooms/$roomId/calls` |
+| Room — #objection-watch · Reports | `48:2213` | `O5` | Lane 6 | `/app/rooms/$roomId/reports` |
+| Room — #objection-watch · Files | `48:2662` | `O6` | Lane 6 | `/app/rooms/$roomId/files` |
+| Room — #objection-watch · About | `48:3103` | `O7` | Lane 6 | `/app/rooms/$roomId/about` |
+| Room — #daily-brief | `31:403` | `O8` | Lane 6 | component `O8RoomDailyBrief` |
+| Room — #coaching | `31:586` | `O9` | Lane 6 | component `O9RoomCoaching` |
+| Room — #mid-market-team (team room) | `48:25761` | `O10` | Lane 6 | component `O10RoomMidMarketTeam` |
+| Room — #acme-logistics (deal room) | `50:3655` | `O11` | Lane 6 | component `O11RoomAcmeLogistics` |
+| Direct message — Dana ↔ Jordan | `49:3123` | `O12` | Lane 6 | `/app/dm/$threadId` |
+| Direct message — BYLDA Coach (rep) | `49:3627` | `O13` | Lane 6 | `/app/dm/coach` |
+| Rooms — New room modal | `50:4184` | `O14` | Lane 6 | `/app/rooms/new` |
 
 ## Lane 2 — Dhruv · 13 Search & Ask · `1:14` · 3 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Search — Command palette ⌘K | `31:760` | `S1` | Dhruv |
-| Search — Natural-language results | `31:909` | `S2` | Dhruv |
-| Ask Bylda — side panel (from rail ✦) | `50:26784` | `S3` | Dhruv |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Search — Command palette ⌘K | `31:760` | `S1` | Dhruv | component `S1SearchCommandPalette` |
+| Search — Natural-language results | `31:909` | `S2` | Dhruv | `/app/search` |
+| Ask Bylda — side panel (from rail ✦) | `50:26784` | `S3` | Dhruv | component `S3AskByldaSidePanel` |
 
 `S2` states the rule: *"Bylda converts your question to filters you can see and
 edit. It never answers from memory — every result links to a call."* Build the
@@ -261,10 +261,10 @@ editable filter chips, not a chat.
 
 ## Lane 1 — Ansh · 14 Notifications · `1:15` · 2 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Notifications — Drawer over Home | `31:1101` | `N1` | Ansh |
-| Notifications — Center | `31:1258` | `N2` | Ansh |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Notifications — Drawer over Home | `31:1101` | `N1` | Ansh | component `N1NotificationsDrawerOverHome` |
+| Notifications — Center | `31:1258` | `N2` | Ansh | `/app/notifications` |
 
 Drawer is 400 wide. Types: `BEHAVIOR REGRESSION` · `IMPORTANT CALL` ·
 `EMERGING PATTERN` · `REPORT READY` · `COACHING COMPLETED` ·
@@ -273,40 +273,40 @@ Drawer is 400 wide. Types: `BEHAVIOR REGRESSION` · `IMPORTANT CALL` ·
 Rule on the frame: *"Severity is shown by a dot and a word, never by red badges
 or counts that pile up."*
 
-## Lane 5 — Dravin · 15 Integrations · `1:16` · 3 views
+## Lane 5 — Mayur · 15 Integrations · `1:16` · 3 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Integrations — Data sources | `31:1464` | `X1` | Dravin |
-| Integrations — Delivery channels | `31:1688` | `X2` | Dravin |
-| Integration detail — HubSpot mapping | `31:1915` | `X3` | Dravin |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Integrations — Data sources | `31:1464` | `X1` | Mayur | `/app/connections` |
+| Integrations — Delivery channels | `31:1688` | `X2` | Mayur | `/app/connections/channels` |
+| Integration detail — HubSpot mapping | `31:1915` | `X3` | Mayur | `/app/connections/hubspot` |
 
 `X1` states: *"Bylda never writes to your CRM in V1."* Read-only, always.
 
-## Lane 5 — Dravin · 16 Settings + Methodology · `1:17` · 18 views
+## Lane 5 — Mayur · 16 Settings + Methodology · `1:17` · 18 views
 
-| Frame name | Node ID | Code | Owner |
-| --- | --- | --- | --- |
-| Settings — Workspace general | `31:2201` | `E1` | Dravin |
-| Settings — Profile | `31:2394` | `E2` | Dravin |
-| Settings — Users | `31:2583` | `E3` | Dravin |
-| Settings — Teams | `31:2828` | `E4` | Dravin |
-| Settings — Roles & permissions | `31:3018` | `E5` | Dravin |
-| Settings — Analysis preferences | `31:3275` | `E6` | Dravin |
-| Settings — Notifications | `31:3474` | `E7` | Dravin |
-| Settings — Retention & privacy | `31:3738` | `E8` | Dravin |
-| Methodology — Index | `31:7762` | `E9` | Dravin |
-| Methodology — Detail (stages) | `31:7973` | `E10` | Dravin |
-| Methodology — Behavior rules list | `31:8450` | `E11` | Dravin |
-| Methodology — Behavior rule editor | `31:8218` | `E12` | Dravin |
-| Methodology — Objection library | `31:8720` | `E13` | Dravin |
-| Methodology — Success criteria | `31:8913` | `E14` | Dravin |
-| Settings — Billing & plan | `31:9113` | `E15` | Dravin |
-| Settings — Usage | `31:9316` | `E16` | Dravin |
-| Settings — API keys | `31:9530` | `E17` | Dravin |
-| Settings — Audit log | `31:9715` | `E18` | Dravin |
+| Frame name | Node ID | Code | Owner | V1 route |
+| --- | --- | --- | --- | --- |
+| Settings — Workspace general | `31:2201` | `E1` | Mayur | `/app/workspace` |
+| Settings — Profile | `31:2394` | `E2` | Mayur | `/app/workspace/profile` |
+| Settings — Users | `31:2583` | `E3` | Mayur | `/app/workspace/users` |
+| Settings — Teams | `31:2828` | `E4` | Mayur | `/app/workspace/teams` |
+| Settings — Roles & permissions | `31:3018` | `E5` | Mayur | `/app/workspace/roles` |
+| Settings — Analysis preferences | `31:3275` | `E6` | Mayur | `/app/workspace/analysis` |
+| Settings — Notifications | `31:3474` | `E7` | Mayur | `/app/workspace/notifications` |
+| Settings — Retention & privacy | `31:3738` | `E8` | Mayur | `/app/workspace/retention` |
+| Methodology — Index | `31:7762` | `E9` | Mayur | `/app/methodology` |
+| Methodology — Detail (stages) | `31:7973` | `E10` | Mayur | `/app/methodology/$methodologyId` |
+| Methodology — Behavior rules list | `31:8450` | `E11` | Mayur | `/app/methodology/$methodologyId/rules` |
+| Methodology — Behavior rule editor | `31:8218` | `E12` | Mayur | `/app/methodology/$methodologyId/rules/$ruleKey` |
+| Methodology — Objection library | `31:8720` | `E13` | Mayur | `/app/methodology/objections` |
+| Methodology — Success criteria | `31:8913` | `E14` | Mayur | `/app/methodology/success-criteria` |
+| Settings — Billing & plan | `31:9113` | `E15` | Mayur | `/app/workspace/billing` |
+| Settings — Usage | `31:9316` | `E16` | Mayur | `/app/workspace/usage` |
+| Settings — API keys | `31:9530` | `E17` | Mayur | `/app/workspace/api-keys` |
+| Settings — Audit log | `31:9715` | `E18` | Mayur | `/app/workspace/audit-log` |
 
-## Lane 5 — Dravin · 17 Empty & System States · `1:18` · BUILD FIRST
+## Lane 5 — Mayur · 17 Empty & System States · `1:18` · ✅ DONE (built in Foundation)
 
 One board frame `19:2` (1600×1424) holding **13** states. Every lane imports these.
 
@@ -330,21 +330,21 @@ Board rule: *"when Bylda lacks evidence, it says so — with the number it needs
 It never fills space with fake intelligence."*
 `Y13` is labelled **"NO SHIMMER THEATRICS"** — static bars, no animated shimmer.
 
-## Lane 5 — Dravin · 18 Mobile & Responsive · `1:19` · 11 views
+## Lane 5 — Mayur · 18 Mobile & Responsive · `1:19` · 11 views
 
-| Frame name | Node ID | Code | Size |
-| --- | --- | --- | --- |
-| Mobile — Rep Daily Brief | `20:2` | `B1` | 390×844 |
-| Mobile — Manager Brief + alert | `20:24` | `B2` | 390×844 |
-| Mobile — Quick call review + coach | `20:67` | `B3` | 390×844 |
-| Mobile — Coaching acknowledge (Rep) | `32:572` | `B4` | 390×844 |
-| Mobile — Alerts (Manager) | `32:605` | `B5` | 390×844 |
-| Mobile — Moment player (Rep) | `32:646` | `B6` | 390×844 |
-| Mobile — Room #objection-watch | `52:11424` | `B7` | 390×844 |
-| Mobile — Direct message (Dana ↔ Jordan) | `52:11495` | `B8` | 390×844 |
-| Mobile — Ask Bylda / BYLDA Coach | `52:11547` | `B9` | 390×844 |
-| Responsive — Manager Home @1280 (context → drawer) | `32:7245` | `B10` | 1280×1080 |
-| Responsive — Manager Home @1024 (icon rail only) | `32:7490` | `B11` | 1024×1080 |
+| Frame name | Node ID | Code | Size | V1 route |
+| --- | --- | --- | --- | --- |
+| Mobile — Rep Daily Brief | `20:2` | `B1` | 390×844 | `/m/brief` |
+| Mobile — Manager Brief + alert | `20:24` | `B2` | 390×844 | `/m/manager-brief` |
+| Mobile — Quick call review + coach | `20:67` | `B3` | 390×844 | `/m/calls/$callId` |
+| Mobile — Coaching acknowledge (Rep) | `32:572` | `B4` | 390×844 | `/m/coaching/$focusId` |
+| Mobile — Alerts (Manager) | `32:605` | `B5` | 390×844 | `/m/alerts` |
+| Mobile — Moment player (Rep) | `32:646` | `B6` | 390×844 | `/m/moments/$momentId` |
+| Mobile — Room #objection-watch | `52:11424` | `B7` | 390×844 | `/m/rooms/$roomId` |
+| Mobile — Direct message (Dana ↔ Jordan) | `52:11495` | `B8` | 390×844 | `/m/dm/$threadId` |
+| Mobile — Ask Bylda / BYLDA Coach | `52:11547` | `B9` | 390×844 | `/m/ask` |
+| Responsive — Manager Home @1280 (context → drawer) | `32:7245` | `B10` | 1280×1080 | `/app/home` @1280 — shell breakpoint (Foundation), QA Lane 5 |
+| Responsive — Manager Home @1024 (icon rail only) | `32:7490` | `B11` | 1024×1080 | `/app/home` @1024 — shell breakpoint (Foundation), QA Lane 5 |
 
 Skip `20:130` — an unnamed 420×198 helper frame, not a view.
 
@@ -375,20 +375,27 @@ Hidden helpers on this page: `__lib` `25:2`, `__swap` `38:2` — skip.
 
 ## View count per lane
 
+Owners as of 2026-09-30 (Lanes 4 and 5 swapped owners that day). Later on
+2026-09-30 `10 Reports` moved from Lane 4 to Lane 6. Full ownership + folders:
+`CLAUDE.md` §8.
+
 | Lane | Owner | Areas | Views |
 | --- | --- | --- | --- |
-| Foundation | Ansh | 01, 02, 03 | tokens + 14 components + shell |
-| Lane 1 | Ansh | 05, 08, 14 | 7 + 11 + 2 = **20** |
-| Lane 2 | Dhruv | adapters, 07, 13 | 9 + 3 = **12** |
-| Lane 3 | Tirth | 09, 10, 11 | 13 + 10 + 12 = **35** |
-| Lane 4 | Mayur | 04, 06 | 11 + 3 = **14** |
-| Lane 5 | Dravin | 15, 16, 17, 18 | 3 + 18 + 13 states + 11 = **45** |
-| Lane 6 | first free | 12 | **14** |
+| Foundation | Ansh | 01, 02, 03 + all 13 states of 17 + shell breakpoints B10/B11 | tokens + 14 components + shell |
+| Lane 1 | Ansh | 05, 14, 08 | 7 + 2 + 11 = **20** |
+| Lane 2 | Dhruv | 07, 13, then 11 | 9 + 3 + 12 = **24** |
+| Lane 4 | Dravin | 04, 06, then 09 | 11 + 3 + 13 = **27** |
+| Lane 5 | Mayur | 15, 16, 18 (17 ✅ done) | 3 + 18 + 11 = **32** (the 13 states of 17 are built — Foundation) |
+| Lane 6 | first free | 12, then 10 | 14 + 10 = **24** |
+| Backend | Tirth | `BACKEND_BACKLOG.md` | — |
 | | | | **128 product views** |
 
-⚠️ **The brief's lane split is badly unbalanced against the real counts.**
-Lane 5 has 45 and Lane 3 has 35; Lane 2 has 12. Recommended fix, one move:
+Every screen above has a placeholder route (the **V1 route** column) and a screen
+component in `src/components/lanes/lane-<n>/` named by its code. Rows marked
+`component` have no route of their own: overlays mounted by the shell (`S1`, `S3`,
+`N1`), a reference diagram (`G1`), or room kinds rendered by `/app/rooms/$roomId`
+(`O8`–`O11`).
 
-**Give 16 Settings (18 views, `E1`–`E18`) to Lane 2.** Lane 2 → 30, Lane 5 → 27,
-Lane 3 → 35. Lane 3 stays heaviest because 09+10+11 are the coaching core and
-shouldn't be split across owners. Raise it in `LANE_REQUESTS.md` before starting.
+`10 Reports` moved from Lane 4 to Lane 6 on 2026-09-30 to rebalance (Lane 4 was 37).
+Its placeholder components stay at `src/components/lanes/lane-4/reports/` — Lane 6
+owns that folder (see `CLAUDE.md` §8).

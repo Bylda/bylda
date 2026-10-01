@@ -4,7 +4,9 @@
 `scripts/boundary-check.sh` both parse the fenced `boundary-patterns` block below.
 Edit the patterns in one place only: here.
 
-During the Bylda V1 frontend rebuild every path matched below is **read-only**.
+During the Bylda V1 frontend rebuild every path matched below is **read-only** —
+except on the backend track: a PR from a `backend/*` branch **with the label
+`backend`** may change them (`scripts/backend-pr-gate.sh`, `CLAUDE.md` §12 D/G).
 Read it to learn the contract. Never add, modify or delete an endpoint, field,
 table, column, type, policy or migration. Ambiguous → ask, don't guess.
 
@@ -111,7 +113,7 @@ Until an owner regenerates them, model the missing tables as hand-written types 
 
 - `src/routes/**` — TanStack Router file routes (87 files)
 - `src/components/**` — all React components
-- `src/screens/**` — new, per-lane V1 screens
+- `src/components/lanes/**` — per-lane V1 screens (`CLAUDE.md` §8)
 - `src/lib/data/**` — new frontend data layer (the only thing screens import)
 - `src/styles.css`, `src/styles/**`, `src/lib/theme*.ts`
 - `src/hooks/**`, `src/constants/**`, `src/router.tsx`, `src/routeTree.gen.ts`
@@ -120,7 +122,12 @@ Until an owner regenerates them, model the missing tables as hand-written types 
 
 ---
 
-## UNSURE — an owner must decide before Lane 2 starts
+## UNSURE — ruled 2026-09-30
+
+**Ruling (`CLAUDE.md` §12 A):** every file below is **frozen** — not boundary-guarded,
+but read-only for lanes, owner Ansh; lanes reach them only through `src/lib/data`.
+`src/lib/observability.ts` and `analytics.ts` are callable, not editable. The table
+is kept for the reasoning.
 
 These are **client-side** files (they run in the browser, import
 `@/integrations/supabase/client`, and are not backend code by any mechanical test),

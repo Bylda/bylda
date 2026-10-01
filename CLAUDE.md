@@ -62,80 +62,121 @@ read-only until an owner rules. That includes `src/lib/invokeEdge.ts`,
 
 ## 3. Design
 
-**Tokens only. No raw hex outside the theme file.** Dev Handoff: *"bind everything
-to `Bylda / Color` and `Bylda / Space & Radius` variables."*
+Source of truth: Figma page 01 Foundations (`1:2`, frame `3:2`) **and** the real
+components on page 02 (`1:3`). Pulled with `get_variable_defs` / `get_design_context`
+on 2026-09-30. Tokens live in **`src/styles/bylda.css`** — the only file in `src/**`
+allowed to contain a raw hex or `rgb()` (`bun run tokens:check` enforces it).
 
-Palette — Pearl `#F8F7F5` · Pearl50 `#F2F1EE` · Pearl100 `#EAE8E4` · White ·
-Silver200 `#E5E3DF` · Silver300 `#D3D0CB` · Silver500 `#9B9892` ·
-Silver600 `#6E6C68` · Graphite700 `#3A3A3F` · Graphite800 `#2A2A2E` ·
-Graphite900 `#1B1B1E` · Ink `#0B0B0C` · Accent `#C9C5BE`
+### Two token layers — components use the SEMANTIC layer only
 
-Figma token names (page 01, `1:2`): `pearl/0` `pearl/50` `pearl/100` `white` ·
-`silver/200` `silver/300` `silver/500` `silver/600` · `graphite/700` `graphite/800`
-`graphite/900` `ink`.
+**Primitive** (Figma `primitive/*`, raw values — never referenced from a component):
 
-Signal colors — **behavioral direction only, never decoration**:
-
-| Figma token | Fore | Back |
+| Figma variable | Value | CSS var |
 | --- | --- | --- |
-| `signal/improve` | `#2F7D5B` | `#E7F2EC` |
-| `signal/regress` | `#C2413B` | `#F8E7E5` |
-| `signal/attention` | `#C27A1A` | `#F8EEDC` |
-| `signal/info` | `#6A5AD0` | `#EEEBFA` |
+| `primitive/pearl/0` | `#F8F7F5` | `--by-pearl-0` |
+| `primitive/pearl/50` | `#F2F1EE` | `--by-pearl-50` |
+| `primitive/pearl/100` | `#EAE8E4` | `--by-pearl-100` |
+| `primitive/white` | `#FFFFFF` | `--by-white` |
+| `primitive/silver/200` | `#E5E3DF` | `--by-silver-200` |
+| `primitive/silver/300` | `#D3D0CB` | `--by-silver-300` |
+| `primitive/silver/500` | `#9B9892` | `--by-silver-500` |
+| `primitive/silver/600` | `#6E6C68` | `--by-silver-600` |
+| `primitive/graphite/700` | `#3A3A3F` | `--by-graphite-700` |
+| `primitive/graphite/800` | `#2A2A2E` | `--by-graphite-800` |
+| `primitive/graphite/900` | `#1B1B1E` | `--by-graphite-900` |
+| `primitive/ink` | `#0B0B0C` | `--by-ink` |
+| `primitive/signal/improve` · `-bg` | `#2F7D5B` · `#E7F2EC` | `--by-improve` · `--by-improve-bg` |
+| `primitive/signal/regress` · `-bg` | `#C2413B` · `#F8E7E5` | `--by-regress` · `--by-regress-bg` |
+| `primitive/signal/attention` · `-bg` | `#C27A1A` · `#F8EEDC` | `--by-attention` · `--by-attention-bg` |
+| `primitive/signal/info` · `-bg` | `#6A5AD0` · `#EEEBFA` | `--by-info` · `--by-info-bg` |
 
-⚠️ The fourth signal is **`info`**, not "pattern" — that's its name in Foundations
-and in the `Tag` component (`Improve · Regress · Attention · Info · Neutral`).
+**Semantic** (Figma `surface/*`, `text/*`, `border/*` — what components bind to).
+Tailwind utilities are generated from these names only (prefix `by-`):
 
-**Type** — **Newsreader** serif for titles and insights · **Inter** for all UI ·
-**Geist Mono** for timestamps and metrics · **Cinzel** for the BYLDA wordmark only.
-Cinzel is a **stand-in for the licensed Ragnar/Nordic display face** — swap the
-`Display/*` styles when it lands; nothing else changes.
+| Figma variable | → primitive | Utility |
+| --- | --- | --- |
+| `surface/canvas` | pearl/0 | `bg-by-surface-canvas` |
+| `surface/raised` | white | `bg-by-surface-raised` |
+| `surface/inset` | pearl/50 | `bg-by-surface-inset` |
+| `surface/rail` | ink | `bg-by-surface-rail` |
+| `surface/sidebar` | graphite/900 | `bg-by-surface-sidebar` |
+| `text/primary` | ink | `text-by-text-primary` |
+| `text/secondary` | silver/600 | `text-by-text-secondary` |
+| `text/tertiary` | silver/500 | `text-by-text-tertiary` |
+| `text/on-dark` | pearl/100 | `text-by-text-on-dark` |
+| `text/on-dark-muted` | silver/500 | `text-by-text-on-dark-muted` |
+| `border/engraved` | silver/200 | `border-by-border-engraved` |
 
-Named styles: `Display/XL` `Display/L` `Display/Label` · `Editorial/H1`
-`Editorial/H2` `Editorial/Insight` `Editorial/Quote` · `UI/Title` `UI/Body`
-`UI/Body Strong` `UI/Small` `UI/Label` · `Mono/Data` `Mono/Micro` `Mono/Metric`.
+Foundation adds a few semantic names Figma uses as raw primitives on components
+(`by-border-control` = silver/300 on secondary buttons and neutral tags,
+`by-surface-control-dark` = ink on primary buttons, `by-surface-hover` = pearl/50,
+`by-surface-muted` = pearl/100, the rail/sidebar hairlines and the signal pairs
+`by-signal-{improve,regress,attention,info}` + `-bg`). Full list: `src/styles/bylda.css`.
 
-**Spacing** — 4pt base: `space/4 8 12 16 24 32 40 56 72`.
+**Signal colours encode behavioral direction only — never decoration.** The fourth
+signal is **`info`**, not "pattern" (`Tag` tones: `Improve · Regress · Attention · Info · Neutral`).
+There is **no Accent `#C9C5BE`** — it is not a Figma variable; the earlier draft was wrong.
 
-⚠️ **Radius — corrected.** Foundations gives `none·0` `xs·2` `sm·4` `md·6`
-`pill·999`, with the rule **"Cards: 2. Inputs/buttons: 4. Pills/avatars only: pill."**
-An earlier draft of this file said "10/6/pill" — that was wrong. **Cards are 2px.**
+### Type — 16 named styles, exact from Figma
 
-**Surfaces** — `Raised` = primary card, **1px engraved border, no shadow** ·
-`Inset` = evidence, transcript quotes, secondary modules · `Divider editorial` =
-no container, hairline rules between sections (reports).
-⚠️ An earlier draft said "minimal soft shadows". Foundations says **no shadow** on
-the primary card. Hairlines do the work.
+| Style | Family | Size / line-height / tracking |
+| --- | --- | --- |
+| `Brand/Logo` | **Cinzel** Regular | 20 / 1.1 / +12% — **the BYLDA wordmark only** |
+| `Display/XL` | **Newsreader** Medium | 44 / 1.08 / −2% |
+| `Display/L` | **Newsreader** Medium | 30 / 1.12 / −1.5% |
+| `Display/Label` | Inter SemiBold | 11 / 1.3 / +10% |
+| `Editorial/H1` | Newsreader Medium | 34 / 1.12 / −1.5% |
+| `Editorial/H2` | Newsreader Medium | 24 / 1.2 / −1% |
+| `Editorial/Insight` | Newsreader Medium | 18 / 1.35 / −0.5% |
+| `Editorial/Quote` | Newsreader Italic | 15 / 1.45 / 0 |
+| `UI/Title` | Inter SemiBold | 15 / 1.35 / −0.5% |
+| `UI/Body` · `UI/Body Strong` | Inter Regular · Medium | 14 / 1.5 / −0.3% |
+| `UI/Small` | Inter Regular | 12.5 / 1.45 / −0.2% |
+| `UI/Label` | Inter SemiBold | 11 / 1.3 / +6% |
+| `Mono/Data` | Geist Mono Regular | 12 / 1.4 / 0 |
+| `Mono/Micro` | Geist Mono Medium | 10 / 1.3 / +6% |
+| `Mono/Metric` | Geist Mono Light | 28 / 1.1 / −2% |
 
-**Shell** — icon rail **64** + sidebar **248** + top bar **56** + main + context
-panel **344**, closable. At **1280** the context panel becomes an overlay drawer;
-at **1024** icon rail only. Verified: 312 (64+248) + 784 + 344 = 1440.
-Use component **App Shell / Navigation v2** (`37:51`) and **Workspace Top Bar**
-(`36:52`). `App Shell / Navigation` (`6:2`) is v1 — superseded, don't use.
+Utilities: `type-display-xl`, `type-editorial-insight`, `type-ui-body`, `type-mono-micro`, …
+(one per style). ⚠️ `Display/XL` and `Display/L` are **Newsreader**, not Cinzel —
+the earlier draft said otherwise. Cinzel is a stand-in for the licensed Ragnar/Nordic
+face and is used **only** by `Brand/Logo`. Fonts ship via `@fontsource`.
 
-**Motion** — 180–220ms ease-out. Panels slide 180ms. Insights resolve in
-(opacity + 4px rise, 220ms). The timeline playhead is the only continuously
-moving element. **No typing effects. No fake progress** — progress bars reflect
-real counts. Nothing bounces.
+### Space, radius, elevation
 
-**Icons** — Lucide at **1.6** stroke. 34 icons exist in `Icons` (`35:15`):
-`Icon/home` `intelligence` `calls` `reports` `team` `coaching` `rooms` `hash`
-`search` `bell` `bookmark` `plug` `settings` `plus` `chevron` `share` `more`
-`chart` `video` `calendar` `pattern` `alert` `check` `mic` `smile` `at` `send`
-`play` `lock` `user` `file` `x` `external` `trend`.
+- **Spacing** — 4pt base: `space/4 8 12 16 24 32 40 56 72`.
+- **Radius** — what the page-02 components actually use: **card 10** (Insight Card,
+  message blocks), **control 6** (buttons, inputs, evidence), **tile 8**, **badge 4**,
+  **menu 12**, **pill 999** (tags, avatars). ⚠️ Page 01 prints *"Cards: 2. Inputs/buttons: 4"*
+  but no component in page 02 uses 2 or 4 for those — Figma contradicts itself;
+  we follow the components (logged in `LANE_REQUESTS.md` #8).
+- **Hairlines** — 1px `by-border-engraved`. Raised cards have **no shadow**.
+- **One soft shadow** — `shadow-by-float` = `0 12px 32px rgba(0,0,0,.12)`, the menus
+  and popovers on `50:27312`. Nothing else casts a shadow.
+
+### Shell, motion, icons
+
+**Shell** — icon rail **64** + sidebar **248** + top bar **56** + main + context panel
+**344**, closable. At **1280** the context panel becomes an overlay drawer; at **1024**
+icon rail only. 312 + 784 + 344 = 1440. Built once in `src/components/bylda/shell/`
+from **App Shell / Navigation v2** (`37:51`) and **Workspace Top Bar** (`36:52`).
+`App Shell / Navigation` (`6:2`) is v1 — superseded.
+
+**Motion** — 180–220ms ease-out. Panels slide 180ms. Insights resolve in (opacity +
+4px rise, 220ms). The timeline playhead is the only continuously moving element. **No
+typing effects. No fake progress. No shimmer.** Nothing bounces.
+
+**Icons** — Lucide at **1.6** stroke, via `<Icon name="calls" />` from
+`@/components/bylda`. 34 names from `Icons` (`35:15`).
 
 **Never** use gradients, orbs, glassmorphism, donut KPI walls, confetti or
-gamification. **Never redesign away from Figma.** If Figma looks wrong, say so —
-don't fix it silently.
+gamification. The single exception is Figma's own warm-metal avatar monogram
+(`--by-avatar-metal`, `4:35`). **Never redesign away from Figma.** If Figma looks
+wrong, say so in `LANE_REQUESTS.md` — don't fix it silently.
 
-⚠️ This palette is **not** the repo's current theme. `src/styles.css` +
-`src/lib/theme-palette.ts` implement a user-customisable 3-colour system with
-presets like `#7c3aed`. The V1 theme is a **new token layer** Ansh adds in
-`src/styles/bylda-v1.css` — do not rip out the existing theme; the Launchpad/CRM
-routes still use it.
-
-ESLint warns on raw hex in inline `style` props. `lint:changed` runs at
-`--max-warnings=0`, so it's a hard gate on your files.
+The legacy theme (`src/styles.css`, `src/lib/theme-palette.ts`) stays for the
+quarantined Launchpad/CRM routes. V1 code never uses its utilities (`bg-primary`,
+`text-muted-foreground`, …) — only `by-*`.
 
 ## 4. Product rules
 
@@ -181,24 +222,30 @@ Straight from Dev Handoff (`1:21` → Implementation rules, `21:143`):
 
 ## 5. Data
 
-**Screens import ONLY from `/lib/data`.** No `fetch`, no `supabase.*`, no
-hard-coded numbers in a component. Ever.
+**Screens import ONLY from `@/lib/data`.** No `fetch`, no `supabase.*`, no
+hard-coded numbers in a component. Ever. The whole layer is documented in
+**`src/lib/data/README.md`** — read that, not the adapters.
 
 ```
 src/lib/data/
-  types/      ← Dhruv (foundation, frozen once merged)
-  mocks/      ← Dhruv (foundation, frozen once merged)
-  adapters/   ← Dhruv (Lane 2) — real Supabase / invokeEdge wiring
-  index.ts    ← the only import surface for screens
+  types/<domain>.ts      view-model types (what screens see)
+  db-types.ts            TEMP row types for the 16 tables missing from types.ts
+  mocks/                 deterministic Acme Revenue fixtures
+  <domain>/source.ts     export const SOURCE: 'mock' | 'real' | 'hybrid'
+  <domain>/queryKeys.ts  TanStack Query keys
+  <domain>/fetchers.ts   real reads — via supabase client / invokeEdge only
+  <domain>/map.ts        row → view model
+  <domain>/hooks.ts      useX() — the only thing screens call
+  index.ts               the only import surface
 ```
-
-A screen does this and nothing else:
 
 ```ts
 import { useCallReview } from "@/lib/data";
 ```
 
-Every hook returns `{ data, loading, error, isEmpty }` so the page-17 states compose.
+Every hook is a TanStack Query hook with the same shape in every mode. Set
+**`VITE_BYLDA_MOCKS=true`** to force every domain to mocks (demo, Storybook-style
+work, offline). Otherwise each domain follows its `SOURCE`.
 
 ### Core data objects — from Dev Handoff (`21:91`). Model these exactly.
 
@@ -211,13 +258,13 @@ Every hook returns `{ data, loading, error, isEmpty }` so the page-17 states com
 | **OutcomeAssociation** | `behavior_key, outcome, with_rate, without_rate, n_with, n_without, confidence, confounders[]` | Association only. **Hide when `n_closed` < 30** → "insufficient data" state. |
 | **CoachingFocus** | `rep_id, behavior_key, note, evidence[], metric, baseline, target, judge_after, status(assigned\|acknowledged\|measuring\|held\|not_yet\|reverted), result{}` | The 4-object coaching loop. No courses, no quizzes. |
 
-Missing field → typed mock in `src/lib/data/mocks`, behind
-`NEXT_PUBLIC_BYLDA_MOCKS`, tagged `// GAP:` on the line above, **and logged in
-`GAPS.md`**. All four steps or it doesn't count.
+Only **Call** has real backing today (`calls` + `call_transcripts` + `call_insights`),
+and even that is partial — no `coaching_value`, no `stage_at_call`. The other five have
+**no tables**; their real fetchers throw `NOT_BUILT: <object>` and the mocks follow the
+**proposed row contracts in `BACKEND_BACKLOG.md`**, which Tirth builds to.
 
-Only **Call** has real backing today (`calls` + `call_transcripts` +
-`call_insights`), and even that is partial — no `coaching_value`, no
-`stage_at_call`. The other five objects have **no tables at all**. See `GAPS.md`.
+A missing field is a gap in the **data layer**, never in a screen: typed in
+`types/`, mocked in `mocks/`, tagged `// GAP:` on the line above, logged in `GAPS.md`.
 
 **Fixture** — every mock uses it, so screens compose into a coherent demo:
 **Acme Revenue** workspace · **Kiran Patel** owner · **Dana Whitfield** manager ·
@@ -226,46 +273,39 @@ Supporting cast in the Figma: reps Sarah, Alex, Mia, Theo, Priya, Nina; accounts
 Acme Logistics, Brightline Freight, Kestrel Labs, Vela Systems, Ferro Metals,
 Lumen Dental, Orchid Health, Northwind Health; David Park (CFO), Sarah Cole (Ops).
 
-Contracts to read (never edit): `src/lib/invokeEdge.ts` (edge gateway — auth, 60s
-timeout, 1 retry, `EdgeError {message, status, code}`), `supabase/config.toml`
-(`verify_jwt` per function), `supabase/migrations/**` (real table shapes),
-`src/lib/queries.ts` + `src/lib/crm.ts` (how the old frontend called things).
-
-⚠️ `src/integrations/supabase/types.ts` is **stale** — `calls`, `call_insights`
-and `call_transcripts` are missing from it though the tables exist. Hand-write
-those types in `/lib/data/types` and tag `// GAP: types.ts stale`. Regenerating
-is a backend change.
+⚠️ `src/integrations/supabase/types.ts` is **stale** (16 queried tables missing).
+Their row types live in `src/lib/data/db-types.ts` (TEMP) until Tirth regenerates it.
 
 ## 6. Naming
 
-Screen files use the Figma code from `FRAMES.md`: `H1RoomFeed.tsx`,
-`C3CallReview.tsx`, `G1AssignCoaching.tsx`. One screen per file.
+A screen is a component named by its Figma code from `FRAMES.md`, one per file, in
+your lane's component folder. A route file is **thin**: `createFileRoute` plus the
+screen import. Foundation already created both for every V1 screen — you fill the
+screen file, you rarely touch the route file.
 
 ```
-src/screens/<NN-area>/<Code><Name>.tsx    ← e.g. src/screens/05-home/H1ManagerFeed.tsx
+src/components/lanes/lane-2/calls/C1CallsIndex.tsx      ← you build this
+src/routes/app/calls/index.tsx                          ← already exists, imports it
 ```
-
-Routes are **thin**: a `createFileRoute` plus the screen import. Keep logic in the
-screen, data in `/lib/data`.
 
 ```ts
-// src/routes/v1.home.tsx
+// src/routes/app/calls/index.tsx
 import { createFileRoute } from "@tanstack/react-router";
-import { H1ManagerFeed } from "@/screens/05-home/H1ManagerFeed";
-export const Route = createFileRoute("/v1/home")({ component: H1ManagerFeed });
+import { C1CallsIndex } from "@/components/lanes/lane-2/calls/C1CallsIndex";
+export const Route = createFileRoute("/app/calls/")({ component: C1CallsIndex });
 ```
 
-Note this repo uses **flat dot-notation** file routes (`app.crm.calls.tsx` →
-`/app/crm/calls`), so `src/routes/` is a shared folder. Prefix every new V1 route
-file `v1.` and only create the ones your lane owns. Never edit another lane's
-route file. `src/routeTree.gen.ts` is generated — never hand-edit it; merge
-conflicts there are resolved by regenerating.
+V1 routes are **directory routes** (`src/routes/app/calls/…`), one directory per
+area, owned by one lane. The legacy flat files (`app.crm.calls.tsx`, …) stay beside
+them untouched. `src/routeTree.gen.ts` is generated — never hand-edit it; resolve a
+merge conflict there by running `bun run build` (or `bun run dev`) and committing the
+regenerated file.
 
 ---
 
 ## 7. Branching
 
-- Each lane: `lane-<n>-<name>` off `integration` (e.g. `lane-3-tirth`).
+- Each lane: `lane-<n>-<name>` off `integration` (e.g. `lane-4-dravin`). Backend work: `backend/<object>` (Tirth only).
 - **Merge `integration` into your branch daily.** Not weekly.
 - Open **small PRs into `integration`, one per section.** Never PR to `main`.
 - CI must be green and `bun run boundary` clean before you ask for review.
@@ -274,54 +314,80 @@ conflicts there are resolved by regenerating.
 
 ## 8. Lane map + folder ownership
 
-### Foundation — frozen once merged
+**Owners as of 2026-09-30:** Lane 1 Ansh · Lane 2 Dhruv · **Lane 4 Dravin** ·
+**Lane 5 Mayur** · Lane 6 first free person · Backend track Tirth.
+(Lanes 4 and 5 swapped owners on 2026-09-30; lane numbers, folders, screens and
+order did not change. There is no Lane 3 any more — its areas moved to Lanes 2 and 4.
+Later on 2026-09-30 **10 Reports moved from Lane 4 to Lane 6**.)
 
-| Area | Paths | Owner |
-| --- | --- | --- |
-| Components, theme, shell | `src/components/v1/**`, `src/styles/bylda-v1.css`, `src/screens/03-menus/**` | **Ansh** |
-| Data types + mocks | `src/lib/data/types/**`, `src/lib/data/mocks/**`, `src/lib/data/index.ts` | **Dhruv** |
+### Foundation — frozen once merged (owner Ansh)
 
-Foundation lands **before** lane work. Once merged it is frozen: changes go
-through `LANE_REQUESTS.md`.
+| What | Paths |
+| --- | --- |
+| Tokens + legacy theme | `src/styles/**`, `src/styles.css` |
+| UI kit | `src/components/bylda/**`, `src/components/ui/**` |
+| Shell + nav config | `src/components/bylda/shell/**`, `src/routes/app.tsx` |
+| Data layer | `src/lib/data/**` |
+| Dev gallery | `src/routes/dev/**` |
 
-### Lanes
+Changes go through `LANE_REQUESTS.md`. See §12 A for the full frozen list.
 
-| Lane | Owner | Areas | Folders |
+### Lanes — each lane edits ONLY these paths
+
+Paths are real TanStack Router directory routes. Every V1 screen already has a
+route file and a placeholder screen component (§12 G). **No route folder is shared.**
+
+| Lane | Owner | Figma areas (build order) | Route folders (URL) | Component folder |
+| --- | --- | --- | --- | --- |
+| 1 | **Ansh** | 05 Manager/Admin Home → 14 Notifications → 08 Intelligence | `src/routes/app/home/**` (`/app/home`) · `src/routes/app/notifications/**` · `src/routes/app/intelligence/**` | `src/components/lanes/lane-1/**` |
+| 2 | **Dhruv** | 07 Calls → 13 Search & Ask → 11 Coaching | `src/routes/app/calls/**` · `src/routes/app/search/**` · `src/routes/app/coaching/**` | `src/components/lanes/lane-2/**` |
+| 4 | **Dravin** | 04 Onboarding/Auth → 06 Rep → 09 Team | `src/routes/welcome/**` (`/welcome/*`, outside the shell) · `src/routes/app/rep/**` · `src/routes/app/team/**` | `src/components/lanes/lane-4/**` **except** `lane-4/reports/**` |
+| 5 | **Mayur** | 15 Integrations → 16 Settings + Methodology → 18 Mobile (17 States ✅ done) | `src/routes/app/connections/**` · `src/routes/app/workspace/**` · `src/routes/app/methodology/**` · `src/routes/app/states/**` · `src/routes/m/**` (390 mobile, outside the shell) | `src/components/lanes/lane-5/**` |
+| 6 | first free person | 12 Rooms & Messages — **mocks only** → 10 Reports | `src/routes/app/rooms/**` · `src/routes/app/dm/**` · `src/routes/app/reports/**` · `src/routes/doc/**` (email/push/print, outside the shell) | `src/components/lanes/lane-6/**` · `src/components/lanes/lane-4/reports/**` (Reports placeholders stay at that path) |
+| — | **Tirth** (backend) | `BACKEND_BACKLOG.md`, in order | `supabase/**` etc., on `backend/*` branches only | — |
+
+**Real view counts** (`FRAMES.md`): Lane 1 **20** (7 + 2 + 11) · Lane 2 **24** (9 + 3 + 12) ·
+Lane 4 **27** (11 + 3 + 13) · Lane 5 **32** (3 + 18 + 11; the 13 page-17 states are done —
+Foundation built them) · Lane 6 **24** (14 + 10).
+
+### Route conflicts — resolved
+
+The V1 URL an area would naturally take is already used by a live legacy route in
+these cases. The legacy file stays untouched; V1 takes a different path:
+
+| V1 screen(s) | Natural path | Taken by (legacy) | V1 path | Owner |
+| --- | --- | --- | --- | --- |
+| 04 Auth + Onboarding `A1`–`A11` | `/auth/*`, `/onboarding` | `auth.*.tsx`, `onboarding.tsx`, `signup.tsx` (live sign-in) | `/welcome/*` | Lane 4 |
+| 15 Integrations `X1`–`X3` | `/app/integrations` | `app.integrations.tsx` | `/app/connections` (Figma flow 11 is "Connections") | Lane 5 |
+| 16 Settings `E1`–`E8`, `E15`–`E18` | `/app/settings` | `app.settings.tsx` | `/app/workspace/*` | Lane 5 |
+| 05 Admin Home `H7` | `/app/admin` | `app.admin.tsx` | `/app/home/admin` | Lane 1 |
+
+Cross-area screens, each assigned to exactly one lane:
+
+| Screen | Why it's shared | Assigned to | Where |
 | --- | --- | --- | --- |
-| 1 | **Ansh** | 05 Manager/Admin Home · 14 Notifications · 08 Intelligence | `src/screens/05-home/**`, `src/screens/14-notifications/**`, `src/screens/08-intelligence/**`, `src/routes/v1.home*`, `v1.notifications*`, `v1.intelligence*` |
-| 2 | **Dhruv** | real adapter wiring · 07 Calls · 13 Search & Ask | `src/lib/data/adapters/**`, `src/screens/07-calls/**`, `src/screens/13-search/**`, `src/routes/v1.calls*`, `v1.search*` |
-| 3 | **Tirth** | 09 Team · 11 Coaching · 10 Reports | `src/screens/09-team/**`, `src/screens/11-coaching/**`, `src/screens/10-reports/**`, `src/routes/v1.team*`, `v1.coaching*`, `v1.reports*` |
-| 4 | **Mayur** | 04 Onboarding/Auth · 06 Rep | `src/screens/04-onboarding/**`, `src/screens/06-rep/**`, `src/routes/v1.auth*`, `v1.onboarding*`, `v1.rep*` |
-| 5 | **Dravin** | 15 Integrations · 16 Settings · 17 System states · 18 Mobile | `src/screens/15-integrations/**`, `src/screens/16-settings/**`, `src/screens/17-states/**`, `src/screens/18-mobile/**`, `src/routes/v1.integrations*`, `v1.settings*` |
-| 6 | first free person | 12 Rooms & Messages — **mocks only** | `src/screens/12-rooms/**`, `src/routes/v1.rooms*` |
+| `R3` Call Review — Rep perspective | a Call Review (07) seen by a Rep (06) | **Lane 4** | `/app/rep/calls/$callId` |
+| `C9` Calls — Rep view, `G11` Coaching — Rep view | rep-facing, but live inside Calls / Coaching | **Lane 2** | `/app/calls/mine`, `/app/coaching/mine` |
+| `T8`–`T12` Rep Profile | opened from Team, Home, sidebar People | **Lane 4** | `/app/team/reps/$repId/*` |
+| `G2` Assign Coaching modal | opened from Home, Calls, Intelligence, + New | **Lane 2** | `/app/coaching/assign` + exported component |
+| `S1` ⌘K palette, `S3` Ask Bylda panel | shell overlays | **Lane 2** | components the shell mounts: `lanes/lane-2/search/S1CommandPalette.tsx`, `S3AskByldaPanel.tsx` |
+| `N1` Notifications drawer | shell overlay | **Lane 1** | component the shell mounts: `lanes/lane-1/notifications/N1NotificationsDrawer.tsx` |
+| `O8`–`O11` special rooms | same room route, different room kind | **Lane 6** | `/app/rooms/$roomId` picks the screen by kind |
+| `B10`, `B11` responsive Manager Home | shell breakpoints + Lane 1's H1 | **Foundation** builds the breakpoints; **Lane 5** QA's them | `/app/home` at 1280 / 1024 |
+| `Y1`–`Y13` system states | every lane uses them | **Foundation** built them — ✅ done | `@/components/bylda` → `SystemState` |
 
-**Edit ONLY your lane's folders.** Need a shared change? Log it in
-`LANE_REQUESTS.md` and build a **local copy in your folder** so you're never
-blocked. The shared version lands later; you delete your copy then.
+Legacy routes that map to a V1 screen (`AUDIT.md`) are **not edited during lane
+work**. At final cleanup their owner replaces each with a redirect to the V1 path:
+Lane 4 — `auth.*`, `signup`, `onboarding`; Lane 6 — `app.bylda.reports`; Lane 1 — `app.index`,
+`app.bylda-home`, `app.monitoring`; Lane 2 — `app.crm.calls`, `app.crm.conversations`;
+Lane 5 — `app.integrations`, `app.crm.setup`, `app.settings`, `app.billing*`,
+`app.playbook`, `app.admin`, `app.context-memory`, `app.memory`.
 
-Notes — **real view counts, pulled from Figma** (`FRAMES.md`):
+**Edit ONLY your lane's paths.** Need a shared change? Log it in `LANE_REQUESTS.md`
+and build a **local copy in your component folder** so you're never blocked.
 
-| Lane | Owner | Areas | Views |
-| --- | --- | --- | --- |
-| 1 | Ansh | 05, 08, 14 | 7 + 11 + 2 = **20** |
-| 2 | Dhruv | adapters, 07, 13 | 9 + 3 = **12** |
-| 3 | Tirth | 09, 10, 11 | 13 + 10 + 12 = **35** |
-| 4 | Mayur | 04, 06 | 11 + 3 = **14** |
-| 5 | Dravin | 15, 16, 17, 18 | 3 + 18 + 13 + 11 = **45** |
-| 6 | first free | 12 | **14** |
-
-- ⚠️ **The split is unbalanced: Lane 5 has 45, Lane 2 has 12.** Recommended fix,
-  one move: **give 16 Settings (18 views, `E1`–`E18`) to Lane 2.** Lane 2 → 30,
-  Lane 5 → 27. Lane 3 stays at 35 because 09+10+11 are the coaching core and
-  shouldn't be split. Settle this in `LANE_REQUESTS.md` **before** lane work starts.
-- **Area 17 lands first.** All 13 states (`Y1`–`Y13`) — every lane imports them
-  and §11 makes them part of done. Dravin ships them before anything else.
-- Lanes 1, 3 and 6 are **majority mock** (`GAPS.md`). Lane 2's area 07 is the only
-  well-supported area (32% missing).
-- Page 19 is 101 `PROTO ·` duplicates. **Never build from it** — check flows only.
-
-**Nobody touches** the 33 `OWNER DECISION` routes in `AUDIT.md` (Launchpad + CRM,
-~19,000 lines) or anything in `BACKEND_BOUNDARY.md`.
+**Nobody touches** the 29 quarantined routes (`LEGACY_ROUTES.md`) or anything in
+`BACKEND_BOUNDARY.md`.
 
 ---
 
@@ -337,8 +403,8 @@ Notes — **real view counts, pulled from Figma** (`FRAMES.md`):
   your first screen. Dev Handoff governs; where it disagrees with §3, it wins —
   raise it in `LANE_REQUESTS.md` so §3 gets fixed once for everyone.
 - **One screenshot per screen, at the end**, to `/design-qa/<code>.png`.
-- Don't explore outside: your lane folders + `src/components/v1` +
-  `src/lib/data/types` + `CLAUDE.md`.
+- Don't explore outside: your lane folders + `CLAUDE.md` + `src/components/bylda/index.ts`
+  + `src/lib/data/README.md`. Those three files are the whole API you build against.
 - **Start a fresh session per section.** Context rot is real on a build this size.
 
 ---
@@ -379,12 +445,12 @@ Node IDs in `FRAMES.md`. `get_metadata` with no `nodeId` lists only `0:1` — br
 ## 11. Definition of done, per section
 
 1. Matches Figma at **1440** (390 if mobile).
-2. **Tokens only** — no raw hex outside the theme file. `lint:changed` runs at
-   `--max-warnings=0`, so the hex rule is a hard gate on your files.
+2. **Tokens only** — semantic `by-*` utilities; no raw hex / `rgb()` outside
+   `src/styles/bylda.css`. `bun run tokens:check` is a hard gate.
 3. **Empty, loading and error states all present.**
 4. Links match the **page 19** prototype (13 flows, 0–12).
 5. `bun run typecheck` at the known 8 · `bun run lint:changed` clean · `bun run build` green.
-6. `bun run boundary` clean.
+6. `bun run boundary` clean · `bun run tokens:check` clean.
 7. Confidence + sample size on every insight; low confidence = no action button;
    no causal language; no peer data in a rep view; sparklines on a fixed y-range;
    `OutcomeAssociation` hidden below n=30.
@@ -400,6 +466,7 @@ bun run lint:changed  # eslint, only the files your branch changed  ← use this
 bun run lint          # eslint .  — ~208 pre-existing errors, see below
 bun run test          # vitest run
 bun run boundary      # backend boundary check vs origin/integration
+bun run tokens:check  # no raw hex/rgb() outside src/styles/bylda.css (also runs in lint + lint:changed)
 bun run build         # vite build → Nitro/Vercel. Verified green, no env needed.
 bun run format        # prettier --write .   ⚠️ never run repo-wide, see below
 ```
@@ -434,9 +501,11 @@ rebuild lands. The last two are Deno edge code dragged in because
 `_shared/sales-verticals`. Fixing them would mean editing a backend file, which
 §2 forbids. **Don't fix any of the 8 in a lane PR.**
 
-`bun run lint` → **208 errors, 122 warnings.** Most are Prettier formatting in
+`bun run lint` → **208 errors, 116 warnings** (re-measured 2026-10-01 on `foundation`,
+with `.vercel/` ignored — before that, a local `bun run build` left a `.vercel/`
+bundle that made full lint run 15+ minutes). Most are Prettier formatting in
 `supabase/functions/**` and `workers/**` — backend paths you may not touch. Scoped
-to `eslint src` it is still 66 errors / 121 warnings, all pre-existing.
+to `eslint src` it is still 66 errors / 115 warnings, all pre-existing.
 
 So **`bun run lint` is not a usable gate.** Use `bun run lint:changed`, which
 lints only the `.ts`/`.tsx` files your branch changed (backend paths and
@@ -466,3 +535,104 @@ Lucide · Zod 3 · Sonner · `bun` · Vitest 2 · ESLint 9 + Prettier ·
 Nitro→Vercel target, Cloudflare Workers alongside.
 
 Path alias: `@/*` → `./src/*`.
+
+---
+
+## 12. DECISIONS (2026-09-30)
+
+Binding until an owner changes them here. Where anything above disagrees, this wins.
+
+### A. Frozen — read-only for lanes
+
+Request changes in `LANE_REQUESTS.md`. Owner **Ansh** unless noted.
+
+| Path | Rule |
+| --- | --- |
+| `src/lib/invokeEdge.ts`, `src/lib/queries.ts`, `src/lib/crm.ts`, `src/lib/auth.tsx`, `src/integrations/supabase/client.ts` | Lanes use them **only through `src/lib/data`**. Never imported from a screen. |
+| `src/lib/feature-gates.ts`, `src/lib/plan.ts`, `src/lib/stripe.ts` | frozen |
+| `src/lib/impersonation.ts`, `src/lib/admin.ts`, `src/lib/ownerMode.ts` | frozen |
+| `src/lib/observability.ts`, `src/lib/analytics.ts` | **callable, not editable** |
+| `vite.config.ts`, `bunfig.toml`, `.lovable/` | frozen |
+| After this PR merges: `src/styles/**`, `src/components/ui/**`, `src/components/bylda/**`, the shell layout route `src/routes/app.tsx`, `src/lib/data/**` | frozen |
+
+This rules on every UNSURE item in `BACKEND_BOUNDARY.md`.
+
+### B. Routes
+
+- The **29 owner-decision routes are QUARANTINED**: out of every nav, code untouched,
+  still reachable by URL, listed in **`LEGACY_ROUTES.md`**. Their 9 redirect stubs too.
+- The **8 DELETE routes** (`AUDIT.md`) are deleted only in the final cleanup PR.
+- Legacy routes that map to a V1 screen become redirects at final cleanup (§8).
+- **Cutover rule.** `/app` and `/auth` switch to the V1 routes only when **Lane 1
+  sections 1–2** (Manager Home feed + tabs, Admin Home) **and Lane 4 onboarding**
+  (sections 1–3: sign in/up/verify, onboarding, invite acceptance) are all merged into
+  `integration`. Until then the demo runs from **`/app/home`** and **`/welcome`**.
+- The 29 quarantined routes (and their 9 redirect stubs) are **kept until after the
+  demo** — they are not deleted or redirected as part of cutover.
+
+### C. Types
+
+`src/integrations/supabase/types.ts` is **never regenerated by a lane**. Row types for
+the missing tables go in **`src/lib/data/db-types.ts` (TEMP)**, derived by reading the
+migrations. Deleted when Tirth regenerates `types.ts`.
+
+### D. Backend track — Tirth
+
+Branches `backend/<object>`, PRs labeled **`backend`** (the guard only lets boundary
+paths through on that combination — see G). Order:
+
+1. **Auth fixes** — `sequence-runner` is `verify_jwt=false` but called from the signed-in
+   app; 6 called functions (`operator`, `advance-mission`, `run-workflow`,
+   `automation-dispatch`, `generate-course`, `log-activation-event`) have no
+   `config.toml` entry.
+2. Regenerate `types.ts` (then delete `src/lib/data/db-types.ts`).
+3. `BehavioralEvent` → 4. `Behavior` → 5. `Insight` → 6. `CoachingFocus` →
+   7. `calls.coaching_value` + `stage_at_call` → 8. `OutcomeAssociation`.
+9. Then every other contract in `BACKEND_BACKLOG.md`, in its order.
+
+He builds **to the contracts in `BACKEND_BACKLOG.md`** — the frontend defines the
+backend. Each contract has a Vitest contract test (`src/lib/data/__tests__/contracts/`);
+a backend object is Done only when its test passes against the real fetcher.
+**Lanes never wait on him.**
+
+### E. Swap protocol
+
+When a backend object merges: mark it **Done** in `BACKEND_BACKLOG.md`, and in **one
+PR** flip that domain's `src/lib/data/<domain>/source.ts` from `'mock'` to `'real'` or
+`'hybrid'`. **Screens never change for a swap.** If one would need to, the adapter is
+wrong — fix `map.ts`.
+
+### F. Lanes
+
+| Lane | Owner | Areas (build order) |
+| --- | --- | --- |
+| 1 | **Ansh** | Manager/Admin Home, Notifications, Intelligence (05, 14, 08) |
+| 2 | **Dhruv** | Calls, Search & Ask (07, 13), then Coaching (11) |
+| 4 | **Dravin** | Onboarding/Auth, Rep (04, 06), then Team (09) |
+| 5 | **Mayur** | Integrations, Settings, mobile (15, 16, 18); system states (17) done |
+| 6 | first free person | Rooms & Messages (12), mocks only, then Reports (10) |
+| Backend | **Tirth** | `BACKEND_BACKLOG.md` |
+
+Each lane edits **only** its own route folders + `src/components/lanes/<lane>/**` (§8).
+One exception: `src/components/lanes/lane-4/reports/**` belongs to **Lane 6**, not Lane 4.
+Branch `lane-<n>-<name>` off `integration` (`lane-1-ansh`, `lane-2-dhruv`,
+`lane-4-dravin`, `lane-5-mayur`, `lane-6-<name>`). **Merge `integration` in every
+morning.** One small PR per section. Per-person start prompts: **`TEAM_START.md`**.
+
+### G. Guards
+
+- `bun run boundary` / CI `backend-guard`: boundary paths are allowed **only** on head
+  branches starting `backend/` **and** carrying the label `backend`. Everything else fails.
+- `bun run tokens:check`: no raw hex / `rgb()` in `src/**` outside `src/styles/bylda.css`.
+  Legacy files are baselined (`scripts/tokens-baseline.json`) and may only go down.
+- `CODEOWNERS` maps every path to its owner.
+- Every V1 screen has a placeholder route + screen that renders
+  *"Coming soon: <screen>"*. Nav links are already wired. Lanes fill files; they never
+  touch the router config or the nav.
+
+### H. Env
+
+`VITE_BYLDA_MOCKS=true` forces every data domain to mocks. It is **not** in
+`.env.example`: that file is a guarded backend path (`BACKEND_BOUNDARY.md`), so adding
+it is a `backend`-labelled change for Tirth. Set it locally in your shell or an
+untracked `.env.local`.

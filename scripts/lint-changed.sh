@@ -49,6 +49,9 @@ mapfile -t FILES < <(
   | while IFS= read -r f; do [[ -f "$f" ]] && printf '%s\n' "$f"; done
 )
 
+# Raw-colour gate first (whole tree, ratcheting baseline — cheap and total).
+node scripts/tokens-check.mjs
+
 if [[ ${#FILES[@]} -eq 0 ]]; then
   echo "lint-changed: no changed .ts/.tsx files vs $BASE — nothing to lint."
   exit 0

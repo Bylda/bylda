@@ -7,6 +7,7 @@
 #
 # Usage:
 #   scripts/boundary-check.sh                 # working tree + commits vs origin/integration
+#   BOUNDARY_HEAD_REF=lane-2-dhruv scripts/boundary-check.sh   # pretend to be that branch
 #   scripts/boundary-check.sh <base-ref>      # vs an explicit base
 #   BOUNDARY_BASE=main scripts/boundary-check.sh
 #
@@ -19,6 +20,20 @@ cd "$REPO_ROOT"
 
 BOUNDARY_FILE="BACKEND_BOUNDARY.md"
 BASE="${1:-${BOUNDARY_BASE:-origin/integration}}"
+
+# ── Backend track exemption ───────────────────────────────────────────────────
+# Tirth's backend work lives on `backend/*` branches (CLAUDE.md §12 D). Those are
+# the ONLY branches allowed to touch boundary paths, so the local check skips
+# them. In CI the exemption additionally needs the `backend` PR label — that
+# decision is made by scripts/backend-pr-gate.sh, which sets BOUNDARY_FORCE=1 to
+# switch this exemption off for an unlabelled backend/* PR.
+#   Head branch: BOUNDARY_HEAD_REF > GITHUB_HEAD_REF > current local branch.
+HEAD_REF="${BOUNDARY_HEAD_REF:-${GITHUB_HEAD_REF:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo)}}"
+if [[ "${BOUNDARY_FORCE:-0}" != "1" && "$HEAD_REF" == backend/* ]]; then
+  echo "boundary: '$HEAD_REF' is a backend/* branch — boundary paths allowed, check skipped."
+  echo "boundary: (CI still requires the 'backend' PR label — see scripts/backend-pr-gate.sh)"
+  exit 0
+fi
 
 if [[ ! -f "$BOUNDARY_FILE" ]]; then
   echo "boundary: cannot find $BOUNDARY_FILE at repo root" >&2
