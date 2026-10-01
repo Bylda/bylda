@@ -3,8 +3,8 @@ import { cn } from "@/components/bylda";
 
 /**
  * The list vocabulary of Manager Home tabs H2–H6 (Figma 43:692 · 43:1176 · 43:1673 · 43:2142 ·
- * 43:2615): a mono-ish section label over a raised, hairline card of rows. Cards are 12 (menu)
- * radius in these frames — the only place Figma uses it outside menus; logged in LANE_REQUESTS.
+ * 43:2615): a section label over a raised, hairline card of rows. Figma draws these cards at 12px;
+ * CLAUDE.md §13.5 overrides it — cards are 10px (`rounded-by-card`), always.
  */
 export function SectionLabel({ children }: { children: ReactNode }) {
   return <p className="type-ui-label text-by-text-secondary">{children}</p>;
@@ -14,7 +14,7 @@ export function ListCard({ children, className }: { children: ReactNode; classNa
   return (
     <div
       className={cn(
-        "flex w-full flex-col gap-2.5 rounded-by-menu border border-by-border-engraved bg-by-surface-raised px-4 py-3.5",
+        "flex w-full flex-col gap-2.5 rounded-by-card border border-by-border-engraved bg-by-surface-raised px-4 py-3.5",
         className,
       )}
     >
