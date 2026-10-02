@@ -1,31 +1,15 @@
-import { ScreenPlaceholder } from "@/components/bylda";
-
-/**
- * S3 · Ask Bylda — side panel (from rail ✦)
- * Figma 50:26784 (page 1:14) · Lane 2 — Mayur · mounted by the shell
- * Hooks: useSearch — see src/lib/data/README.md
- *
- * PLACEHOLDER. Replace the body with the real screen; keep the export name.
- */
+import { Button } from "@/components/bylda";
+import { LocalSearchGate, LocalSearchScreen } from "./LocalSearch";
 export function S3AskByldaPanel({ onClose }: { onClose: () => void }) {
   return (
-    <div>
-      <div className="flex justify-end px-4 pt-3">
-        <button
-          type="button"
-          onClick={onClose}
-          className="type-ui-small text-by-text-secondary hover:text-by-text-primary"
-        >
+    <div className="flex h-full flex-col gap-5 p-5 text-by-text-primary">
+      <header className="flex items-center justify-between">
+        <h2 className="type-ui-title">✦ Ask Bylda</h2>
+        <Button variant="ghost" size="sm" onClick={onClose}>
           Close
-        </button>
-      </div>
-      <ScreenPlaceholder
-        code="S3"
-        name="Ask Bylda — side panel (from rail ✦)"
-        node="50:26784"
-        lane={2}
-        owner="Mayur"
-      />
+        </Button>
+      </header>
+      <LocalSearchGate>{(viewer) => <LocalSearchScreen viewer={viewer} compact />}</LocalSearchGate>
     </div>
   );
 }
