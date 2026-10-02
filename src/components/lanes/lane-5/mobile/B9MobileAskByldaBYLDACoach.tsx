@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Avatar, AppBadge, Button } from "@/components/bylda";
+import { Avatar, AppBadge, Button, Wordmark } from "@/components/bylda";
 import { useSearch, useMyCalls, useViewer } from "@/lib/data";
 import { LocalRepOnly, LocalBoundary, LocalMobileFrame, LocalLabel } from "./LocalMobile";
 export function B9MobileAskByldaBYLDACoach() {
@@ -27,7 +27,7 @@ function LocalAsk() {
   return (
     <>
       <header className="flex flex-col gap-1 border-b border-by-border-engraved bg-by-surface-raised px-[18px] py-3">
-        <LocalLabel>BYLDA</LocalLabel>
+        <Wordmark className="text-by-text-tertiary" />
         <div className="flex items-center gap-2">
           <Link to="/m/brief" search={true} aria-label="Back to brief">
             ‹

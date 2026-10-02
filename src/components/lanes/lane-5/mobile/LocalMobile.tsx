@@ -10,6 +10,7 @@ import {
   StateEmpty,
   SystemState,
   systemStates,
+  Wordmark,
   type QueryLike,
 } from "@/components/bylda";
 import {
@@ -82,9 +83,8 @@ export function LocalMobileFrame({
       )}
     >
       {!coach && (
-        <header className="flex items-start justify-between pt-4">
-          <span className="type-mono-data">BYLDA</span>
-          <span className="type-display-label text-by-text-secondary">B Y L D A</span>
+        <header className="flex items-start justify-end pt-4">
+          <Wordmark className="text-by-text-secondary" />
         </header>
       )}
       {children}

@@ -181,6 +181,15 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 describe("mobile privacy and data states", () => {
+  it("uses the shared Cinzel wordmark for mobile header branding", async () => {
+    await render(<B1MobileRepDailyBrief />);
+    const branding = container.querySelectorAll("header .type-brand-logo");
+    expect(branding).toHaveLength(1);
+    expect([...branding].every((mark) => mark.textContent === "BYLDA")).toBe(true);
+    expect(container.querySelector("header .type-display-label")).toBeNull();
+    await render(<B9MobileAskByldaBYLDACoach />);
+    expect(container.querySelector("header .type-brand-logo")?.textContent).toBe("BYLDA");
+  });
   it("hides team patterns and shows insight confidence/sample", async () => {
     const text = await render(<B1MobileRepDailyBrief />);
     expect(text).toContain("Own insight");

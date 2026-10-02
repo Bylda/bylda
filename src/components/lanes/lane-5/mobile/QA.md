@@ -26,6 +26,11 @@ Chrome verified brief → coaching → moment with ?as=rep retained, coach query
 
 ## Validation
 
+Review follow-up: mobile header branding now uses the shared `Wordmark` (Cinzel),
+per CLAUDE.md §13.4. Removed the duplicate BYLDA text that stood in for an OS
+time; the wordmark retains its right alignment. Coach branding uses the same kit
+component. No shared kit or data changes. A regression test checks brand typography.
+
 - Mobile tests: 20 passed, covering ownership, evidence leakage, threshold gating, state rendering, mutation target/status, search scoping, and malformed moment addresses.
 - Full suite: 459 passed, 36 skipped, 2 pre-existing integrations-catalog failures (497 total).
 - Typecheck: exactly 8 pre-existing errors, none in this section.
