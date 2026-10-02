@@ -25,7 +25,12 @@ function ProtectedAppLayout() {
   const mock = mocksForced();
 
   useEffect(() => {
-    if (mock || loading || user) return;
+    // Guard only what this layout guards. While the redirect below is in flight, the router's
+    // latest location is already /auth/sign-in but this layout is still mounted; without this
+    // check the guard re-ran there, took the sign-in URL as the page to return to, and
+    // redirected again — each pass wrapping the last URL in `?redirect=` until React gave up.
+    const inApp = location.pathname === "/app" || location.pathname.startsWith("/app/");
+    if (mock || loading || user || !inApp) return;
     const redirectTo = `${location.pathname}${location.searchStr}${location.hash}`;
     void navigate({
       to: "/auth/sign-in",

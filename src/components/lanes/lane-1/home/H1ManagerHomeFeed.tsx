@@ -1,27 +1,16 @@
-import { useNavigate } from "@tanstack/react-router";
+import { SkeletonBlock } from "@/components/bylda";
 import {
-  DataBoundary,
-  SkeletonBar,
-  SkeletonBlock,
-  StateError,
-  SystemState,
-  systemStates,
-} from "@/components/bylda";
-import {
-  ForbiddenForRoleError,
   useCalls,
   useCoachingFoci,
-  useHomeFeed,
   useReports,
   useTeamMembers,
   type HomeFeed,
   type Insight,
 } from "@/lib/data";
-import { HomeFrame } from "./shared/HomeFrame";
+import { HomeTab } from "./shared/HomeTab";
 import { HeroInsight } from "./feed/HeroInsight";
 import { AttentionRow, FeedStream } from "./feed/FeedStream";
 import { buildPosts } from "./feed/posts";
-import { TodayPanel } from "./feed/TodayPanel";
 
 /**
  * H1 · Manager Home — Feed (For You)
@@ -33,50 +22,7 @@ import { TodayPanel } from "./feed/TodayPanel";
  * useCoachingFoci, useReports, useTeamMembers to compose posts and the panel).
  */
 export function H1ManagerHomeFeed() {
-  const feed = useHomeFeed("all");
-  const navigate = useNavigate();
-
-  return (
-    <HomeFrame>
-      <DataBoundary
-        query={feed}
-        loading={<FeedSkeleton />}
-        error={(err) =>
-          err instanceof ForbiddenForRoleError ? (
-            <SystemState
-              eyebrow="HOME · MANAGER VIEW"
-              tag={{ tone: "neutral", label: "Restricted" }}
-              title="Manager Home is for managers."
-              body="Your own calls, focus and progress live on your home."
-              actions={[
-                {
-                  label: "Go to my home",
-                  variant: "secondary",
-                  onClick: () => void navigate({ to: "/app/rep" }),
-                },
-              ]}
-            />
-          ) : (
-            <StateError
-              eyebrow="HOME · FEED"
-              body="Bylda couldn’t load your feed. Your calls are safe — try again."
-              onRetry={() => void feed.refetch()}
-            />
-          )
-        }
-        empty={
-          <SystemState
-            {...systemStates.homeNoCalls({
-              onConnect: () => void navigate({ to: "/app/connections" }),
-              onUpload: () => void navigate({ to: "/app/calls/upload" }),
-            })}
-          />
-        }
-      >
-        {(data) => <ForYou feed={data} />}
-      </DataBoundary>
-    </HomeFrame>
-  );
+  return <HomeTab eyebrow="HOME · FEED">{(data) => <ForYou feed={data} />}</HomeTab>;
 }
 
 /** Hero pick: the newest For You insight that can carry an action; else the newest one. */
@@ -124,24 +70,6 @@ function ForYou({ feed }: { feed: HomeFeed }) {
       {hero ? <HeroInsight insight={hero} rep={heroRep} /> : null}
       <FeedStream posts={posts} />
       {secondaryLoading ? <SkeletonBlock height={64} className="rounded-by-card" /> : null}
-      <TodayPanel feed={feed} />
     </>
-  );
-}
-
-/** Static skeleton — "NO SHIMMER THEATRICS" (Y13). */
-function FeedSkeleton() {
-  return (
-    <div className="flex w-full flex-col gap-3.5" aria-busy="true" aria-label="Loading feed">
-      <div className="flex w-full flex-col gap-3 rounded-by-card border border-by-border-engraved bg-by-surface-raised px-[22px] py-5">
-        <SkeletonBar width={140} height={10} />
-        <SkeletonBar width="80%" height={22} />
-        <SkeletonBar width="95%" height={12} />
-        <SkeletonBar width="60%" height={12} />
-      </div>
-      {[0, 1, 2].map((i) => (
-        <SkeletonBlock key={i} height={58} className="rounded-by-card" />
-      ))}
-    </div>
   );
 }
