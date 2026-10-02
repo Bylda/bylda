@@ -1,4 +1,4 @@
-# P9 — Behavior Report — Objection handling · node `29:993` · Lane 6 (Mayur) · route `/app/reports/behavior/$behaviorKey` · exported 2026-10-01
+# P9 — Behavior Report — Objection handling · node `29:993` · Lane 6 (Dhruv) · route `/app/reports/behavior/$behaviorKey` · exported 2026-10-01
 
 > **See CLAUDE.md §13: decision overrides Figma.**
 

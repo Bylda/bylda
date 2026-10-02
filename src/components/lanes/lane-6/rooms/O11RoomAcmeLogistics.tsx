@@ -14,7 +14,7 @@ export function O11RoomAcmeLogistics() {
       name="Room — #acme-logistics (deal room)"
       node="50:3655"
       lane={6}
-      owner="Lane 6"
+      owner="Dhruv"
     />
   );
 }

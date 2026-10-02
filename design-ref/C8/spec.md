@@ -1,4 +1,4 @@
-# C8 — Call comparison · node `28:1464` · Lane 2 (Mayur) · route `/app/calls/compare` · exported 2026-10-01
+# C8 — Call comparison · node `28:1464` · Lane 2 (Dhruv) · route `/app/calls/compare` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

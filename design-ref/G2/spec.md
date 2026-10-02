@@ -1,4 +1,4 @@
-# G2 — Assign Coaching — modal · node `14:24` · Lane 2 (Mayur) · route `/app/coaching/assign` + exported component · exported 2026-10-01
+# G2 — Assign Coaching — modal · node `14:24` · Lane 2 (Dhruv) · route `/app/coaching/assign` + exported component · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

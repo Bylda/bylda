@@ -1,4 +1,4 @@
-# P5 — Weekly Manager Report — living document · node `29:352` · Lane 6 (Mayur) · route `/app/reports/weekly` · exported 2026-10-01
+# P5 — Weekly Manager Report — living document · node `29:352` · Lane 6 (Dhruv) · route `/app/reports/weekly` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

@@ -1,4 +1,4 @@
-# G12 — Behavior Change Result — Alex Morgan · node `14:224` · Lane 2 (Mayur) · route `/app/coaching/$focusId/result` · exported 2026-10-01
+# G12 — Behavior Change Result — Alex Morgan · node `14:224` · Lane 2 (Dhruv) · route `/app/coaching/$focusId/result` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

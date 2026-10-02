@@ -1,4 +1,4 @@
-# G4 — Coaching — Needs follow-up · node `52:6380` · Lane 2 (Mayur) · route `/app/coaching/follow-up` · exported 2026-10-01
+# G4 — Coaching — Needs follow-up · node `52:6380` · Lane 2 (Dhruv) · route `/app/coaching/follow-up` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

@@ -1,4 +1,4 @@
-# P10 — Weekly Report — PDF / print (A4) · node `29:1154` · Lane 6 (Mayur) · route `/doc/weekly-print` · exported 2026-10-01
+# P10 — Weekly Report — PDF / print (A4) · node `29:1154` · Lane 6 (Dhruv) · route `/doc/weekly-print` · exported 2026-10-01
 
 > **See CLAUDE.md §13: decision overrides Figma.**
 

@@ -1,4 +1,4 @@
-# G11 — Coaching — Rep view (Jordan) · node `30:839` · Lane 2 (Mayur) · route `/app/coaching/mine` · exported 2026-10-01
+# G11 — Coaching — Rep view (Jordan) · node `30:839` · Lane 2 (Dhruv) · route `/app/coaching/mine` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

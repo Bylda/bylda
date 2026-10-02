@@ -1,4 +1,4 @@
-# O11 — Room — #acme-logistics (deal room) · node `50:3655` · Lane 6 (Mayur) · route `component O11RoomAcmeLogistics (/app/rooms/$roomId)` · exported 2026-10-01
+# O11 — Room — #acme-logistics (deal room) · node `50:3655` · Lane 6 (Dhruv) · route `component O11RoomAcmeLogistics (/app/rooms/$roomId)` · exported 2026-10-01
 
 > **See CLAUDE.md §13: decision overrides Figma.**
 

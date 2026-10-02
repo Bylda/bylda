@@ -1,4 +1,4 @@
-# P2 — Daily Manager Brief — in-app document · node `13:2` · Lane 6 (Mayur) · route `/app/reports/daily` · exported 2026-10-01
+# P2 — Daily Manager Brief — in-app document · node `13:2` · Lane 6 (Dhruv) · route `/app/reports/daily` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

@@ -1,4 +1,4 @@
-# O1 — Rooms — Directory · node `31:241` · Lane 6 (Mayur) · route `/app/rooms` · exported 2026-10-01
+# O1 — Rooms — Directory · node `31:241` · Lane 6 (Dhruv) · route `/app/rooms` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

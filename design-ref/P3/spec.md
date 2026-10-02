@@ -1,4 +1,4 @@
-# P3 — Daily Manager Brief — email (640) · node `13:232` · Lane 6 (Mayur) · route `/doc/manager-brief-email` · exported 2026-10-01
+# P3 — Daily Manager Brief — email (640) · node `13:232` · Lane 6 (Dhruv) · route `/doc/manager-brief-email` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

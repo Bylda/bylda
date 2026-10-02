@@ -9,6 +9,6 @@ import { ScreenPlaceholder } from "@/components/bylda";
  */
 export function O1RoomsDirectory() {
   return (
-    <ScreenPlaceholder code="O1" name="Rooms — Directory" node="31:241" lane={6} owner="Lane 6" />
+    <ScreenPlaceholder code="O1" name="Rooms — Directory" node="31:241" lane={6} owner="Dhruv" />
   );
 }

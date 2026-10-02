@@ -1,4 +1,4 @@
-# P4 — Daily Rep Brief — email / push (60 sec) · node `13:316` · Lane 6 (Mayur) · route `/doc/rep-brief-push` · exported 2026-10-01
+# P4 — Daily Rep Brief — email / push (60 sec) · node `13:316` · Lane 6 (Dhruv) · route `/doc/rep-brief-push` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

@@ -14,7 +14,7 @@ export function O12DirectMessageDanaJordan() {
       name="Direct message — Dana ↔ Jordan"
       node="49:3123"
       lane={6}
-      owner="Lane 6"
+      owner="Dhruv"
     />
   );
 }

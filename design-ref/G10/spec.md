@@ -1,4 +1,4 @@
-# G10 — Coaching Detail — Discussion · node `46:2549` · Lane 2 (Mayur) · route `/app/coaching/$focusId/discussion` · exported 2026-10-01
+# G10 — Coaching Detail — Discussion · node `46:2549` · Lane 2 (Dhruv) · route `/app/coaching/$focusId/discussion` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

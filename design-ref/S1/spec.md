@@ -1,4 +1,4 @@
-# S1 — Search — Command palette ⌘K · node `31:760` · Lane 2 (Mayur) · component `S1SearchCommandPalette` (shell overlay) · exported 2026-10-01
+# S1 — Search — Command palette ⌘K · node `31:760` · Lane 2 (Dhruv) · component `S1SearchCommandPalette` (shell overlay) · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

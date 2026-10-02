@@ -1,4 +1,4 @@
-# O9 — Room — #coaching · node `31:586` · Lane 6 (Mayur) · route `component O9RoomCoaching (/app/rooms/$roomId)` · exported 2026-10-01
+# O9 — Room — #coaching · node `31:586` · Lane 6 (Dhruv) · route `component O9RoomCoaching (/app/rooms/$roomId)` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 

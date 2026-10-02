@@ -1,4 +1,4 @@
-# P6 — Weekly Sales Behavior Report — outline · node `52:10624` · Lane 6 (Mayur) · route `/app/reports/outline` · exported 2026-10-01
+# P6 — Weekly Sales Behavior Report — outline · node `52:10624` · Lane 6 (Dhruv) · route `/app/reports/outline` · exported 2026-10-01
 
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
