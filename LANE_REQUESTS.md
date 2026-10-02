@@ -110,6 +110,10 @@ When the shared version lands, delete your copy.
 
 <!-- Add new rows above. Keep the newest at the bottom. -->
 
+### #63 — Coaching lists and rep view contracts (Mayur)
+
+G1/G3/G4/G5/G11 need confidence/sample/window metadata for progress and result claims; capacity limits, due/stall definitions, calendar, practice scripts and gated examples; persisted acknowledgement confirmation. Current follow-up uses explicit not_yet/reverted statuses only. Reps bypass manager lists and whitelist own focus/evidence IDs. Existing mock acknowledgement is an unconfirmed preview; invalid returned ownership/status is rejected. Saved-frame deviations and validation are documented in lane-2/coaching/IndexQA.md. Open — Ansh / Tirth.
+
 
 ### #46 — Lane 5 mobile primitives (Mayur)
 
