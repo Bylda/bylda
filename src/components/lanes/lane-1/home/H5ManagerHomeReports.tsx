@@ -57,7 +57,7 @@ function ReportRow({ report: r }: { report: ReportListItem }) {
 
   return (
     <ListRow className="gap-3.5 py-3">
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-by-tile bg-by-signal-info-bg text-by-signal-info">
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-by-tile bg-by-surface-inset text-by-text-secondary">
         <Icon name="file" size={18} />
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-[3px]">
