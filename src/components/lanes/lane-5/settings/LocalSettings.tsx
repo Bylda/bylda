@@ -62,7 +62,15 @@ const areas = [
 ] as const;
 
 /** TODO(#34): fold-into-kit — light settings navigation and form/list primitives. */
-export function LocalSettingsLayout({ active, children }: { active: string; children: ReactNode }) {
+export function LocalSettingsLayout({
+  active,
+  children,
+  methodologyId,
+}: {
+  active: string;
+  children: ReactNode;
+  methodologyId?: string;
+}) {
   return (
     <div className="flex min-h-full text-by-text-primary">
       <nav
@@ -72,21 +80,40 @@ export function LocalSettingsLayout({ active, children }: { active: string; chil
         {areas.map(([heading, links]) => (
           <div key={heading} className="mb-3.5 flex flex-col gap-0.5">
             <h2 className="type-mono-micro text-by-text-tertiary">{heading}</h2>
-            {links.map(([label, to]) => (
-              <Link
-                key={label}
-                to={to}
-                aria-current={active === label ? "page" : undefined}
-                className={cn(
-                  "rounded-by-control px-2.5 py-1.5 hover:bg-by-surface-hover",
-                  active === label
-                    ? "type-ui-body-strong bg-by-surface-muted"
-                    : "type-ui-small text-by-text-secondary",
-                )}
-              >
-                {label}
-              </Link>
-            ))}
+            {links.map(([label, to]) =>
+              label === "Behavior rules" && methodologyId ? (
+                <Link
+                  key={label}
+                  search={true}
+                  to="/app/methodology/$methodologyId/rules"
+                  params={{ methodologyId }}
+                  aria-current={active === label ? "page" : undefined}
+                  className={cn(
+                    "rounded-by-control px-2.5 py-1.5 hover:bg-by-surface-hover",
+                    active === label
+                      ? "type-ui-body-strong bg-by-surface-muted"
+                      : "type-ui-small text-by-text-secondary",
+                  )}
+                >
+                  {label}
+                </Link>
+              ) : (
+                <Link
+                  search={true}
+                  key={label}
+                  to={to}
+                  aria-current={active === label ? "page" : undefined}
+                  className={cn(
+                    "rounded-by-control px-2.5 py-1.5 hover:bg-by-surface-hover",
+                    active === label
+                      ? "type-ui-body-strong bg-by-surface-muted"
+                      : "type-ui-small text-by-text-secondary",
+                  )}
+                >
+                  {label}
+                </Link>
+              ),
+            )}
           </div>
         ))}
       </nav>
@@ -256,14 +283,23 @@ export function LocalSettingsEmpty({ noun }: { noun: string }) {
 }
 export function LocalSettingsTable({
   headings,
+  columnClasses,
   children,
 }: {
   headings: string[];
+  columnClasses?: string[];
   children: ReactNode;
 }) {
   return (
     <div className="overflow-x-auto rounded-by-card border border-by-border-engraved bg-by-surface-raised">
-      <table className="w-full text-left">
+      <table className={cn("w-full text-left", columnClasses && "table-fixed")}>
+        {columnClasses && (
+          <colgroup>
+            {columnClasses.map((className, index) => (
+              <col key={index} className={className} />
+            ))}
+          </colgroup>
+        )}
         <thead className="bg-by-surface-inset">
           <tr>
             {headings.map((h) => (
