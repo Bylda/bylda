@@ -256,9 +256,11 @@ export function LocalSettingsEmpty({ noun }: { noun: string }) {
 }
 export function LocalSettingsTable({
   headings,
+  columnClasses,
   children,
 }: {
   headings: string[];
+  columnClasses?: string[];
   children: ReactNode;
 }) {
   return (
@@ -266,11 +268,14 @@ export function LocalSettingsTable({
       <table className="w-full text-left">
         <thead className="bg-by-surface-inset">
           <tr>
-            {headings.map((h) => (
+            {headings.map((h, index) => (
               <th
                 key={h}
                 scope="col"
-                className="type-mono-micro whitespace-nowrap px-4 py-2.5 font-medium text-by-text-tertiary"
+                className={cn(
+                  "type-mono-micro whitespace-nowrap px-4 py-2.5 font-medium text-by-text-tertiary",
+                  columnClasses?.[index],
+                )}
               >
                 {h}
               </th>
