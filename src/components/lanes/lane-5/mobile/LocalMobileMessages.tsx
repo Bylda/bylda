@@ -8,9 +8,10 @@ import {
   ConfidenceMeter,
   EvidenceBlock,
   StateEmpty,
+  Wordmark,
 } from "@/components/bylda";
 import { useViewer, useMyCalls, useMyCoaching, type Message } from "@/lib/data";
-import { LocalBoundary, LocalLabel, LocalRestricted } from "./LocalMobile";
+import { LocalBoundary, LocalRestricted } from "./LocalMobile";
 export function LocalManagerOnly({ children }: { children: ReactNode }) {
   const viewer = useViewer();
   return (
@@ -25,7 +26,7 @@ export function LocalMobileHeader({ title, subtitle }: { title: string; subtitle
   const viewer = useViewer().data;
   return (
     <header className="flex flex-col gap-1 border-b border-by-border-engraved bg-by-surface-raised px-[18px] py-3 min-h-[86px]">
-      <LocalLabel>BYLDA</LocalLabel>
+      <Wordmark className="text-by-text-tertiary" />
       <div className="flex items-center gap-2">
         <Link
           to={(viewer?.role === "rep" ? "/m/brief" : "/m/manager-brief") as never}

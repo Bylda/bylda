@@ -1,20 +1,63 @@
-import { ScreenPlaceholder } from "@/components/bylda";
-
-/**
- * E17 · Settings — API keys
- * Figma 31:9530 (page 1:17) · Lane 5 — Mayur · route /app/workspace/api-keys
- * Hooks: useApiKeys — see src/lib/data/README.md
- *
- * PLACEHOLDER. Replace the body with the real screen; keep the export name.
- */
+import { DataBoundary } from "@/components/bylda";
+import { useApiKeys } from "@/lib/data";
+import {
+  cell,
+  LocalSettingsEmpty,
+  LocalSettingsHeading,
+  LocalSettingsTable,
+} from "./LocalSettings";
+import { LocalAccountAction, LocalAccountLayout, LocalAccountMissingRow } from "./LocalAccount";
+import { displayDate } from "./accountModel";
 export function E17SettingsAPIKeys() {
   return (
-    <ScreenPlaceholder
-      code="E17"
-      name="Settings — API keys"
-      node="31:9530"
-      lane={5}
-      owner="Mayur"
-    />
+    <LocalAccountLayout active="API keys">
+      <KeysContent />
+    </LocalAccountLayout>
+  );
+}
+function KeysContent() {
+  const query = useApiKeys();
+  return (
+    <>
+      <LocalSettingsHeading
+        title="API keys"
+        subtitle="Masked keys and their assigned scopes. Only the key suffix is shown."
+        action={<LocalAccountAction label="Create key" variant="primary" />}
+      />
+      <DataBoundary query={query} empty={<LocalSettingsEmpty noun="API keys" />}>
+        {(keys) => (
+          <LocalSettingsTable
+            headings={["NAME", "KEY", "SCOPES", "LAST USED"]}
+            columnClasses={["w-[25%]", "w-[25%]", "w-[25%]", "w-[25%]"]}
+          >
+            {keys.map((key) => (
+              <tr key={key.id}>
+                <td className={cell}>
+                  <span className="type-ui-body-strong">{key.label}</span>
+                </td>
+                <td className={`${cell} type-mono-data text-by-text-secondary`}>
+                  •••• {key.last4}
+                </td>
+                <td className={cell}>
+                  {key.scopes.length ? key.scopes.join(" · ") : "No scopes assigned"}
+                </td>
+                <td className={`${cell} type-mono-data text-by-text-secondary`}>
+                  {key.lastUsedAt ? displayDate(key.lastUsedAt) : "Never used"}
+                </td>
+              </tr>
+            ))}
+          </LocalSettingsTable>
+        )}
+      </DataBoundary>
+      <h2 className="type-ui-label">WEBHOOKS</h2>
+      <LocalSettingsTable
+        headings={["EVENT", "ENDPOINT", "STATUS"]}
+        columnClasses={["w-[34%]", "w-[37%]", "w-[29%]"]}
+      >
+        <LocalAccountMissingRow columns={3}>
+          Webhook settings aren't available yet.
+        </LocalAccountMissingRow>
+      </LocalSettingsTable>
+    </>
   );
 }

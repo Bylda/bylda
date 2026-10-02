@@ -166,6 +166,14 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 describe("remaining mobile screens", () => {
+  it("uses kit wordmarks in the manager brief and messaging headers", async () => {
+    await render(<B2MobileManagerBriefAlert />);
+    expect(container.querySelector("header .type-brand-logo")?.textContent).toBe("BYLDA");
+    await render(<B7MobileRoomObjectionWatch />);
+    expect(container.querySelector("header .type-brand-logo")?.textContent).toBe("BYLDA");
+    await render(<B8MobileDirectMessage />);
+    expect(container.querySelector("header .type-brand-logo")?.textContent).toBe("BYLDA");
+  });
   for (const [code, Screen] of [
     ["B2", B2MobileManagerBriefAlert],
     ["B3", B3MobileQuickCallReviewCoach],

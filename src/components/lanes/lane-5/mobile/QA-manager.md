@@ -20,6 +20,10 @@ Native Home captures at 1280 × 1080 and 1024 × 1080: design-qa/B10.png and B11
 
 ## Functional verification
 
+Review follow-up: integrated the rep header correction without losing role-aware
+navigation. Messaging headers now use the shared Cinzel `Wordmark` as required by
+CLAUDE.md §13.4. Refreshed mobile screenshots and added brand regression coverage.
+
 25 focused tests cover five screens' loading/retry/empty states; manager gate; rep-owned calls and alerts; room membership; DM participation even for managers; peer text/evidence/action suppression; low-confidence actions; team sample thresholds and metadata-free structured blocks. Assignment verified with the existing mock mutation, confirmation disables repeat submission, mock session-only disclosure shown. Message sending, reaction mutation, push changes and snooze stay unavailable without contracts.
 
 Production build passes. Changed-file lint, tokens, boundary and diff checks pass. Typecheck retains exactly eight baseline errors outside this section. Full suite: 464 passed, 36 skipped, two known integration-catalog failures (ReadyMode label and GoHighLevel credential fields). No backend, shared data, kit, shell, router, nav, dependencies or environment files changed.
