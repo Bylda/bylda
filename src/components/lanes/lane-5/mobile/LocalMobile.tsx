@@ -75,6 +75,7 @@ export function LocalMobileFrame({
   active?: string;
   coach?: boolean;
 }) {
+  const viewer = useViewer().data;
   return (
     <main
       className={cn(
@@ -97,9 +98,9 @@ export function LocalMobileFrame({
           )}
         >
           {[
-            ["Brief", "/m/brief"],
-            ["Calls", "/app/calls/mine"],
-            ["Coaching", "/app/coaching/mine"],
+            ["Brief", viewer?.role === "rep" ? "/m/brief" : "/m/manager-brief"],
+            ["Calls", viewer?.role === "rep" ? "/app/calls/mine" : "/app/calls"],
+            ["Coaching", viewer?.role === "rep" ? "/app/coaching/mine" : "/app/coaching"],
             ["Alerts", "/m/alerts"],
           ].map(([name, to]) => (
             <Link
