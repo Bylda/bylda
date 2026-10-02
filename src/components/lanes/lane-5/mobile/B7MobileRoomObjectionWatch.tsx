@@ -1,21 +1,44 @@
-import { ScreenPlaceholder } from "@/components/bylda";
-
-/**
- * B7 · Mobile — Room #objection-watch
- * Figma 52:11424 (page 1:19) · Lane 5 — Mayur · route /m/rooms/$roomId
- * Hooks: useRoomMessages — see src/lib/data/README.md
- *
- * PLACEHOLDER. Replace the body with the real screen; keep the export name.
- */
+import { useParams } from "@tanstack/react-router";
+import { useRoom, useRoomMessages, useViewer } from "@/lib/data";
+import { StateEmpty } from "@/components/bylda";
+import { LocalBoundary, LocalMobileFrame, LocalRestricted } from "./LocalMobile";
+import { LocalMobileHeader, LocalReadOnlyComposer, LocalMessageList } from "./LocalMobileMessages";
 export function B7MobileRoomObjectionWatch() {
+  const { roomId } = useParams({ strict: false }) as { roomId: string };
+  const viewer = useViewer();
   return (
-    <ScreenPlaceholder
-      code="B7"
-      name="Mobile — Room #objection-watch"
-      node="52:11424"
-      lane={5}
-      owner="Mayur"
-      bare
-    />
+    <LocalMobileFrame coach>
+      <LocalBoundary query={viewer}>{() => <LocalRoom roomId={roomId} />}</LocalBoundary>
+    </LocalMobileFrame>
+  );
+}
+function LocalRoom({ roomId }: { roomId: string }) {
+  const room = useRoom(roomId);
+  return (
+    <LocalBoundary query={room} emptyTitle="Room not found.">
+      {(r) =>
+        !r ? (
+          <StateEmpty title="Room not found." />
+        ) : !r.isMember ? (
+          <LocalRestricted />
+        ) : (
+          <>
+            <LocalMobileHeader title={`# ${r.name}`} subtitle={`${r.memberCount} members`} />
+            <LocalRoomMessages roomId={r.id} />
+            <LocalReadOnlyComposer />
+          </>
+        )
+      }
+    </LocalBoundary>
+  );
+}
+function LocalRoomMessages({ roomId }: { roomId: string }) {
+  const query = useRoomMessages(roomId);
+  return (
+    <LocalBoundary query={query} emptyTitle="No room messages yet.">
+      {(messages) => (
+        <LocalMessageList room messages={messages.filter((m) => m.roomId === roomId)} />
+      )}
+    </LocalBoundary>
   );
 }
