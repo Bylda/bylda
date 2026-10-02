@@ -1,12 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  ConfidenceMeter,
-  DataBoundary,
-  Icon,
-  SkeletonBlock,
-  StateError,
-  cn,
-} from "@/components/bylda";
+import { DataBoundary, Icon, SkeletonBlock, StateError, cn } from "@/components/bylda";
 import { useCalls, type BehaviorScore, type Call, type RepSummary } from "@/lib/data";
 import { LocalSparkline } from "../rep/LocalSparkline";
 import { directionTone, formatMedian, formatScore, shortDate, useNow } from "../rep/repFormat";
@@ -82,7 +75,7 @@ function PerformanceTrend({ summary }: { summary: RepSummary }) {
       {lead ? (
         <>
           <p className="type-ui-small text-by-text-tertiary">
-            {`${lead.name} · last ${p.length} weeks`}
+            {`${lead.name} · last ${p.length} weeks · n = ${lead.sampleSize}`}
           </p>
           <ChartGrid>
             <LocalSparkline
@@ -91,7 +84,6 @@ function PerformanceTrend({ summary }: { summary: RepSummary }) {
               className="h-full w-full text-by-text-primary"
             />
           </ChartGrid>
-          <ConfidenceMeter level={lead.confidence} sampleSize={lead.sampleSize} />
         </>
       ) : (
         <p className="type-ui-small text-by-text-secondary">
@@ -197,7 +189,7 @@ function RecentCalls({ repId }: { repId: string }) {
                   params={{ callId: c.id }}
                   className="flex items-center gap-2.5 border-b border-by-border-engraved py-2 transition-colors duration-200 ease-out hover:bg-by-surface-hover"
                 >
-                  <Icon name="play" size={12} className="text-by-text-primary" />
+                  <Icon name="play" size={12} className="fill-current text-by-text-primary" />
                   <span className="type-ui-body-strong min-w-0 flex-1 truncate text-by-text-primary">
                     {c.account.name}
                   </span>

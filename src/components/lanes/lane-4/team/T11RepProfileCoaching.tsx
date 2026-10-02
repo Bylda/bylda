@@ -109,11 +109,11 @@ function ActiveFocus({ focus, score }: { focus: CoachingFocus; score: BehaviorSc
 }
 
 const COLS = {
-  focus: "min-w-[220px] flex-[1.6]",
+  focus: "w-[300px] shrink-0",
   dates: "w-[180px] shrink-0",
   result: "w-[160px] shrink-0",
   change: "w-[200px] shrink-0",
-  open: "w-[80px] shrink-0",
+  open: "min-w-[60px] flex-1",
 };
 
 function History({
@@ -148,7 +148,7 @@ function History({
             key={f.id}
             className="flex min-w-[860px] items-center border-b border-by-border-engraved px-4 py-2.5 last:border-b-0"
           >
-            <span className={cn("type-ui-body text-by-text-primary", COLS.focus)}>
+            <span className={cn("type-ui-small text-by-text-primary", COLS.focus)}>
               {f.behaviorName}
             </span>
             <span className={cn("type-mono-data text-by-text-secondary", COLS.dates)}>
@@ -167,7 +167,7 @@ function History({
               to="/app/coaching/$focusId"
               params={{ focusId: f.id }}
               className={cn(
-                "type-ui-body text-by-text-primary underline-offset-4 hover:underline",
+                "type-ui-small text-by-text-primary underline-offset-4 hover:underline",
                 COLS.open,
               )}
             >

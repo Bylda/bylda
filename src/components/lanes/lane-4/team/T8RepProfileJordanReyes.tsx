@@ -177,7 +177,7 @@ function BehaviorProfile({ repId, firstName }: { repId: string; firstName: strin
                 return (
                   <div
                     key={s.behaviorKey}
-                    className="flex min-w-[620px] items-center border-b border-by-border-engraved px-[18px] py-2.5 last:border-b-0"
+                    className="flex min-w-[620px] items-center border-b border-by-border-engraved px-[18px] py-2 last:border-b-0"
                   >
                     <span className={cn("type-ui-body text-by-text-primary", COLS.behavior)}>
                       {s.name}
@@ -237,6 +237,12 @@ function focusLine(f: CoachingFocus): string {
   return `Baseline ${f.baseline} → target ${f.target}.${judge}`;
 }
 
+/** Figma T8 names in-flight foci "Active" and measured ones "Completed"; colour from the result. */
+function historyTag(f: CoachingFocus): { tone: TagTone; label: string } {
+  if (!f.result) return { tone: "info", label: "Active" };
+  return { tone: focusTag(f).tone, label: "Completed" };
+}
+
 function CoachingHistory({ repId }: { repId: string }) {
   const foci = useCoachingFoci({ repId });
   return (
@@ -262,7 +268,7 @@ function CoachingHistory({ repId }: { repId: string }) {
             {[...rows]
               .sort((a, b) => b.assignedAt.localeCompare(a.assignedAt))
               .map((f) => {
-                const tag = focusTag(f);
+                const tag = historyTag(f);
                 return (
                   <li key={f.id}>
                     <Link

@@ -19,8 +19,8 @@ const COLS = {
   date: "w-[90px] shrink-0",
   length: "w-[80px] shrink-0",
   outcome: "w-[110px] shrink-0",
-  moment: "min-w-0 flex-1",
-  tag: "w-[150px] shrink-0",
+  moment: "w-[330px] shrink-0",
+  tag: "min-w-[120px] flex-1",
 };
 
 function CallsTable({ summary }: { summary: RepSummary }) {

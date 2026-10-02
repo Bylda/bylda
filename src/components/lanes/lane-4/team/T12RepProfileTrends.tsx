@@ -1,10 +1,4 @@
-import {
-  ConfidenceMeter,
-  DataBoundary,
-  SkeletonBlock,
-  StateError,
-  SystemState,
-} from "@/components/bylda";
+import { DataBoundary, SkeletonBlock, StateError, SystemState } from "@/components/bylda";
 import {
   REP_INSIGHT_MIN_CALLS,
   useRepScores,
@@ -33,9 +27,9 @@ function Trends({ summary }: { summary: RepSummary }) {
     <DataBoundary
       query={scores}
       loading={
-        <div className="grid grid-cols-3 gap-4 max-[1200px]:grid-cols-2 max-[800px]:grid-cols-1">
+        <div className="flex flex-wrap items-start gap-4">
           {[0, 1, 2].map((i) => (
-            <SkeletonBlock key={i} height={190} />
+            <SkeletonBlock key={i} height={190} className="w-[330px]" />
           ))}
         </div>
       }
@@ -56,7 +50,7 @@ function Trends({ summary }: { summary: RepSummary }) {
       }
     >
       {(rows) => (
-        <div className="grid grid-cols-3 gap-4 max-[1200px]:grid-cols-2 max-[800px]:grid-cols-1">
+        <div className="flex flex-wrap items-start gap-4">
           {rows.map((s) => (
             <TrendCard key={s.behaviorKey} score={s} />
           ))}
@@ -69,7 +63,10 @@ function Trends({ summary }: { summary: RepSummary }) {
 function TrendCard({ score: s }: { score: BehaviorScore }) {
   const weeks = s.sparkline.points.length;
   return (
-    <section className="flex flex-col gap-2 rounded-by-card border border-by-border-engraved bg-by-surface-raised px-4 py-4">
+    <section
+      className="flex w-[330px] flex-col gap-1.5 rounded-by-card border border-by-border-engraved bg-by-surface-raised px-4 py-3.5"
+      title={`n = ${s.sampleSize} · confidence ${s.confidence}`}
+    >
       <p className="type-ui-small text-by-text-secondary">{s.name}</p>
       <p className="type-editorial-h2 text-by-text-primary">{formatScore(s.value, s.unit)}</p>
       <ChartGrid className="h-[80px]">
@@ -80,7 +77,6 @@ function TrendCard({ score: s }: { score: BehaviorScore }) {
         />
       </ChartGrid>
       <p className="type-ui-small text-by-text-tertiary">{`last ${weeks} weeks · vs own baseline`}</p>
-      <ConfidenceMeter level={s.confidence} sampleSize={s.sampleSize} />
     </section>
   );
 }
