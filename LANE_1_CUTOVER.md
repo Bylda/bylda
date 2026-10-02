@@ -1,6 +1,6 @@
 # Lane 1 — cutover checklist
 
-Owner: **Ansh** · Lane 1 = Manager Home (H1–H6) + Admin Home (H7). Base: `integration` @ `036c673`.
+Owner: **Ansh** · Lane 1 = Manager Home (H1–H6) + Admin Home (H7). Base: `integration` @ `bf70f41`.
 
 CLAUDE.md §12 B: `/app` and `/auth` switch to the V1 routes only when **Lane 1 sections 1–2**
 (Manager Home feed + tabs, Admin Home) and Lane 4 onboarding are all merged. This file is what
@@ -37,12 +37,12 @@ Docs only. No code changes.
 
 Not asked for, but the cutover rule and the verification column below depend on them — strike if wrong.
 
-- [ ] **H7 is merged** — [#29](https://github.com/Bylda/bylda/pull/29), draft. §12 B needs Lane 1 sections 1–2.
+- [x] **H7 is merged** — [#29](https://github.com/Bylda/bylda/pull/29), `bf70f41`. §12 B needs Lane 1 sections 1–2.
 - [ ] **A replayable environment exists.** A local Supabase stack built from `supabase/migrations` fails at
       `20260807000001_integration_oauth.sql` (`column "value_hint" does not exist`): that migration and
       `20260612210000_fix_integration_save.sql` use `value_hint` / `encrypted_value`, which no migration
       ever adds. Until it replays from empty, **no "real-mode verified" box below can be checked.** (Tirth.)
-- [ ] Sign-in returns to the page the guard sent the visitor from — [#28](https://github.com/Bylda/bylda/pull/28), draft.
+- [x] Sign-in returns to the page the guard sent the visitor from — [#28](https://github.com/Bylda/bylda/pull/28), `6826888`.
       (The redirect _loop_ is already fixed: #27, merged.)
 
 ## Screens — real-mode verified
@@ -77,9 +77,9 @@ table exists, GAP fields come back `null`/`[]`).
   - Data today: **none** — lane-local `useMentions` serves a fixture in mock mode only and `[]` otherwise, so in real mode this screen is an empty state by construction
   - Mock-verified: `design-qa/H6.png`
   - Needs for real: the `useMentions` fold-into-data item below
-- [ ] **H7** Admin Home — Owner · `/app/home/admin` · `31:9916` · **draft** (#29) — real-mode verified
+- [ ] **H7** Admin Home — Owner · `/app/home/admin` · `31:9916` · merged (#29) — real-mode verified
   - Data today: `useWorkspaceHealth` hybrid (`health_checks` real; alerts/seats/failed jobs GAP) · `useDataSources` hybrid · `useTeams` **mock** (C-08) · `useCalls` hybrid · `useCoachingFoci` **mock** · `usePatterns` **mock** · `usePlan` hybrid · `useMembers` hybrid · `useMethodologies` **mock** · `useDeliveryChannels` **mock**
-  - Mock-verified (draft): `design-qa/H7-{default,loading,error,empty,non-owner}.png`
+  - Mock-verified: `design-qa/H7-{default,loading,error,empty,non-owner}.png`
   - Needs for real: **#52a–e**, and the blocker above. Also check **owner** and **admin** separately, plus **manager** (must be refused)
 
 Rep-safety applies to every Lane 1 screen: H1–H7 are manager/owner surfaces, so a **rep** session must get
@@ -98,7 +98,7 @@ Merged on `integration` — Manager Home tabs (#25). _(#33 has sub-rows **33a–
 - [ ] **#33c** — `ReportListItem.readMinutes` / `summary` / `series` (H5)
 - [ ] **#33d** — `Call.reviewPriority` + `useCalls({ sort, since, limit })` (H3)
 
-In draft [#29](https://github.com/Bylda/bylda/pull/29) — Admin Home. _(Called #34 / 34a–e during review; **#52 / 52a–e** once merged.)_
+Merged on `integration` — Admin Home ([#29](https://github.com/Bylda/bylda/pull/29)). _(Called #34 / 34a–e during review; renumbered to **#52 / 52a–e** when Lane 5 took #34–#51.)_
 
 - [ ] **#52** — umbrella: H7 built from what, and what is missing
 - [ ] **#52a** — `useAdoption` (briefs opened, per-team open rate, trajectory, focus-ack window) — **Tirth: confirm the trajectory metric**
