@@ -7,7 +7,7 @@ const ROWS = 6;
  * Which calls H3 lists as "worth your time": analyzed calls that have a coaching value and a
  * top moment, highest coaching value first, capped at six.
  *
- * TODO(LANE_REQUESTS 32d): replace with the server-side review-priority rank
+ * TODO(LANE_REQUESTS 33d): replace with the server-side review-priority rank
  * (`Call.reviewPriority`). This client-side rule exists only because the data layer has no rank;
  * delete it — and the cap — when the field lands.
  */

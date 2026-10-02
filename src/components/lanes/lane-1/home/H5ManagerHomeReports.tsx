@@ -11,7 +11,7 @@ import { ListCard, ListRow, ROW_LIST, SectionLabel } from "./shared/List";
  *
  * Reports "ready for you", newest first. The Figma frame is broken — its four cards are 188px
  * wide with the sparkline and Open button clipped — so this follows the evident intent: one
- * full-width row per report (LANE_REQUESTS #32). Sparklines are omitted: no per-report series
+ * full-width row per report (LANE_REQUESTS #33). Sparklines are omitted: no per-report series
  * exists in the data layer.
  */
 export function H5ManagerHomeReports() {

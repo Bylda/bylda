@@ -5,7 +5,7 @@ import type { QueryLike } from "@/components/bylda";
  * GAP: there is no mentions source in `@/lib/data` — Rooms and DMs are mock-only (C-33 / C-34)
  * and `Message` carries no `mentions` or read state. Until Tirth builds it this lane-local hook
  * serves a typed fixture in mock mode ONLY and nothing otherwise, so a real workspace never
- * sees invented mentions. Logged in LANE_REQUESTS #32 as `fold-into-data` (`useMentions`).
+ * sees invented mentions. Logged in LANE_REQUESTS #33 as `fold-into-data` (`useMentions`).
  */
 export type Mention = {
   id: string;
