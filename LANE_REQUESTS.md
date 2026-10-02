@@ -99,3 +99,16 @@ When the shared version lands, delete your copy.
 | 39 | Mayur | 5 | E6–E8 preference fields and mutations | E6 lacks configurable min-confidence, baseline window, outcome-association toggle and reset/save; fixed rep insight threshold comes from REP_INSIGHT_MIN_CALLS (10, not Figma 20). Existing minCallSeconds=120 stays 2 minutes, not Figma 3. E7 has one channel and generic types, not a per-channel matrix; only explicit keys are editable and other cells are unspecified. Missing push, brief/coaching/important-call/emerging-pattern preferences, batching, timezone and quiet-hour behavior. Shared end time is 08:00, not Figma 07:00. E8 lacks event/insight retention, consent and model-training policies, DPA/subprocessors/region, export/deletion/person-selection/save contracts; transcripts stay exact 365 days, not an assumed 12-month period. PII setting comes from useAnalysisPreferences. Need scope-enforced mutations, defaults and capability/field shapes; local edits are disclosed unsaved drafts and reload restores shared values. E6 owner/admin; E8 strictly owner; E7 personal accessible to reps. No shared overrides or invented policies/guarantees. | `open` — Ansh / Tirth |
 
 <!-- Add new rows above. Keep the newest at the bottom. -->
+
+
+### #46 — Lane 5 mobile primitives (Mayur)
+
+Fold `LocalMobileFrame`, rep gate/forbidden boundary, evidence links, focus acknowledgement feedback and native audio controls into the kit when appropriate. Local copies live under lane-5/mobile; semantic tokens and kit parts only. Shared shell/kit/router remain untouched.
+
+### #47 — Mobile rep data gaps (B1/B4/B6/B9)
+
+Need dated rep brief/day count; assigning-manager profile; persistent acknowledge mock; push registration mutation; opaque moment-ID→call/timestamp resolver and recording/clip waveform/duration; conversational coach response/history/evidence/practice/attachments. Existing useSearch returns filters and calls only, with string-only query edits. Current mobile evidence URLs encode actual `callId~tSeconds`, reject malformed/unknown addresses and recheck ownership. No fabricated answers/audio or backend changes. See lane-5/mobile/QA.md.
+
+### #48 — Mobile rep saved-reference comparison
+
+Compared B1/B4/B6/B9 at 390×844 with mocks enabled; one correction round completed. Remaining differences: required rounded cards/confidence/sample, actual fixture wording and already-acknowledged status, missing dated brief/manager profile/audio/coach response, local composite moment addressing, text Send and editable filter inputs. Final screenshots in design-qa; full account in lane-5/mobile/QA.md.
