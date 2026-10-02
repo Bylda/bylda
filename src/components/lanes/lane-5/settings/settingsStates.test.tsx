@@ -11,11 +11,19 @@ vi.mock("@/lib/data", () => ({
   mocksForced: () => true,
 }));
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children, to, ...props }: React.PropsWithChildren<{ to: string }>) => (
-    <a href={to} {...props}>
-      {children}
-    </a>
-  ),
+  Link: ({
+    children,
+    to,
+    search,
+    ...props
+  }: React.PropsWithChildren<{ to: string; search?: boolean }>) => {
+    void search;
+    return (
+      <a href={to} {...props}>
+        {children}
+      </a>
+    );
+  },
 }));
 import { E3SettingsUsers } from "./E3SettingsUsers";
 describe("settings data states", () => {
