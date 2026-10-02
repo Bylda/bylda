@@ -1,5 +1,7 @@
 # E12 — Methodology — Behavior rule editor · node `31:8218` · Lane 5 (Mayur) · route `/app/methodology/$methodologyId/rules/$ruleKey` · exported 2026-10-02
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.

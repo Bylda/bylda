@@ -1,5 +1,7 @@
 # B4 — Mobile — Coaching acknowledge (Rep) · node `32:572` · Lane 5 (Mayur) · route `/m/coaching/$focusId` · exported 2026-10-02
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.
