@@ -88,3 +88,16 @@ When the shared version lands, delete your copy.
 | 37 | Mayur | 5 | Settings shared-shell design deviations vs E1–E5 | Breadcrumb repeats Settings; workspace subtitle reads Mid-Market AE · 9 reps rather than Owner · all teams; icons, active Home rail and role-dependent room/DM rows differ from saved shell. Frozen shell stays untouched. One visual correction round adjusted local nav spacing and table actions; native screenshots and remaining differences recorded in lane-5/settings/QA.md. | `open` — Ansh |
 
 <!-- Add new rows above. Keep the newest at the bottom. -->
+
+
+### #46 — Lane 5 mobile primitives (Mayur)
+
+Fold `LocalMobileFrame`, rep gate/forbidden boundary, evidence links, focus acknowledgement feedback and native audio controls into the kit when appropriate. Local copies live under lane-5/mobile; semantic tokens and kit parts only. Shared shell/kit/router remain untouched.
+
+### #47 — Mobile rep data gaps (B1/B4/B6/B9)
+
+Need dated rep brief/day count; assigning-manager profile; persistent acknowledge mock; push registration mutation; opaque moment-ID→call/timestamp resolver and recording/clip waveform/duration; conversational coach response/history/evidence/practice/attachments. Existing useSearch returns filters and calls only, with string-only query edits. Current mobile evidence URLs encode actual `callId~tSeconds`, reject malformed/unknown addresses and recheck ownership. No fabricated answers/audio or backend changes. See lane-5/mobile/QA.md.
+
+### #48 — Mobile rep saved-reference comparison
+
+Compared B1/B4/B6/B9 at 390×844 with mocks enabled; one correction round completed. Remaining differences: required rounded cards/confidence/sample, actual fixture wording and already-acknowledged status, missing dated brief/manager profile/audio/coach response, local composite moment addressing, text Send and editable filter inputs. Final screenshots in design-qa; full account in lane-5/mobile/QA.md.
