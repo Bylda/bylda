@@ -200,7 +200,12 @@ export const C15 = defineContract<PatternRow, ReturnType<typeof mapPattern>>({
     affected_rep_ids: ["u_jordan"],
   },
   map: mapPattern,
-  mock: () => PATTERNS[0],
+  // The table has no status / rule / selected yet (F-1), so the contract's mock is a pattern as the
+  // table can deliver it today. The optional view-model fields stay on the fixtures.
+  mock: () => {
+    const { status: _s, rule: _r, selected: _p, ...row } = PATTERNS[0];
+    return row;
+  },
   fetchReal: () => fetchPatterns(),
 });
 

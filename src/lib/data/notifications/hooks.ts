@@ -3,6 +3,7 @@ import type { DataCtx } from "../core/context";
 import { useCtxQuery } from "../core/hook";
 import { isEmptyArray } from "../core/query";
 import { resolveSource } from "../core/source";
+import { useDataCtx } from "../session/hooks";
 import { NOTIFICATIONS, REP_NOTIFICATIONS } from "../mocks/collab";
 import type { Notification, PushRegistration } from "../types";
 import { fetchNotifications, markRead } from "./fetchers";
@@ -72,12 +73,14 @@ function setRead(qc: QueryClient, id: string, read: boolean) {
  */
 export function useMarkNotificationRead() {
   const qc = useQueryClient();
+  const ctx = useDataCtx();
   return useMutation<void, Error, string>({
     mutationFn: async (id) => {
       if (resolveSource(SOURCE) === "mock") {
-        if (
-          ![...NOTIFICATIONS, ...Object.values(REP_NOTIFICATIONS).flat()].some((n) => n.id === id)
-        )
+        // Same authorization as the read (docs/notification-visibility.md): only a row in the
+        // viewer's own inbox can be marked. One someone else owns fails exactly like one that
+        // doesn't exist, so the error never confirms it is there.
+        if (!ctx || !mockInbox(ctx).some((n) => n.id === id))
           throw new Error("NOTIFICATION_NOT_FOUND");
         mockRead.add(id);
         return;

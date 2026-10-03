@@ -10,6 +10,7 @@ import type {
   ObjectionStat,
   OutcomeAssociation,
   Pattern,
+  TeamBehaviorRow,
 } from "../types";
 
 export const EV_ACME: EvidenceRef = {
@@ -531,12 +532,13 @@ const INTERRUPTION_COPY: BehaviorExample = {
 
 export const BEHAVIOR_DETAIL_INTERRUPTING: BehaviorDetail = {
   behavior: BEHAVIORS[1],
-  teamValue: 0.8,
+  teamValue: 0.9,
   unit: "per_call",
   direction: "regressing",
   confidence: "medium",
   sampleSize: 142,
-  sparkline: spark([0.7, 0.68, 0.72, 0.74, 0.76, 0.77, 0.8, 0.826], 0, 2),
+  // 0.76 → 0.9 is the +18% I2 draws as "TEAM TREND · 30D" (the lane derives it from first → last).
+  sparkline: spark([0.76, 0.74, 0.78, 0.8, 0.83, 0.86, 0.88, 0.9], 0, 2),
   byRep: [
     { repId: "u_jordan", repName: "Jordan Reyes", value: 1.5, n: 12, vsBaseline: 0.8 },
     { repId: "u_sarah", repName: "Sarah Lin", value: 1.2, n: 9, vsBaseline: 0.5 },
@@ -552,7 +554,7 @@ export const BEHAVIOR_DETAIL_INTERRUPTING: BehaviorDetail = {
     u_alex: spark([1.1, 1.1, 1.0, 0.9, 0.8, 0.8, 0.7, 0.7], 0, 2),
     u_theo: spark([0.3, 0.2, 0.3, 0.2, 0.3, 0.2, 0.2, 0.2], 0, 2),
   },
-  projected: [0.86, 0.9],
+  projected: [0.93, 0.96],
   examples: { avoid: INTERRUPTION_AVOID, copy: INTERRUPTION_COPY },
   recommendedChange:
     "Coach one move: after any objection, let the prospect finish, pause, and ask one clarifying question before responding.",
@@ -705,12 +707,118 @@ export const BEHAVIOR_DETAILS: Record<string, BehaviorDetail> = {
 };
 
 /**
- * I3 Emerging Patterns — the six rows Figma draws, in its order. I1's "Emerging patterns 5" is
- * the first five (open); the sixth is Resolved. Headline is Figma's row title: the rule line under
- * it ("Answers price objection < 1s, then discounts") and the lifecycle status (Confirmed ·
- * Emerging · Fading · Resolved) have no field on Pattern. GAP: status, rule text.
- * `sampleSize` is the CALLS column — 0 for the Resolved row, as drawn. Scope is by who it names:
- * one rep → rep, two or more → team, a methodology step → methodology.
+ * I1 "Team behaviors · 12 tracked · 5 shown" / I7: one row per tracked behavior. The five I1 draws
+ * come first (so a screen takes the first five); the numbers for those five are read from
+ * BEHAVIOR_DETAILS so the two can't drift. The rest follow I7's order, then the three I7 doesn't
+ * draw. GAP: the rule that picks Figma's five isn't stated, and I7's own order differs.
+ * Labels as Figma draws them ("2.6 / topic", "52 / 48", "−2 pts", "—").
+ * Not in Figma, so invented: demo_before_discovery, talking_over_prospects, call_length.
+ */
+const detailRow = (key: string, valueLabel: string, changeLabel: string): TeamBehaviorRow => {
+  const d = BEHAVIOR_DETAILS[key];
+  return {
+    behaviorKey: key,
+    name: d.behavior.name,
+    teamValue: d.teamValue,
+    unit: d.unit,
+    valueLabel,
+    changeLabel,
+    direction: d.direction,
+    sparkline: d.sparkline,
+    confidence: d.confidence,
+    sampleSize: d.sampleSize,
+  };
+};
+const teamRow = (
+  key: string,
+  o: Omit<TeamBehaviorRow, "behaviorKey" | "name">,
+): TeamBehaviorRow => ({ behaviorKey: key, name: behaviorByKey(key).name, ...o });
+
+export const TEAM_BEHAVIOR_ROWS: TeamBehaviorRow[] = [
+  detailRow("discovery_depth", "2.6 / topic", "+0.4"),
+  detailRow("interrupting_during_objections", "0.9 / obj", "+18%"),
+  detailRow("next_step_booked", "74%", "+3 pts"),
+  detailRow("talk_share", "52 / 48", "−2 pts"),
+  detailRow("economic_buyer_by_s3", "61% by stage 3", "—"),
+  teamRow("pause_after_objection", {
+    teamValue: 1.1,
+    unit: "seconds",
+    valueLabel: "1.1s",
+    changeLabel: "−0.2s",
+    direction: "regressing",
+    sparkline: spark([1.3, 1.3, 1.2, 1.2, 1.1, 1.1], 0, 3),
+    confidence: "high",
+    sampleSize: 486,
+  }),
+  teamRow("early_discounting", {
+    teamValue: 31,
+    unit: "percent",
+    valueLabel: "31%",
+    changeLabel: "+9 pts",
+    direction: "regressing",
+    sparkline: spark([22, 24, 25, 27, 29, 31], 0, 100),
+    confidence: "high",
+    sampleSize: 186,
+  }),
+  teamRow("monologue_over_2min", {
+    teamValue: 0.4,
+    unit: "per_call",
+    valueLabel: "0.4 / call",
+    changeLabel: "−0.3",
+    direction: "improving",
+    sparkline: spark([0.7, 0.6, 0.6, 0.5, 0.4, 0.4], 0, 2),
+    confidence: "high",
+    sampleSize: 486,
+  }),
+  teamRow("recap_before_pricing", {
+    teamValue: 38,
+    unit: "percent",
+    valueLabel: "38%",
+    changeLabel: "+4 pts",
+    direction: "steady",
+    sparkline: spark([34, 35, 36, 36, 37, 38], 0, 100),
+    confidence: "medium",
+    sampleSize: 142,
+  }),
+  teamRow("demo_before_discovery", {
+    teamValue: 12,
+    unit: "percent",
+    valueLabel: "12%",
+    changeLabel: "+5 pts",
+    direction: "regressing",
+    sparkline: spark([7, 8, 9, 10, 11, 12], 0, 100),
+    confidence: "low",
+    sampleSize: 45,
+  }),
+  teamRow("talking_over_prospects", {
+    teamValue: 0.2,
+    unit: "per_call",
+    valueLabel: "0.2 / call",
+    changeLabel: "−0.1",
+    direction: "improving",
+    sparkline: spark([0.3, 0.3, 0.3, 0.2, 0.2, 0.2], 0, 2),
+    confidence: "medium",
+    sampleSize: 64,
+  }),
+  teamRow("call_length", {
+    teamValue: 36,
+    unit: "count",
+    valueLabel: "36 min",
+    changeLabel: "+2 min",
+    direction: "steady",
+    sparkline: spark([34, 34, 35, 35, 36, 36], 0, 60),
+    confidence: "high",
+    sampleSize: 486,
+  }),
+];
+
+/**
+ * I3 Emerging Patterns — the six rows Figma draws, in its order. Tab counts come from these six
+ * rows (Emerging 2 · Confirmed 2 · Fading 1 · Resolved 1), not from Figma's 11. I1's "Emerging
+ * patterns 5" is the five open ones. `sampleSize` is the CALLS column. Rulings over Figma: the two
+ * Confirmed rows are raised to n ≥ 30 (the lifecycle legend), and the Resolved row keeps its 0
+ * calls but shows no confidence (patternShowsConfidence), so its stored level is the last one
+ * measured. Scope is by who it names: one rep → rep, two or more → team, a step → methodology.
  */
 export const PATTERNS: Pattern[] = [
   {
@@ -718,10 +826,12 @@ export const PATTERNS: Pattern[] = [
     scope: "team",
     headline: "Defending price before diagnosing",
     confidence: "high",
-    sampleSize: 9,
+    sampleSize: 34,
     firstSeenAt: "2026-09-08",
     behaviorKey: "pause_after_objection",
     affectedRepIds: ["u_jordan", "u_alex", "u_mia"],
+    status: "confirmed",
+    rule: "Answers price objection < 1s, then discounts",
   },
   {
     id: "pat_demo_before_discovery",
@@ -732,6 +842,13 @@ export const PATTERNS: Pattern[] = [
     firstSeenAt: "2026-09-21",
     behaviorKey: "demo_before_discovery",
     affectedRepIds: ["u_mia"],
+    status: "emerging",
+    rule: "Screen share before 5 min, < 3 questions",
+    selected: {
+      frequency: "5 of 7 Mia first calls · 1 of 38 rest of team",
+      associatedOutcome: "Next step 40% vs team 74%",
+      trend: "New this month",
+    },
   },
   {
     id: "pat_eb_stage3",
@@ -742,16 +859,20 @@ export const PATTERNS: Pattern[] = [
     firstSeenAt: "2026-09-24",
     behaviorKey: "economic_buyer_by_s3",
     affectedRepIds: ["u_sarah", "u_nina"],
+    status: "emerging",
+    rule: "EB not on a call by stage 3",
   },
   {
     id: "pat_pause_after_objection",
     scope: "team",
     headline: "Pausing after objections",
     confidence: "high",
-    sampleSize: 23,
+    sampleSize: 38,
     firstSeenAt: "2026-08-02",
     behaviorKey: "pause_after_objection",
     affectedRepIds: ["u_theo", "u_priya"],
+    status: "confirmed",
+    rule: "≥ 1.5s before responding",
   },
   {
     id: "pat_roi_monologue",
@@ -762,6 +883,8 @@ export const PATTERNS: Pattern[] = [
     firstSeenAt: "2026-07-30",
     behaviorKey: "monologue_over_2min",
     affectedRepIds: ["u_alex"],
+    status: "fading",
+    rule: "> 2 min rep speech on value",
   },
   {
     id: "pat_talking_over_demo",
@@ -772,6 +895,8 @@ export const PATTERNS: Pattern[] = [
     firstSeenAt: "2026-07-12",
     behaviorKey: "talking_over_prospects",
     affectedRepIds: ["u_nina"],
+    status: "resolved",
+    rule: "Overlap > 300ms in demo stage",
   },
 ];
 

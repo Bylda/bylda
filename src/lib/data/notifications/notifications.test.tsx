@@ -358,6 +358,62 @@ describe("useMarkNotificationRead — mock mode", () => {
   });
 });
 
+describe("mark-read follows the same authorization as reads (docs/notification-visibility.md)", () => {
+  beforeEach(() => useSource("mock"));
+
+  /** Fire one write and return its error message, or undefined if it went through. */
+  const attempt = async (id: string) => {
+    let message: string | undefined;
+    await act(async () => {
+      await probe.mark.mutateAsync(id).catch((e: Error) => void (message = e.message));
+    });
+    return message;
+  };
+
+  it("a rep cannot mark a manager-inbox row, and it looks exactly like an id that isn't there", async () => {
+    mount(JORDAN);
+    await flush();
+    const denied = await attempt("n1"); // a real row, in Dana's inbox
+    const missing = await attempt("does_not_exist");
+    expect(denied).toBe("NOTIFICATION_NOT_FOUND");
+    expect(denied).toBe(missing);
+    // nothing moved: Jordan's own rows are untouched and Dana still sees n1 unread
+    expect(cached().map((n) => [n.id, n.read])).toEqual([
+      ["n10", false],
+      ["n13", false],
+      ["n11", true],
+      ["n12", true],
+    ]);
+    expect((await loadNotifications(DANA)).find((n) => n.id === "n1")?.read).toBe(false);
+  });
+
+  it("a rep can still mark their own row", async () => {
+    mount(JORDAN);
+    await flush();
+    expect(await attempt("n10")).toBeUndefined();
+    expect(isRead("n10")).toBe(true);
+  });
+
+  it.each(["coach", "viewer"] as const)("%s cannot mark any row", async (role) => {
+    mount({ ...DANA, role });
+    await flush();
+    expect(await attempt("n1")).toBe("NOTIFICATION_NOT_FOUND");
+    expect(await attempt("n10")).toBe("NOTIFICATION_NOT_FOUND");
+    expect((await loadNotifications(DANA)).find((n) => n.id === "n1")?.read).toBe(false);
+  });
+
+  it("mark all: a denied id doesn't affect the others", async () => {
+    mount(JORDAN);
+    await flush();
+    await act(async () => {
+      await Promise.allSettled(["n10", "n1", "n13"].map((id) => probe.mark.mutateAsync(id)));
+    });
+    expect(isRead("n10")).toBe(true);
+    expect(isRead("n13")).toBe(true);
+    expect((await loadNotifications(DANA)).find((n) => n.id === "n1")?.read).toBe(false);
+  });
+});
+
 describe("useMarkNotificationRead — real mode", () => {
   beforeEach(() => {
     useSource("real");

@@ -15,6 +15,7 @@ export type * from "./integration";
 export type * from "./settings";
 export type * from "./billing";
 export type * from "./workspace";
+export { patternShowsConfidence } from "./behavior";
 export { OUTCOME_MIN_CLOSED, isOutcomeSufficient } from "./outcome";
 export {
   REP_INSIGHT_MIN_CALLS,

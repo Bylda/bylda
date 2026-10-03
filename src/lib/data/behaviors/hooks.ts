@@ -9,9 +9,17 @@ import {
   OBJECTIONS,
   PATTERNS,
   SCORES_JORDAN,
+  TEAM_BEHAVIOR_ROWS,
 } from "../mocks/intelligence";
 import { personById, TEAMS } from "../mocks/people";
-import type { Behavior, BehaviorDetail, BehaviorScore, ObjectionStat, Pattern } from "../types";
+import type {
+  Behavior,
+  BehaviorDetail,
+  BehaviorScore,
+  ObjectionStat,
+  Pattern,
+  TeamBehaviorRow,
+} from "../types";
 import { fetchBehaviorScores, fetchBehaviors, fetchObjectionRows, fetchPatterns } from "./fetchers";
 import {
   aggregateObjections,
@@ -42,6 +50,14 @@ export async function loadBehaviorDetail(
   }
   await fetchBehaviorScores();
   return null;
+}
+
+/** I1 / I7 — the team-behaviors table in one read. Team-wide, so never served to a rep. */
+export async function loadTeamBehaviors(ctx: DataCtx): Promise<TeamBehaviorRow[]> {
+  assertNotRep(ctx, "team behaviors");
+  if (resolveSource(SOURCE) === "mock") return TEAM_BEHAVIOR_ROWS;
+  await fetchBehaviorScores();
+  return [];
 }
 
 /**
@@ -79,6 +95,8 @@ export async function loadObjectionStats(ctx: DataCtx): Promise<ObjectionStat[]>
 }
 
 export const useBehaviors = () => useCtxQuery(behaviorKeys.list(), loadBehaviors, isEmptyArray);
+export const useTeamBehaviors = () =>
+  useCtxQuery(behaviorKeys.team(), loadTeamBehaviors, isEmptyArray);
 export const useBehaviorDetail = (key: string) =>
   useCtxQuery(
     behaviorKeys.detail(key),
