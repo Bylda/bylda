@@ -26,20 +26,25 @@ export function detailMatches(brief: Brief, screen: ReportScreen, subject?: stri
   );
 }
 const causal = /\bcaus(?:e|ed|es|ing)\b/i;
-const closedOutcome = /\b(?:won|win rate|closed|outcome|lost deals)\b/i;
-const comparison = /\b(?:team|peer|rank(?:ing)?|top performers|best)\b/i;
+const closedOutcome = /\b(?:won|wins?|win rates?|closed|outcomes?|lost deals?)\b/i;
+const comparison = /\b(?:team|peers?|rank(?:ing)?s?|top performers?|other reps?|best)\b/i;
 export function statementAllowed(insight: Insight, subject?: string) {
   if (
     !isInsightSufficient(insight) ||
+    !Number.isFinite(insight.callsAnalyzed) ||
     !Number.isFinite(insight.sampleSize) ||
-    insight.sampleSize <= 0
+    insight.sampleSize <= 0 ||
+    !["low", "medium", "high"].includes(insight.confidence)
   )
     return false;
   // Brief has no n_closed/OutcomeAssociation linkage; sampleSize is not a closed-call count.
-  if (closedOutcome.test(insight.headline + " " + (insight.body ?? ""))) return false;
+  const text = `${insight.headline} ${insight.body ?? ""} ${insight.sampleLabel ?? ""}`;
+  if (closedOutcome.test(text)) return false;
   if (
-    !insight.causalTested &&
-    causal.test(insight.headline + " " + (subject ? "" : (insight.body ?? "")))
+    insight.causalTested !== true &&
+    causal.test(
+      `${insight.headline} ${subject ? "" : `${insight.body ?? ""} ${insight.sampleLabel ?? ""}`}`,
+    )
   )
     return false;
   if (subject)

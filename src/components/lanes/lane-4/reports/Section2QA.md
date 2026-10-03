@@ -1,5 +1,7 @@
 # Lane 6 section 2 — report detail QA
 
+Review correction (2026-10-03): statement guards now reject missing/null/unknown confidence, non-finite analyzed-call counts, plural outcome/win-rate claims (including sample-label claims), and causal statements without an explicit boolean `true` flag. Personal report headlines reject plural peers/rankings/other-rep comparisons. Two regression tests exercise these inputs and verify all four rendered report detail components omit rejected statements, evidence and recommendations. Scoped section suite: 26 passing tests. These conservative text checks do not establish typed closed-outcome evidence or backend authorization; requests #65–#68 remain open and the PR remains draft.
+
 Mayur · 2026-10-02 · integration base `38e065c3a42088f103d6920c52ae7685acfbe9e2`.
 
 This is a partial frontend implementation for review, not complete report functionality or a pixel match. Shared-contract requests #65–#68 remain open. P1/P2/P5 and their helpers are unchanged. No shared data, backend, kit, styles, shell, routes, nav, router, dependencies or reference exports were changed.

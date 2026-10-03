@@ -189,6 +189,41 @@ describe("Report detail access and boundary states", () => {
   });
 });
 describe("Statement quality and ownership", () => {
+  it("rejects unverified plural outcomes and invalid quality metadata before rendering", () => {
+    const invalid = [
+      { headline: "Outcomes improved this week" },
+      { body: "Win rates improved this week" },
+      { sampleLabel: "n = 40 closed outcomes" },
+      { confidence: undefined },
+      { confidence: null },
+      { confidence: "unknown" },
+      { callsAnalyzed: Infinity },
+      { headline: "Pausing caused change", causalTested: "true" },
+    ];
+    for (const patch of invalid) {
+      const candidate = { ...insight, ...patch } as Insight;
+      expect(statementAllowed(candidate)).toBe(false);
+      for (const [, Component, kind, subject] of screens) {
+        hooks.brief.mockReturnValue(
+          query({
+            ...brief,
+            kind,
+            subjectId: subject,
+            sections: [{ ...brief.sections[0], insights: [candidate] }],
+          }),
+        );
+        const markup = renderToStaticMarkup(<Component />);
+        expect(markup).not.toContain(candidate.headline);
+        expect(markup).not.toContain("Own quote");
+        expect(markup).not.toContain("Unverified recommendation");
+      }
+    }
+  });
+  it("withholds plural peer and ranking headlines from a personal report", () => {
+    for (const headline of ["Peers improved", "Rankings improved", "Other reps improved"]) {
+      expect(statementAllowed({ ...insight, headline }, "rep")).toBe(false);
+    }
+  });
   it("withholds own evidence during loading, error and absent call results", () => {
     for (const override of [
       { isLoading: true },
