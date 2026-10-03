@@ -75,9 +75,16 @@ describe("room feed scope", () => {
     );
     for (const patch of [
       { callsAnalyzed: 9 },
+      { callsAnalyzed: Infinity },
+      { confidence: undefined },
+      { confidence: "unknown" },
       { sampleSize: 0 },
       { headline: "Won deals rise" },
+      { headline: "Outcomes improved" },
+      { body: "Win rates improved" },
+      { sampleLabel: "n = 40 closed outcomes" },
       { headline: "Pausing caused improvement" },
+      { headline: "Pausing caused improvement", causalTested: "true" },
     ])
       expect(
         roomFeedInsightAllowed({
