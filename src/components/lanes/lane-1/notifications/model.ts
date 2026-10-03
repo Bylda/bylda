@@ -27,16 +27,19 @@ const CATEGORY: Record<NotificationType, Category | null> = {
 };
 
 /**
- * "Needs you" = unread AND action-level. Figma's severity legend (31:1258) has two tones that
- * ask something of the viewer: Regression ("a behavior got meaningfully worse") and Needs review
- * ("worth a look today"). Pattern, Improvement and Info are things to know, not things to do.
- * System rows (integration problems) are admin plumbing, never "Needs you" — even though they
- * carry a regress tone. Derived from `toneOf` + type because the data type can't say it (#69, #71).
+ * "Needs you" = unread AND one of: Regression (`regress`), Needs review (`attention`), a forming
+ * Pattern (`info` — the emerging pattern), or a System row with a regress tone (a broken
+ * integration). Improvement and Info (FYI) never qualify, nor does a System row that isn't
+ * regress. Derived from `toneOf` + type because the data type can't say it (#69, #71).
  */
-const ACTION_TONES: readonly TagTone[] = ["regress", "attention"];
+const NEEDS_YOU_TONES: readonly TagTone[] = ["regress", "attention", "info"];
 
-export const needsYou = (n: Notification): boolean =>
-  !n.read && CATEGORY[n.type] !== "system" && ACTION_TONES.includes(toneOf(n));
+export const needsYou = (n: Notification): boolean => {
+  if (n.read) return false;
+  const tone = toneOf(n);
+  if (CATEGORY[n.type] === "system") return tone === "regress";
+  return NEEDS_YOU_TONES.includes(tone);
+};
 
 export const matches = (n: Notification, key: FilterKey): boolean =>
   key === "all" ? true : key === "needs_you" ? needsYou(n) : CATEGORY[n.type] === key;
