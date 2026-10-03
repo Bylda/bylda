@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { notifyManager, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -102,7 +102,24 @@ function mount(ctx: DataCtx) {
   );
   unmount = () => act(() => root.unmount());
 }
-const flush = () => act(async () => void (await new Promise((r) => setTimeout(r, 0))));
+/*
+ * TanStack Query hands observer updates to React through setTimeout(0), after a failed mutation has
+ * awaited onError/onSettled. The old flush() was also a setTimeout(0), registered earlier, so it
+ * could return before the hook was told the write failed: the cache was already rolled back but
+ * `probe.mark.error` was still undefined (a few runs in a hundred). The tests now own that tick:
+ * the scheduler holds notifications, and flush() lets the microtasks drain, then releases them
+ * inside act(). No timer is raced, and nothing reaches React outside act().
+ */
+const held: (() => void)[] = [];
+const flush = () =>
+  act(async () => {
+    let released: (() => void)[];
+    do {
+      await new Promise((r) => setTimeout(r, 0)); // every pending microtask has run by now
+      released = held.splice(0);
+      for (const notify of released) notify();
+    } while (released.length);
+  });
 const cached = () =>
   qc
     .getQueriesData<Notification[]>({ queryKey: ["notifications", "list"] })
@@ -117,9 +134,14 @@ const deferred = () => {
 
 beforeAll(() => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  notifyManager.setScheduler((notify) => void held.push(notify));
 });
-afterAll(() => setSourceOverride(null));
+afterAll(() => {
+  notifyManager.setScheduler((notify) => void setTimeout(notify, 0));
+  setSourceOverride(null);
+});
 beforeEach(() => {
+  held.length = 0;
   resetMockNotificationState();
   seedDb();
   fetchMock.mockReset();
@@ -254,6 +276,32 @@ describe("rep view (CLAUDE.md §4, LANE_REQUESTS #72) — scoped by whose row it
   });
 });
 
+describe("roles the visibility doc doesn't define (docs/notification-visibility.md)", () => {
+  beforeEach(() => useSource("mock"));
+
+  it.each(["owner", "admin", "manager"] as const)(
+    "%s sees the nine workspace rows",
+    async (role) => {
+      expect(await loadNotifications({ ...DANA, role })).toHaveLength(9);
+    },
+  );
+
+  it.each(["coach", "viewer"] as const)(
+    "%s sees nothing: not the manager's rows, not a rep's",
+    async (role) => {
+      expect(await loadNotifications({ ...DANA, role })).toEqual([]);
+      expect(await loadNotifications({ ...JORDAN, role })).toEqual([]);
+    },
+  );
+
+  it.each(["coach", "viewer"] as const)("%s gets no unread dot", async (role) => {
+    mount({ ...DANA, role });
+    await flush();
+    expect(cached()).toEqual([]);
+    expect(probe.dot).toBe(false);
+  });
+});
+
 describe("useMarkNotificationRead — mock mode", () => {
   beforeEach(() => {
     useSource("mock");
@@ -307,6 +355,62 @@ describe("useMarkNotificationRead — mock mode", () => {
     await flush();
     expect(probe.mark.error?.message).toBe("NOTIFICATION_NOT_FOUND");
     expect(cached()).toEqual(before);
+  });
+});
+
+describe("mark-read follows the same authorization as reads (docs/notification-visibility.md)", () => {
+  beforeEach(() => useSource("mock"));
+
+  /** Fire one write and return its error message, or undefined if it went through. */
+  const attempt = async (id: string) => {
+    let message: string | undefined;
+    await act(async () => {
+      await probe.mark.mutateAsync(id).catch((e: Error) => void (message = e.message));
+    });
+    return message;
+  };
+
+  it("a rep cannot mark a manager-inbox row, and it looks exactly like an id that isn't there", async () => {
+    mount(JORDAN);
+    await flush();
+    const denied = await attempt("n1"); // a real row, in Dana's inbox
+    const missing = await attempt("does_not_exist");
+    expect(denied).toBe("NOTIFICATION_NOT_FOUND");
+    expect(denied).toBe(missing);
+    // nothing moved: Jordan's own rows are untouched and Dana still sees n1 unread
+    expect(cached().map((n) => [n.id, n.read])).toEqual([
+      ["n10", false],
+      ["n13", false],
+      ["n11", true],
+      ["n12", true],
+    ]);
+    expect((await loadNotifications(DANA)).find((n) => n.id === "n1")?.read).toBe(false);
+  });
+
+  it("a rep can still mark their own row", async () => {
+    mount(JORDAN);
+    await flush();
+    expect(await attempt("n10")).toBeUndefined();
+    expect(isRead("n10")).toBe(true);
+  });
+
+  it.each(["coach", "viewer"] as const)("%s cannot mark any row", async (role) => {
+    mount({ ...DANA, role });
+    await flush();
+    expect(await attempt("n1")).toBe("NOTIFICATION_NOT_FOUND");
+    expect(await attempt("n10")).toBe("NOTIFICATION_NOT_FOUND");
+    expect((await loadNotifications(DANA)).find((n) => n.id === "n1")?.read).toBe(false);
+  });
+
+  it("mark all: a denied id doesn't affect the others", async () => {
+    mount(JORDAN);
+    await flush();
+    await act(async () => {
+      await Promise.allSettled(["n10", "n1", "n13"].map((id) => probe.mark.mutateAsync(id)));
+    });
+    expect(isRead("n10")).toBe(true);
+    expect(isRead("n13")).toBe(true);
+    expect((await loadNotifications(DANA)).find((n) => n.id === "n1")?.read).toBe(false);
   });
 });
 

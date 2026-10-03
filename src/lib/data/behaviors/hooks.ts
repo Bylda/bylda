@@ -5,13 +5,21 @@ import { resolveSource } from "../core/source";
 import {
   BEHAVIORS,
   BEHAVIOR_DETAIL,
-  BEHAVIOR_DETAIL_INTERRUPTING,
+  BEHAVIOR_DETAILS,
   OBJECTIONS,
   PATTERNS,
   SCORES_JORDAN,
+  TEAM_BEHAVIOR_ROWS,
 } from "../mocks/intelligence";
 import { personById, TEAMS } from "../mocks/people";
-import type { Behavior, BehaviorDetail, BehaviorScore, ObjectionStat, Pattern } from "../types";
+import type {
+  Behavior,
+  BehaviorDetail,
+  BehaviorScore,
+  ObjectionStat,
+  Pattern,
+  TeamBehaviorRow,
+} from "../types";
 import { fetchBehaviorScores, fetchBehaviors, fetchObjectionRows, fetchPatterns } from "./fetchers";
 import {
   aggregateObjections,
@@ -38,12 +46,18 @@ export async function loadBehaviorDetail(
   if (resolveSource(SOURCE) === "mock") {
     const b = BEHAVIORS.find((x) => x.key === key);
     if (!b) return null;
-    const base =
-      key === "interrupting_during_objections" ? BEHAVIOR_DETAIL_INTERRUPTING : BEHAVIOR_DETAIL;
-    return { ...base, behavior: b };
+    return { ...(BEHAVIOR_DETAILS[key] ?? BEHAVIOR_DETAIL), behavior: b };
   }
   await fetchBehaviorScores();
   return null;
+}
+
+/** I1 / I7 — the team-behaviors table in one read. Team-wide, so never served to a rep. */
+export async function loadTeamBehaviors(ctx: DataCtx): Promise<TeamBehaviorRow[]> {
+  assertNotRep(ctx, "team behaviors");
+  if (resolveSource(SOURCE) === "mock") return TEAM_BEHAVIOR_ROWS;
+  await fetchBehaviorScores();
+  return [];
 }
 
 /**
@@ -81,6 +95,8 @@ export async function loadObjectionStats(ctx: DataCtx): Promise<ObjectionStat[]>
 }
 
 export const useBehaviors = () => useCtxQuery(behaviorKeys.list(), loadBehaviors, isEmptyArray);
+export const useTeamBehaviors = () =>
+  useCtxQuery(behaviorKeys.team(), loadTeamBehaviors, isEmptyArray);
 export const useBehaviorDetail = (key: string) =>
   useCtxQuery(
     behaviorKeys.detail(key),

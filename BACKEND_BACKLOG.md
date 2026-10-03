@@ -1270,6 +1270,13 @@ export type Pattern = {
   firstSeenAt: string;
   behaviorKey: string | null;
   affectedRepIds: ID[];
+  // Optional on purpose: the real table has none of these yet (F-1 in LANE_REQUESTS.md asks for them).
+  /** GAP: lifecycle status — F-1 */
+  status?: PatternStatus;
+  /** GAP: the detection rule under the title, "Answers price objection < 1s, then discounts" — F-1 */
+  rule?: string | null;
+  /** GAP: context-panel values — F-1 */
+  selected?: PatternSelected | null;
 };
 ```
 

@@ -104,6 +104,23 @@ export type BehaviorDetail = {
   affectedCalls: AffectedCall[];
 };
 
+/** I3 lifecycle: Emerging (< 2 weeks, n < 20) · Confirmed (3+ weeks, n ≥ 30) · Fading · Resolved. */
+export type PatternStatus = "emerging" | "confirmed" | "fading" | "resolved";
+
+/**
+ * I3 context panel, "SELECTED · <pattern>": three display strings. They compare the rep with the
+ * rest of the team ("1 of 38 rest of team", "team 74%"), so they exist only on a Pattern, which
+ * is manager-only (loadPatterns asserts) and never reaches a rep.
+ */
+export type PatternSelected = {
+  /** "5 of 7 Mia first calls · 1 of 38 rest of team" */
+  frequency: string;
+  /** "Next step 40% vs team 74%". null when no outcome is associated yet. */
+  associatedOutcome: string | null;
+  /** "New this month" */
+  trend: string;
+};
+
 /** I3 Emerging Patterns / I7–I11 pattern rows. */
 export type Pattern = {
   id: ID;
@@ -114,6 +131,42 @@ export type Pattern = {
   firstSeenAt: string;
   behaviorKey: string | null;
   affectedRepIds: ID[];
+  // Optional on purpose: the real table has none of these yet (F-1 in LANE_REQUESTS.md asks for them).
+  /** GAP: lifecycle status — F-1 */
+  status?: PatternStatus;
+  /** GAP: the detection rule under the title, "Answers price objection < 1s, then discounts" — F-1 */
+  rule?: string | null;
+  /** GAP: context-panel values — F-1 */
+  selected?: PatternSelected | null;
+};
+
+/**
+ * A resolved pattern, or one with no calls in the window, has no live evidence, so a screen shows
+ * no confidence level for it (I3 draws "Talking over prospects in demos" with 0 calls). `confidence`
+ * stays required so existing screens keep compiling; this is the one place that decides.
+ */
+export const patternShowsConfidence = (p: Pick<Pattern, "status" | "sampleSize">): boolean =>
+  p.status !== "resolved" && p.sampleSize > 0;
+
+/**
+ * I1 "Team behaviors" / I7 table row: one per tracked behavior, so a screen reads the list in one
+ * call instead of `useBehaviorDetail` per row. Team-wide, so never served to a rep.
+ */
+export type TeamBehaviorRow = {
+  behaviorKey: string;
+  name: string;
+  teamValue: number;
+  unit: BehaviorDetail["unit"];
+  /** TEAM NOW as drawn: "2.6 / topic", "0.9 / obj", "52 / 48". The unit enum can't carry these. */
+  valueLabel: string;
+  /** 30-DAY CHANGE as drawn: "+0.4", "+18%", "−2 pts", "—". */
+  changeLabel: string;
+  /** Behaviour direction (the Improving / Regressing / Steady tag), not the sign of the change. */
+  direction: Direction;
+  /** Fixed y-range per behavior (CLAUDE.md §4). */
+  sparkline: Sparkline;
+  confidence: Confidence;
+  sampleSize: number;
 };
 
 /** I4 Objections — frequency view (buildable today from call_insights.objections). */

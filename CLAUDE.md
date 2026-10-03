@@ -231,6 +231,8 @@ Notification visibility (full spec: docs/notification-visibility.md)
 - Manager: themselves and reps in their scope. V1 scope = the whole workspace; teams can narrow it later.
 - Owner and Admin: everything in the workspace. Admin has the same visibility as Owner.
 - Integration and system alerts: Owner yes, Admin yes, Manager yes, Rep no.
+- Coach and Viewer: undefined, so they see nothing.
+- Mark-read writes follow the same authorization as reads: a user can mark only a notification they may read. Anything else fails as not found.
 - The payload counts: a rep-facing title or body must not mention anyone else.
 - Backend-enforced and default-deny. No subject means not returned. Mock and frontend filters are not enforcement.
 
@@ -400,6 +402,12 @@ Lane 5 — `app.integrations`, `app.crm.setup`, `app.settings`, `app.billing*`,
 
 **Edit ONLY your lane's paths.** Need a shared change? Log it in `LANE_REQUESTS.md`
 and build a **local copy in your component folder** so you're never blocked.
+
+**Request IDs are prefixed by owner**, so two PRs can never claim the same number:
+`F-` for Foundation, `L1-`, `L2-`, `L4-`, `L5-`, `L6-` for the lanes (`L2-1`, `L2-2`, …),
+numbered per prefix from 1. Take the next free number under your own prefix only.
+Existing plain numbers stay as they are, including any that open PRs have already taken
+(`#1`–`#73` at the time of writing).
 
 **Nobody touches** the 29 quarantined routes (`LEGACY_ROUTES.md`) or anything in
 `BACKEND_BOUNDARY.md`.

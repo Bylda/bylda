@@ -10,6 +10,7 @@ import type {
   ObjectionStat,
   OutcomeAssociation,
   Pattern,
+  TeamBehaviorRow,
 } from "../types";
 
 export const EV_ACME: EvidenceRef = {
@@ -54,6 +55,81 @@ export const BEHAVIORS: Behavior[] = [
     name: "Talk share",
     definition: "Rep share of talk time.",
     rule: { measure: "talk_ratio" },
+    methodologyId: "meth_meddic",
+    enabled: true,
+    higherIsBetter: false,
+  },
+  // I1 "12 tracked" / I7 "12 BEHAVIORS TRACKED": the four above plus these eight. The first five
+  // of these complete I7's nine drawn rows; demo_before_discovery and talking_over_prospects are
+  // named by I3's patterns and call_length by I1's third card.
+  {
+    key: "early_discounting",
+    name: "Early discounting",
+    definition: "A discount is offered in the first 60 seconds of a price conversation.",
+    rule: { event: "discount", within_seconds: 60 },
+    methodologyId: "meth_meddic",
+    enabled: true,
+    higherIsBetter: false,
+  },
+  {
+    key: "next_step_booked",
+    name: "Next step booked",
+    definition: "The call ends with a dated next step.",
+    rule: { measure: "next_step_rate" },
+    methodologyId: "meth_meddic",
+    enabled: true,
+    higherIsBetter: true,
+  },
+  {
+    key: "monologue_over_2min",
+    name: "Monologue > 2 min",
+    definition: "The rep speaks for more than two minutes without a break.",
+    rule: { event: "monologue", min_seconds: 120 },
+    methodologyId: "meth_meddic",
+    enabled: true,
+    higherIsBetter: false,
+  },
+  {
+    key: "economic_buyer_by_s3",
+    name: "Economic buyer by S3",
+    definition: "The economic buyer is identified by stage 3.",
+    rule: { event: "stage", stage: 3, requires: "economic_buyer" },
+    methodologyId: "meth_meddic",
+    enabled: true,
+    higherIsBetter: true,
+  },
+  {
+    key: "recap_before_pricing",
+    name: "Recap before pricing",
+    definition: "The rep recaps the prospect’s needs before discussing price.",
+    rule: { before: "pricing", requires: "recap" },
+    methodologyId: "meth_meddic",
+    enabled: true,
+    higherIsBetter: true,
+  },
+  {
+    key: "demo_before_discovery",
+    name: "Demo before discovery",
+    definition: "Screen share starts before minute 5 with fewer than 3 questions asked.",
+    rule: { event: "control_shift", before_seconds: 300, max_questions: 2 },
+    methodologyId: "meth_meddic",
+    enabled: true,
+    higherIsBetter: false,
+  },
+  {
+    key: "talking_over_prospects",
+    name: "Talking over prospects",
+    definition: "Speech overlap above 300ms while the prospect is talking in the demo stage.",
+    rule: { event: "interruption", min_overlap_ms: 300, stage: "demo" },
+    methodologyId: "meth_meddic",
+    enabled: true,
+    higherIsBetter: false,
+  },
+  {
+    key: "call_length",
+    name: "Call length",
+    definition: "Call duration in minutes.",
+    rule: { measure: "duration_minutes" },
     methodologyId: "meth_meddic",
     enabled: true,
     higherIsBetter: false,
@@ -162,6 +238,116 @@ export const INSIGHTS: Insight[] = [
     tone: "improve",
     tag: "↑ Improving",
     createdAt: "2026-09-29T16:00:00Z",
+  },
+  // I1 "Important today · 3" — three team-level cards. `callsAnalyzed` is the team's analyzed
+  // calls (486, the I1 header), as the Insight type documents for a team pattern; Figma's own
+  // n ("19 won · 23 lost · 142 discovery calls", "20 deals") stays in sampleSize / sampleLabel.
+  // `tag` carries the eyebrow category ("IMPORTANT TODAY · OUTCOME PATTERN"); Insight has no
+  // category field. Appended after the originals so INSIGHTS[0..3] and the Home feed don't move.
+  {
+    id: "ins_discovery_outcome",
+    kind: "pattern",
+    headline:
+      "Won deals contain more second-level discovery questions — 3.4 per call vs 1.6 in losses.",
+    body: "Holds across 5 of 6 reps. Strongest in deals over $30k.",
+    confidence: "high",
+    sampleSize: 142,
+    sampleLabel: "n = 19 won · 23 lost · 142 discovery calls",
+    callsAnalyzed: 486,
+    affectedRepIds: [],
+    evidence: [],
+    // Figma also has "Make it a team focus": InsightAction is one action, and assign_coaching
+    // needs a repId. GAP: second action + team-level coaching focus.
+    action: {
+      type: "review_calls",
+      label: "See 6 examples",
+      callIds: [
+        "call_acme",
+        "call_brightline",
+        "call_kestrel",
+        "call_vela",
+        "call_ferro",
+        "call_lumen",
+      ],
+    },
+    causalTested: false,
+    tone: "info",
+    tag: "Outcome pattern",
+    createdAt: "2026-09-30T08:00:00Z",
+  },
+  {
+    id: "ins_price_discount_losses",
+    kind: "pattern",
+    headline: "Losses with price objections often include a discount offered in the first 60s.",
+    body: "7 of 9 such losses. Wins with price objections: 2 of 11.",
+    confidence: "medium",
+    sampleSize: 20,
+    sampleLabel: "n = 20 deals",
+    callsAnalyzed: 486,
+    affectedRepIds: [],
+    evidence: [],
+    action: null,
+    causalTested: false,
+    tone: "regress",
+    tag: "Objection pattern",
+    createdAt: "2026-09-30T07:45:00Z",
+  },
+  {
+    id: "ins_call_length",
+    kind: "pattern",
+    headline: "Calls longer than 42 minutes aren’t producing better outcomes for this team.",
+    body: "Next-step rate 68% (<42m) vs 61% (>42m).",
+    confidence: "medium",
+    sampleSize: 486,
+    sampleLabel: "n = 486 calls",
+    callsAnalyzed: 486,
+    affectedRepIds: [],
+    evidence: [],
+    action: null,
+    causalTested: false,
+    tone: "neutral",
+    tag: "Call length",
+    createdAt: "2026-09-30T07:30:00Z",
+  },
+  // I3 context panel — "SELECTED · DEMO BEFORE DISCOVERY". About Mia alone, so a rep could see
+  // it; but kind "pattern" is always team-gated (insightScope), so it clears on the team's 486.
+  // Figma's own sample (7 + 38 first calls = 45) is under the 50-call floor. The panel's
+  // Frequency / Associated / Trend rows compare her with the team, so they stay out of this
+  // rep-visible insight (CLAUDE.md §4).
+  // GAP: nothing links this insight to pat_demo_before_discovery except behaviorKey + rep.
+  {
+    id: "ins_mia_demo_first",
+    kind: "pattern",
+    headline:
+      "Mia started screen-share before minute 5 on 5 of her last 7 first calls, after fewer than 3 questions.",
+    body: null,
+    confidence: "medium",
+    sampleSize: 7,
+    sampleLabel: "n = 7 first calls",
+    callsAnalyzed: 486,
+    affectedRepIds: ["u_mia"],
+    // Figma anchors this on Northwind; in the shared fixtures call_northwind is Nina's 40-second
+    // partial call, so the clip points at Mia's own call_vela instead.
+    evidence: [
+      {
+        callId: "call_vela",
+        timestamp: "04:10",
+        tSeconds: 250,
+        speaker: "rep",
+        speakerLabel: "MIA · VELA",
+        quote: "Let me just show you — it’s easier than explaining.",
+      },
+    ],
+    action: {
+      type: "assign_coaching",
+      label: "Create coaching focus for Mia",
+      repId: "u_mia",
+      behaviorKey: "demo_before_discovery",
+    },
+    causalTested: false,
+    tone: "attention",
+    tag: "Emerging",
+    createdAt: "2026-09-30T07:15:00Z",
   },
 ];
 
@@ -346,12 +532,13 @@ const INTERRUPTION_COPY: BehaviorExample = {
 
 export const BEHAVIOR_DETAIL_INTERRUPTING: BehaviorDetail = {
   behavior: BEHAVIORS[1],
-  teamValue: 0.8,
+  teamValue: 0.9,
   unit: "per_call",
   direction: "regressing",
   confidence: "medium",
   sampleSize: 142,
-  sparkline: spark([0.7, 0.68, 0.72, 0.74, 0.76, 0.77, 0.8, 0.826], 0, 2),
+  // 0.76 → 0.9 is the +18% I2 draws as "TEAM TREND · 30D" (the lane derives it from first → last).
+  sparkline: spark([0.76, 0.74, 0.78, 0.8, 0.83, 0.86, 0.88, 0.9], 0, 2),
   byRep: [
     { repId: "u_jordan", repName: "Jordan Reyes", value: 1.5, n: 12, vsBaseline: 0.8 },
     { repId: "u_sarah", repName: "Sarah Lin", value: 1.2, n: 9, vsBaseline: 0.5 },
@@ -367,7 +554,7 @@ export const BEHAVIOR_DETAIL_INTERRUPTING: BehaviorDetail = {
     u_alex: spark([1.1, 1.1, 1.0, 0.9, 0.8, 0.8, 0.7, 0.7], 0, 2),
     u_theo: spark([0.3, 0.2, 0.3, 0.2, 0.3, 0.2, 0.2, 0.2], 0, 2),
   },
-  projected: [0.86, 0.9],
+  projected: [0.93, 0.96],
   examples: { avoid: INTERRUPTION_AVOID, copy: INTERRUPTION_COPY },
   recommendedChange:
     "Coach one move: after any objection, let the prospect finish, pause, and ask one clarifying question before responding.",
@@ -415,55 +602,362 @@ export const BEHAVIOR_DETAIL_INTERRUPTING: BehaviorDetail = {
   ],
 };
 
+/**
+ * I1 team-behaviors table: one summary per shown row. Only the headline fields and `byRep` are
+ * modelled (BEST / NEEDS WORK in I7 are the top and bottom of `byRep`, ranks as drawn; the values
+ * are invented). Everything the table doesn't need is empty or null, not copied from another
+ * behavior. GAP: Figma shows "2.6 / topic", "0.9 / obj", "52 / 48", "61% by stage 3" and a
+ * 30-day change in mixed units ("+0.4", "+3 pts", "—"), and a "Watch" tag; BehaviorDetail has
+ * a unit enum, a fixed range and a three-value direction, so those labels can't be carried.
+ */
+const summary = (
+  behavior: Behavior,
+  o: Pick<
+    BehaviorDetail,
+    "teamValue" | "unit" | "direction" | "confidence" | "sampleSize" | "sparkline" | "byRep"
+  >,
+): BehaviorDetail => ({
+  behavior,
+  ...o,
+  evidence: [],
+  callsWithBehavior: null,
+  teamSize: 9,
+  repSparklines: {},
+  projected: [],
+  examples: { avoid: null, copy: null },
+  recommendedChange: null,
+  affectedCalls: [],
+});
+const behaviorByKey = (key: string): Behavior => {
+  const b = BEHAVIORS.find((x) => x.key === key);
+  if (!b) throw new Error(`mock behavior missing: ${key}`);
+  return b;
+};
+const rep = (repId: string, repName: string, value: number, n: number) => ({
+  repId,
+  repName,
+  value,
+  n,
+  vsBaseline: null,
+});
+
+/** Keyed by behavior; a key with no entry falls back to BEHAVIOR_DETAIL in loadBehaviorDetail. */
+export const BEHAVIOR_DETAILS: Record<string, BehaviorDetail> = {
+  interrupting_during_objections: BEHAVIOR_DETAIL_INTERRUPTING,
+  discovery_depth: summary(behaviorByKey("discovery_depth"), {
+    teamValue: 2.6,
+    unit: "count",
+    direction: "improving",
+    confidence: "high",
+    sampleSize: 142,
+    sparkline: spark([2.2, 2.3, 2.2, 2.4, 2.5, 2.6], 0, 4),
+    byRep: [
+      rep("u_theo", "Theo Brandt", 3.4, 9),
+      rep("u_priya", "Priya Nair", 3.1, 8),
+      rep("u_jordan", "Jordan Reyes", 2.9, 12),
+      rep("u_alex", "Alex Morgan", 2.7, 11),
+      rep("u_mia", "Mia Kowalski", 1.8, 7),
+    ],
+  }),
+  next_step_booked: summary(behaviorByKey("next_step_booked"), {
+    teamValue: 74,
+    unit: "percent",
+    direction: "steady",
+    confidence: "high",
+    sampleSize: 486,
+    sparkline: spark([71, 70, 72, 72, 73, 74], 0, 100),
+    byRep: [
+      rep("u_priya", "Priya Nair", 84, 61),
+      rep("u_theo", "Theo Brandt", 79, 52),
+      rep("u_alex", "Alex Morgan", 76, 58),
+      rep("u_jordan", "Jordan Reyes", 70, 66),
+      rep("u_sarah", "Sarah Lin", 61, 49),
+    ],
+  }),
+  talk_share: summary(behaviorByKey("talk_share"), {
+    teamValue: 0.52,
+    unit: "ratio",
+    direction: "steady",
+    confidence: "high",
+    sampleSize: 486,
+    sparkline: spark([0.54, 0.54, 0.53, 0.53, 0.52, 0.52], 0, 1),
+    byRep: [
+      rep("u_theo", "Theo Brandt", 0.41, 52),
+      rep("u_priya", "Priya Nair", 0.47, 61),
+      rep("u_alex", "Alex Morgan", 0.5, 58),
+      rep("u_sarah", "Sarah Lin", 0.55, 49),
+      rep("u_jordan", "Jordan Reyes", 0.64, 66),
+    ],
+  }),
+  economic_buyer_by_s3: summary(behaviorByKey("economic_buyer_by_s3"), {
+    teamValue: 61,
+    unit: "percent",
+    direction: "steady",
+    confidence: "medium",
+    sampleSize: 128,
+    sparkline: spark([61, 55, 50, 56, 60, 61], 0, 100),
+    byRep: [
+      rep("u_theo", "Theo Brandt", 80, 15),
+      rep("u_priya", "Priya Nair", 70, 14),
+      rep("u_alex", "Alex Morgan", 62, 16),
+      rep("u_jordan", "Jordan Reyes", 55, 18),
+      rep("u_sarah", "Sarah Lin", 38, 13),
+    ],
+  }),
+};
+
+/**
+ * I1 "Team behaviors · 12 tracked · 5 shown" / I7: one row per tracked behavior. The five I1 draws
+ * come first (so a screen takes the first five); the numbers for those five are read from
+ * BEHAVIOR_DETAILS so the two can't drift. The rest follow I7's order, then the three I7 doesn't
+ * draw. GAP: the rule that picks Figma's five isn't stated, and I7's own order differs.
+ * Labels as Figma draws them ("2.6 / topic", "52 / 48", "−2 pts", "—").
+ * Not in Figma, so invented: demo_before_discovery, talking_over_prospects, call_length.
+ */
+const detailRow = (key: string, valueLabel: string, changeLabel: string): TeamBehaviorRow => {
+  const d = BEHAVIOR_DETAILS[key];
+  return {
+    behaviorKey: key,
+    name: d.behavior.name,
+    teamValue: d.teamValue,
+    unit: d.unit,
+    valueLabel,
+    changeLabel,
+    direction: d.direction,
+    sparkline: d.sparkline,
+    confidence: d.confidence,
+    sampleSize: d.sampleSize,
+  };
+};
+const teamRow = (
+  key: string,
+  o: Omit<TeamBehaviorRow, "behaviorKey" | "name">,
+): TeamBehaviorRow => ({ behaviorKey: key, name: behaviorByKey(key).name, ...o });
+
+export const TEAM_BEHAVIOR_ROWS: TeamBehaviorRow[] = [
+  detailRow("discovery_depth", "2.6 / topic", "+0.4"),
+  detailRow("interrupting_during_objections", "0.9 / obj", "+18%"),
+  detailRow("next_step_booked", "74%", "+3 pts"),
+  detailRow("talk_share", "52 / 48", "−2 pts"),
+  detailRow("economic_buyer_by_s3", "61% by stage 3", "—"),
+  teamRow("pause_after_objection", {
+    teamValue: 1.1,
+    unit: "seconds",
+    valueLabel: "1.1s",
+    changeLabel: "−0.2s",
+    direction: "regressing",
+    sparkline: spark([1.3, 1.3, 1.2, 1.2, 1.1, 1.1], 0, 3),
+    confidence: "high",
+    sampleSize: 486,
+  }),
+  teamRow("early_discounting", {
+    teamValue: 31,
+    unit: "percent",
+    valueLabel: "31%",
+    changeLabel: "+9 pts",
+    direction: "regressing",
+    sparkline: spark([22, 24, 25, 27, 29, 31], 0, 100),
+    confidence: "high",
+    sampleSize: 186,
+  }),
+  teamRow("monologue_over_2min", {
+    teamValue: 0.4,
+    unit: "per_call",
+    valueLabel: "0.4 / call",
+    changeLabel: "−0.3",
+    direction: "improving",
+    sparkline: spark([0.7, 0.6, 0.6, 0.5, 0.4, 0.4], 0, 2),
+    confidence: "high",
+    sampleSize: 486,
+  }),
+  teamRow("recap_before_pricing", {
+    teamValue: 38,
+    unit: "percent",
+    valueLabel: "38%",
+    changeLabel: "+4 pts",
+    direction: "steady",
+    sparkline: spark([34, 35, 36, 36, 37, 38], 0, 100),
+    confidence: "medium",
+    sampleSize: 142,
+  }),
+  teamRow("demo_before_discovery", {
+    teamValue: 12,
+    unit: "percent",
+    valueLabel: "12%",
+    changeLabel: "+5 pts",
+    direction: "regressing",
+    sparkline: spark([7, 8, 9, 10, 11, 12], 0, 100),
+    confidence: "low",
+    sampleSize: 45,
+  }),
+  teamRow("talking_over_prospects", {
+    teamValue: 0.2,
+    unit: "per_call",
+    valueLabel: "0.2 / call",
+    changeLabel: "−0.1",
+    direction: "improving",
+    sparkline: spark([0.3, 0.3, 0.3, 0.2, 0.2, 0.2], 0, 2),
+    confidence: "medium",
+    sampleSize: 64,
+  }),
+  teamRow("call_length", {
+    teamValue: 36,
+    unit: "count",
+    valueLabel: "36 min",
+    changeLabel: "+2 min",
+    direction: "steady",
+    sparkline: spark([34, 34, 35, 35, 36, 36], 0, 60),
+    confidence: "high",
+    sampleSize: 486,
+  }),
+];
+
+/**
+ * I3 Emerging Patterns — the six rows Figma draws, in its order. Tab counts come from these six
+ * rows (Emerging 2 · Confirmed 2 · Fading 1 · Resolved 1), not from Figma's 11. I1's "Emerging
+ * patterns 5" is the five open ones. `sampleSize` is the CALLS column. Rulings over Figma: the two
+ * Confirmed rows are raised to n ≥ 30 (the lifecycle legend), and the Resolved row keeps its 0
+ * calls but shows no confidence (patternShowsConfidence), so its stored level is the last one
+ * measured. Scope is by who it names: one rep → rep, two or more → team, a step → methodology.
+ */
 export const PATTERNS: Pattern[] = [
   {
     id: "pat_price_early",
     scope: "team",
-    headline: "Reps answered before diagnosing in 7 of 9 price objections.",
-    confidence: "medium",
-    sampleSize: 9,
-    firstSeenAt: "2026-09-26",
+    headline: "Defending price before diagnosing",
+    confidence: "high",
+    sampleSize: 34,
+    firstSeenAt: "2026-09-08",
     behaviorKey: "pause_after_objection",
-    affectedRepIds: ["u_jordan", "u_sarah"],
+    affectedRepIds: ["u_jordan", "u_alex", "u_mia"],
+    status: "confirmed",
+    rule: "Answers price objection < 1s, then discounts",
+  },
+  {
+    id: "pat_demo_before_discovery",
+    scope: "rep",
+    headline: "Demo before discovery",
+    confidence: "medium",
+    sampleSize: 5,
+    firstSeenAt: "2026-09-21",
+    behaviorKey: "demo_before_discovery",
+    affectedRepIds: ["u_mia"],
+    status: "emerging",
+    rule: "Screen share before 5 min, < 3 questions",
+    selected: {
+      frequency: "5 of 7 Mia first calls · 1 of 38 rest of team",
+      associatedOutcome: "Next step 40% vs team 74%",
+      trend: "New this month",
+    },
   },
   {
     id: "pat_eb_stage3",
-    scope: "outcome",
-    headline: "Economic buyer identified by stage 3 is associated with higher win rate.",
-    confidence: "medium",
+    scope: "methodology",
+    headline: "Late economic-buyer contact",
+    confidence: "low",
+    sampleSize: 7,
+    firstSeenAt: "2026-09-24",
+    behaviorKey: "economic_buyer_by_s3",
+    affectedRepIds: ["u_sarah", "u_nina"],
+    status: "emerging",
+    rule: "EB not on a call by stage 3",
+  },
+  {
+    id: "pat_pause_after_objection",
+    scope: "team",
+    headline: "Pausing after objections",
+    confidence: "high",
     sampleSize: 38,
-    firstSeenAt: "2026-09-12",
-    behaviorKey: null,
-    affectedRepIds: [],
+    firstSeenAt: "2026-08-02",
+    behaviorKey: "pause_after_objection",
+    affectedRepIds: ["u_theo", "u_priya"],
+    status: "confirmed",
+    rule: "≥ 1.5s before responding",
+  },
+  {
+    id: "pat_roi_monologue",
+    scope: "rep",
+    headline: "Monologues on ROI",
+    confidence: "medium",
+    sampleSize: 4,
+    firstSeenAt: "2026-07-30",
+    behaviorKey: "monologue_over_2min",
+    affectedRepIds: ["u_alex"],
+    status: "fading",
+    rule: "> 2 min rep speech on value",
+  },
+  {
+    id: "pat_talking_over_demo",
+    scope: "rep",
+    headline: "Talking over prospects in demos",
+    confidence: "high",
+    sampleSize: 0,
+    firstSeenAt: "2026-07-12",
+    behaviorKey: "talking_over_prospects",
+    affectedRepIds: ["u_nina"],
+    status: "resolved",
+    rule: "Overlap > 300ms in demo stage",
   },
 ];
 
+/**
+ * I4 Objections — the six rows Figma draws (I1 tab "Objections 6"). Labels, COUNT and HELD as
+ * drawn; Unclassified has no HELD rate (—). `callCount` is not in Figma. GAP: BEST HANDLER and
+ * WHAT WORKS have no field.
+ */
 export const OBJECTIONS: ObjectionStat[] = [
   {
     label: "Price / budget",
-    count: 23,
-    callCount: 17,
-    handledWellRate: 0.35,
+    count: 312,
+    callCount: 186,
+    handledWellRate: 0.46,
     trend: "regressing",
-    sampleSize: 23,
+    sampleSize: 312,
     confidence: "high",
   },
   {
-    label: "Timing",
-    count: 11,
-    callCount: 10,
-    handledWellRate: 0.6,
+    label: "Timing / not now",
+    count: 201,
+    callCount: 148,
+    handledWellRate: 0.63,
     trend: "steady",
-    sampleSize: 11,
-    confidence: "medium",
+    sampleSize: 201,
+    confidence: "high",
   },
   {
     label: "Already have a tool",
-    count: 6,
-    callCount: 6,
+    count: 144,
+    callCount: 112,
+    handledWellRate: 0.52,
+    trend: "steady",
+    sampleSize: 144,
+    confidence: "high",
+  },
+  {
+    label: "Implementation risk",
+    count: 88,
+    callCount: 71,
+    handledWellRate: 0.38,
+    trend: "regressing",
+    sampleSize: 88,
+    confidence: "medium",
+  },
+  {
+    label: "Need to check with team",
+    count: 131,
+    callCount: 104,
+    handledWellRate: 0.71,
+    trend: "improving",
+    sampleSize: 131,
+    confidence: "high",
+  },
+  {
+    label: "Unclassified",
+    count: 47,
+    callCount: 39,
     handledWellRate: null,
     trend: "steady",
-    sampleSize: 6,
+    sampleSize: 47,
     confidence: "low",
   },
 ];
@@ -492,6 +986,68 @@ export const OUTCOMES: OutcomeAssociation[] = [
     nClosed: 7,
     confidence: "low",
     confounders: [],
+  },
+  // I1 team-behaviors table, ASSOCIATED WITH column. Each outcome is its own row: "Stage advanced,
+  // won" is two. "Weak signal" has no outcome of its own: it is a low-confidence, near-zero gap.
+  {
+    behaviorKey: "discovery_depth",
+    behaviorName: "Discovery depth",
+    outcome: "advanced",
+    withRate: 0.64,
+    withoutRate: 0.38,
+    nWith: 214,
+    nWithout: 272,
+    nClosed: 486,
+    confidence: "high",
+    confounders: ["deal size", "segment"],
+  },
+  {
+    behaviorKey: "interrupting_during_objections",
+    behaviorName: "Interrupting during objections",
+    outcome: "next_step_booked",
+    withRate: 0.52,
+    withoutRate: 0.78,
+    nWith: 38,
+    nWithout: 104,
+    nClosed: 142,
+    confidence: "medium",
+    confounders: ["deal size"],
+  },
+  {
+    behaviorKey: "next_step_booked",
+    behaviorName: "Next step booked",
+    outcome: "advanced",
+    withRate: 0.7,
+    withoutRate: 0.29,
+    nWith: 360,
+    nWithout: 126,
+    nClosed: 486,
+    confidence: "high",
+    confounders: ["segment"],
+  },
+  {
+    behaviorKey: "talk_share",
+    behaviorName: "Talk share",
+    outcome: "advanced",
+    withRate: 0.47,
+    withoutRate: 0.45,
+    nWith: 240,
+    nWithout: 246,
+    nClosed: 486,
+    confidence: "low",
+    confounders: [],
+  },
+  {
+    behaviorKey: "economic_buyer_by_s3",
+    behaviorName: "Economic buyer by S3",
+    outcome: "won",
+    withRate: 0.44,
+    withoutRate: 0.19,
+    nWith: 25,
+    nWithout: 17,
+    nClosed: 42,
+    confidence: "medium",
+    confounders: ["deal size"],
   },
 ];
 
