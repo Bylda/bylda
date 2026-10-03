@@ -175,3 +175,20 @@ Reuse #34 `LocalField` / `LocalSelect` and #40 `LocalTextarea` directly; existin
 ### #61 — G2/G12 visual QA (Mayur)
 
 1440×1080 manager captures: `design-qa/G2.png`, `G12.png`, compared to the saved frames. G2 retains a 600px centered modal, token shadow/radii, original section order and fields; added rep/behavior selection and unavailable-contract notices change its height. Blank manual inputs replace design-specific notes/numbers. No fabricated background coaching rows. G12 retains 36px main inset, 20px gaps, 736/300 columns, chart area and before/after cards; chart, metrics and clips are unavailable because of #59. Header is neutral rather than claiming coaching caused change; actions disabled. Kit radius/shadow follow §13 over Figma. Frozen shared breadcrumbs, rail/sidebar icons/rooms and topbar vary from frames. Not pixel-identical; no shell/nav/router/style edits. See `coaching/SectionQA.md`. Open — Ansh.
+
+### #69 — N1/N2 Notifications: severity can't tell "pattern" from "FYI" (Ansh)
+
+Figma 31:1258's legend has **five** severities — Regression, Needs review, Pattern (info signal), Improvement, **Info** (neutral, "FYI only"). `Notification.severity` only has four (`info | attention | regress | improve`), so `emerging_pattern` and `report_ready` / `coaching_acknowledged` arrive identical. Lane 1 derives the split from `type` (`notifications/model.ts` → `toneOf`: info + not `emerging_pattern` ⇒ neutral). `fold-into-data`: add `"neutral"` to `Notification.severity` and set it in `mapNotificationRow` / `mapNotificationV1`, then delete `toneOf`'s special case. Open — Ansh (data layer).
+
+### #70 — N1/N2 Notifications: mock `useMarkNotificationRead` doesn't mark anything (Ansh)
+
+In mock mode the mutation resolves with no effect, so "Mark all read" / opening a row leaves every item unread and "Needs you" never empties. Real mode refetches and works. Lane 1 deliberately has **no local overlay** (it would be dead code after the swap). `fold-into-data`: optimistic `setQueryData` on `notificationKeys.list()` in `useMarkNotificationRead` (flip `read`, roll back on error) — fixes mock mode and makes real mode instant. A bulk `useMarkAllNotificationsRead()` would also replace N1/N2's N parallel `mutate(id)` calls. Open — Ansh (data layer).
+
+### #71 — N1/N2 Notifications: contracts the screens can't state yet (Ansh)
+
+- **Batching row (N2 context panel, 31:1459).** Figma shows *Push · Off 7 PM – 7 AM* and *Batching · Non-urgent items wait for the brief*. `NotificationPreferences` has `quietHours` but no batching flag, so only the Push row renders — we won't assert a behavior the data doesn't say. Needs `batchNonUrgent: boolean` (C-28).
+- **`href` / `body` for real rows (C-22).** `mapNotificationRow` sets `href: "/app/notifications"` and `body: null` for every row, so in real mode every row links back to the page it's on. The V1 columns (`NotificationV1Row`) fix it.
+- **Category tabs (N2, 31:1357).** `Behavior / Coaching / Reports / System` are derived from `type` in `model.ts`; `important_call` belongs to none of them (Figma's 4+2+1+1 leaves it out of the 9). **Needs you = unread** — the Figma frame doesn't define it, this is Lane 1's reading. Ansh to confirm or give `Notification.needsAction: boolean`.
+- **Drawer breakpoint.** N1 mounts at the shell's 400px; the context panel on N2 becomes an overlay drawer ≤1280 (shell behavior, untouched).
+
+Open — Ansh.

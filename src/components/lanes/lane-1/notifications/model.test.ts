@@ -1,0 +1,103 @@
+import { describe, expect, it } from "vitest";
+import type { Notification } from "@/lib/data";
+import {
+  countFor,
+  drawerBucket,
+  hourLabel,
+  matches,
+  quietHoursLabel,
+  toneOf,
+  whenOf,
+} from "./model";
+
+const n = (o: Partial<Notification> & Pick<Notification, "type">): Notification => ({
+  id: o.type,
+  typeLabel: o.type.toUpperCase(),
+  severity: "info",
+  title: "t",
+  body: null,
+  href: "/app/notifications",
+  read: false,
+  createdAt: "2026-09-30T08:10:00",
+  ...o,
+});
+
+const LIST = [
+  n({ type: "behavior_regression", severity: "regress" }),
+  n({ type: "important_call", severity: "attention" }),
+  n({ type: "emerging_pattern" }),
+  n({ type: "report_ready", read: true }),
+  n({ type: "coaching_completed", severity: "improve", read: true }),
+  n({ type: "coaching_acknowledged", read: true }),
+  n({ type: "methodology_breakdown", severity: "attention", read: true }),
+  n({ type: "integration_problem", severity: "regress", read: true }),
+  n({ type: "behavior_improvement", severity: "improve", read: true }),
+];
+
+describe("filters", () => {
+  it("reproduces the Figma tab counts for the Figma list", () => {
+    expect(countFor(LIST, "all")).toBe(9);
+    expect(countFor(LIST, "needs_you")).toBe(3);
+    expect(countFor(LIST, "behavior")).toBe(4);
+    expect(countFor(LIST, "coaching")).toBe(2);
+    expect(countFor(LIST, "reports")).toBe(1);
+    expect(countFor(LIST, "system")).toBe(1);
+  });
+  it("needs you follows read state", () => {
+    expect(matches(n({ type: "report_ready", read: true }), "needs_you")).toBe(false);
+    expect(matches(n({ type: "report_ready", read: false }), "needs_you")).toBe(true);
+  });
+  it("a call alert is in no category tab", () => {
+    const call = n({ type: "important_call", severity: "attention" });
+    expect(
+      ["behavior", "coaching", "reports", "system"].some((k) => matches(call, k as never)),
+    ).toBe(false);
+    expect(matches(call, "all")).toBe(true);
+  });
+});
+
+describe("toneOf", () => {
+  it("keeps signal severities", () => {
+    expect(toneOf(n({ type: "behavior_regression", severity: "regress" }))).toBe("regress");
+    expect(toneOf(n({ type: "behavior_improvement", severity: "improve" }))).toBe("improve");
+    expect(toneOf(n({ type: "important_call", severity: "attention" }))).toBe("attention");
+  });
+  it("emerging pattern is the info signal; other info is neutral FYI", () => {
+    expect(toneOf(n({ type: "emerging_pattern" }))).toBe("info");
+    expect(toneOf(n({ type: "report_ready" }))).toBe("neutral");
+    expect(toneOf(n({ type: "coaching_acknowledged" }))).toBe("neutral");
+  });
+});
+
+describe("time labels", () => {
+  const now = new Date("2026-09-30T12:00:00").getTime();
+  it("clock today, Yesterday, then weekday", () => {
+    expect(whenOf("2026-09-30T08:10:00", now)).toBe("8:10 AM");
+    expect(whenOf("2026-09-29T08:10:00", now)).toBe("Yesterday");
+    expect(whenOf("2026-09-26T08:10:00", now)).toBe("Sat");
+  });
+  it("drawer folds yesterday into earlier", () => {
+    expect(drawerBucket("2026-09-30T08:10:00", now)).toBe("today");
+    expect(drawerBucket("2026-09-29T08:10:00", now)).toBe("earlier");
+    expect(drawerBucket("2026-09-20T08:10:00", now)).toBe("earlier");
+  });
+});
+
+describe("quiet hours", () => {
+  it.each([
+    ["19:00", "7 PM"],
+    ["07:00", "7 AM"],
+    ["00:00", "12 AM"],
+    ["12:00", "12 PM"],
+    ["08:30", "8:30 AM"],
+  ])("%s → %s", (i, o) => expect(hourLabel(i)).toBe(o));
+  it("rejects junk", () => {
+    expect(hourLabel("7pm")).toBeNull();
+    expect(hourLabel("25:00")).toBeNull();
+  });
+  it("label", () => {
+    expect(quietHoursLabel({ from: "19:00", to: "07:00" })).toBe("Off 7 PM – 7 AM");
+    expect(quietHoursLabel(null)).toBe("Not set");
+    expect(quietHoursLabel({ from: "x", to: "y" })).toBe("Not set");
+  });
+});
