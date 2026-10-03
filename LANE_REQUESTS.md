@@ -9,6 +9,10 @@ a shell tweak — you do **two** things:
 
 When the shared version lands, delete your copy.
 
+### #72 — Lane 6 room kinds contracts (Mayur)
+
+O8–O11 need room-linked briefs/coaching results/calls, subject-scoped app posts, pin/member/presence/curated-link queries and deal/stakeholder context. Only daily-brief has a shared report message; coaching/team/deal feeds are empty in current mocks. Never substitute workspace-wide coaching or invent deal values. Public Brief resolves the shared report by exact ID and manager team subject; free-form app statements withheld. All rep kind feeds restricted before raw messages. LocalKindRoom composes kit ContextPanel and #34 note; route component selects actual Room.kind without editing router config. Open — Ansh/data owner.
+
 ### #71 — Lane 6 room tabs contracts (Mayur)
 
 O3–O7 need room-linked calls/reports/files, verified subject scope for text/evidence, member lists, creation/visibility/watch/delivery settings and mutations. Current O3 uses the public scoped/gated insight hook; personal bodies and sample labels withheld. O4/O5 use exact-room message attachment IDs plus accessible public Call/Brief data, never workspace-wide substitutes. O6 has no file source; O7 displays only supplied Room fields and marks other fields unavailable. Raw tabs restricted for reps before fetching. Reuse #34 table/note; LocalRoomTabs composition stays lane-local. Open — Ansh/data owner.
