@@ -172,7 +172,7 @@ function SeverityPanel() {
   const prefs = useNotificationPreferences();
   return (
     <ContextPanel>
-      <div className="flex flex-col gap-4.5 px-1 py-1">
+      <div className="flex flex-col gap-4.5 py-1">
         <PanelHeading>SEVERITY</PanelHeading>
         <div className="flex flex-col">
           {SEVERITY.map((s) => (
