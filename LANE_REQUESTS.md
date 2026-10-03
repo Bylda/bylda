@@ -9,6 +9,10 @@ a shell tweak — you do **two** things:
 
 When the shared version lands, delete your copy.
 
+### #73 — Lane 6 new room / DM / Coach contracts (Mayur)
+
+O14 needs create-room mutation, purpose/posting-rule/member/private-visibility schema and Slack mirroring. Draft only; no save simulation. Reuse #34 fields/notes and #38 switches; accessible Radix dialog (560px, focus trap/Escape/cancel) is lane-local pending kit folding. O12/O13 need subject-scoped messages/attachments, participant profiles, shared counts, send/reply/Coach answer/practice contracts. DMs require exact thread participation for every role before messages; Coach fixed Jordan attachment resolves only against useMyCoaching with exact viewer repId. Personal raw text and performance summaries withheld without scope/confidence/sample. Own assignment identity/status and navigation available; no fabricated Coach answer, peer comparison, clip or persistence. Open — Ansh/data owner.
+
 ### #72 — Lane 6 room kinds contracts (Mayur)
 
 O8–O11 need room-linked briefs/coaching results/calls, subject-scoped app posts, pin/member/presence/curated-link queries and deal/stakeholder context. Only daily-brief has a shared report message; coaching/team/deal feeds are empty in current mocks. Never substitute workspace-wide coaching or invent deal values. Public Brief resolves the shared report by exact ID and manager team subject; free-form app statements withheld. All rep kind feeds restricted before raw messages. LocalKindRoom composes kit ContextPanel and #34 note; route component selects actual Room.kind without editing router config. Open — Ansh/data owner.
