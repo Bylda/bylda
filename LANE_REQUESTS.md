@@ -211,3 +211,40 @@ Reuse #34 LocalSettingsNote and LocalSettingsTable, kit Button/DataBoundary/Syst
 ### #61 — G2/G12 visual QA (Mayur)
 
 1440×1080 manager captures: `design-qa/G2.png`, `G12.png`, compared to the saved frames. G2 retains a 600px centered modal, token shadow/radii, original section order and fields; added rep/behavior selection and unavailable-contract notices change its height. Blank manual inputs replace design-specific notes/numbers. No fabricated background coaching rows. G12 retains 36px main inset, 20px gaps, 736/300 columns, chart area and before/after cards; chart, metrics and clips are unavailable because of #59. Header is neutral rather than claiming coaching caused change; actions disabled. Kit radius/shadow follow §13 over Figma. Frozen shared breadcrumbs, rail/sidebar icons/rooms and topbar vary from frames. Not pixel-identical; no shell/nav/router/style edits. See `coaching/SectionQA.md`. Open — Ansh.
+
+### #69 — N1/N2 Notifications: severity can't tell "pattern" from "FYI" (Ansh)
+
+Figma 31:1258's legend has **five** severities — Regression, Needs review, Pattern (info signal), Improvement, **Info** (neutral, "FYI only"). `Notification.severity` only has four (`info | attention | regress | improve`), so `emerging_pattern` and `report_ready` / `coaching_acknowledged` arrive identical. Lane 1 derives the split from `type` (`notifications/model.ts` → `toneOf`: info + not `emerging_pattern` ⇒ neutral). `fold-into-data`: add `"neutral"` to `Notification.severity` and set it in `mapNotificationRow` / `mapNotificationV1`, then delete `toneOf`'s special case. Open — Ansh (data layer).
+
+### #70 — N1/N2 Notifications: mock `useMarkNotificationRead` doesn't mark anything (Ansh)
+
+**Resolved** by Foundation PR [#47](https://github.com/Bylda/bylda/pull/47): the hook now flips the row optimistically in every cached list (per-row rollback), mock mode writes through, and the shell's bell dot follows the list cache. N1/N2 keep calling `mutate(id)` per row; a bulk `useMarkAllNotificationsRead()` would still be tidier but is not needed. Verified in the browser on this branch (mark-read, Mark all read, bell dot clears).
+
+### #71 — N1/N2 Notifications: contracts the screens can't state yet (Ansh)
+
+- **Batching row (N2 context panel, 31:1459).** Figma shows *Push · Off 7 PM – 7 AM* and *Batching · Non-urgent items wait for the brief*. `NotificationPreferences` has `quietHours` but no batching flag, so only the Push row renders — we won't assert a behavior the data doesn't say. Needs `batchNonUrgent: boolean` (C-28).
+- **`href` / `body` for real rows (C-22).** `mapNotificationRow` sets `href: "/app/notifications"` and `body: null` for every row, so in real mode every row links back to the page it's on. The V1 columns (`NotificationV1Row`) fix it.
+- **Category tabs (N2, 31:1357).** `Behavior / Coaching / Reports / System` are derived from `type` in `model.ts`; the Notification type has no category field. Figma's tab counts sum to 8 of 9 and leave `important_call` out of every tab. **Ansh's ruling: it sits in Coaching**, so Coaching reads 3 against Figma's 2 (the one deliberate deviation). A `category` on the row would let the data state it. **Needs you = unread AND (tone is `regress` or `attention`, OR type is `emerging_pattern`).** Improvement and any other info-tone row (FYI) never qualify, read or unread; no category is exempt (a broken integration qualifies like any regress/attention row). Derived from `type` + `toneOf` in `model.ts`; reproduces Figma's "Needs you 3" (31:1363). Give `Notification.needsAction: boolean` so the data states it instead of the screen deriving it.
+- **Drawer breakpoint.** N1 mounts at the shell's 400px; the context panel on N2 becomes an overlay drawer ≤1280 (shell behavior, untouched).
+
+Open — Ansh.
+
+### #72 — Notification visibility: the `Notification` type can't carry the spec's subject model (Ansh)
+
+Spec: [`docs/notification-visibility.md`](docs/notification-visibility.md) (merged in Foundation PR [#47](https://github.com/Bylda/bylda/pull/47); summary in CLAUDE.md §4). **Ruling:** access is decided by the notification's **subject**, never by its type. A rep sees notifications whose single subject is that rep (their own regression and improvement included); team patterns, other reps' rows, multi-rep rows and integration/system alerts are hidden; backend-enforced, default-deny.
+
+**What #47 did:** the mock loader now scopes by *whose inbox a row sits in* (`REP_NOTIFICATIONS[userId]`, fail-closed when a rep has no inbox) instead of by type. Real mode is `fetchNotifications(ctx.userId)` + RLS, which is by recipient, not by subject. Neither is enforcement (§4); the spec is explicit that mock and frontend filters are not.
+
+**What the `Notification` view type can't express** (`src/lib/data/types/notification.ts`):
+- **No `subject_type`, `subject_id` or `workspace_id`** — the spec's three required fields. The loader can only use "which inbox is this row in" as a stand-in for the subject; it cannot tell a rep-subject row from a team-subject row of the same type (the spec's own `behavior_regression` example).
+- **No way to mark a row as multi-subject.** A row about Mike, Sarah and Alex must be denied to Mike; nothing on the row says it names three reps.
+- **No team scope.** V1 manager scope is the whole workspace, so nothing breaks today, but a manager narrowed to teams later has no `team_id`/team subject to filter on.
+- **No `category` field.** N1/N2's Behavior / Coaching / Reports / System tabs are derived from `type` in `lane-1/notifications/model.ts` (see #71).
+- **Payload privacy is unverifiable** — `title` and `body` are free text; nothing marks them as safe for a rep (§4: "a rep-facing title or body must not mention anyone else").
+- **Roles `coach` and `viewer` are undefined in the spec** (it covers Owner, Admin, Manager, Rep only) and the mock loader gives them the **manager inbox** (`ctx.role === "rep" ? … : NOTIFICATIONS`). They should be denied or given an explicit rule, default-deny, until the spec rules.
+
+Whether to add the subject fields to the view type or keep them backend-side (the spec says everything beyond the three required fields is the backend's call) is Foundation's decision. N1/N2 render whatever `useNotifications` returns and add no filtering of their own. Open — Ansh (data layer), Tirth (backend).
+
+### #73 — Lane 5 `B5MobileAlerts` filters rep rows by type and href, so it hides a rep's own regression and improvement (Ansh)
+
+`src/components/lanes/lane-5/mobile/B5MobileAlerts.tsx` (lines ~31–38) shows a rep only `important_call` rows whose href matches one of the rep's own calls and `coaching_acknowledged` / `coaching_completed` rows whose href matches one of the rep's own foci. That is a filter **by type and href**, which §4 rules out, and it hides a rep's **own** `behavior_regression` and `behavior_improvement` rows (and any own row whose href doesn't match, e.g. `/app/coaching/:id/result`). It is also redundant: the data layer already returns only the rep's inbox. Needs: drop the screen-side filter and render `useNotifications` as returned, so B5 follows CLAUDE.md §4 / `docs/notification-visibility.md`. Lane 5 is not Lane 1's, so this is **logged, not edited**. Open — Lane 5 (Mayur).
