@@ -172,6 +172,22 @@ G12 `cf_alex_pause` / `u_alex` is **Pause after objection**, assigned 2026-09-10
 
 Reuse #34 `LocalField` / `LocalSelect` and #40 `LocalTextarea` directly; existing kit Button/Avatar/Tag/DataBoundary/SystemState compose the section. `LocalAssignmentModal` in G2 adds the missing accessible Radix dialog (focus trap, Escape/cancel, modal scrim, pending dismissal protection); `LocalCoachingDenied` overrides the kit Y9 sample copy because it names Sarah/Dana and implies a peer-sharing exception. `LocalCoachingError` and `LocalMissing` compose retry/forbidden and missing-contract feedback. Semantic tokens; no shared-kit edits or fixture overrides. Fold these compositions into the kit. Open — Ansh.
 
+### #65 — Reports section 2 subject and privacy contracts (Mayur)
+
+P7/P8/P9/P6 use public useBrief unchanged. Latest-by-kind cannot select by route subject; screens require kind + exact subjectId equality for rep/team/behavior, reject wrong reportId/subject, and gate reps before mounting useBrief (only own P7). Shared weekly_rep is Jordan/Wk39/5-min/Sep29 with daily-style sections, including a team outcome pattern and a body comparing top performers. P7 renders only sole-subject non-pattern statements, withholds bodies/sample labels and verifies every evidence call against public useCalls rep ownership. Team/peer/ranking headlines are withheld. Need typed report-scope, subject lookup, scope-safe narrative/evidence and metadata. No peer-copy exception. P8 and P9 have no shared briefs; missing views explicitly show the report layout awaiting data. Behavior subject binding needs an explicit behavior key rather than inferring one from a title or team. Open — Ansh / Tirth.
+
+### #66 — Reports section 2 measurement and content contracts (Mayur)
+
+P7 lacks report-period metrics, comparisons, focus snapshot/check-in and ranked moments. P8 lacks period coverage, fixed-range trajectory, measured coaching results and by-rep rows. P9 lacks supported strong/weak descriptions, sequence rates, event evidence and closed-outcome metadata. P6 lacks mapped outline sections, executive summary/metric quality, collaborators and comments. Current coaching/call aggregates are not substituted for historical reports. Every statement requires confidence, finite positive sample and the public rep/team analyzed-call threshold. Brief has no OutcomeAssociation/n_closed linkage, so recognizable closed-outcome claims are withheld even when sampleSize is large. Need structured outcome references/closed counts (minimum 30), measured series + fixed behavior ranges, qualified narratives and section mappings centrally. No local fixture/value overrides, projections or chart placeholders that assert trends. Open — Ansh / Tirth.
+
+### #67 — Reports section 2 actions (Mayur)
+
+Public reports API remains read-only (#17). Share/delivery/PDF/team-focus actions are disabled with visible explanation. No clipboard copy is described as delivery, no local comments/persistence, no inferred coaching recommendation. P6 native disclosures and contents navigation work locally; report action functionality remains incomplete. Open — Ansh / Tirth.
+
+### #68 — fold-into-kit: report detail compositions (Mayur)
+
+Reuse #34 LocalSettingsNote and LocalSettingsTable, kit Button/DataBoundary/SystemState/InsightCard/EvidenceBlock first. LocalReportDetail in lane-4/reports composes missing report metrics/panels, role/subject boundaries and native accessible outline disclosures/contents. No equivalent report-detail fold entry exists; fold these compositions into the kit. Saved geometry uses semantic token utilities and existing layout scales. Visual differences and test evidence are recorded in reports/Section2QA.md. Open — Ansh.
+
 ### #61 — G2/G12 visual QA (Mayur)
 
 1440×1080 manager captures: `design-qa/G2.png`, `G12.png`, compared to the saved frames. G2 retains a 600px centered modal, token shadow/radii, original section order and fields; added rep/behavior selection and unavailable-contract notices change its height. Blank manual inputs replace design-specific notes/numbers. No fabricated background coaching rows. G12 retains 36px main inset, 20px gaps, 736/300 columns, chart area and before/after cards; chart, metrics and clips are unavailable because of #59. Header is neutral rather than claiming coaching caused change; actions disabled. Kit radius/shadow follow §13 over Figma. Frozen shared breadcrumbs, rail/sidebar icons/rooms and topbar vary from frames. Not pixel-identical; no shell/nav/router/style edits. See `coaching/SectionQA.md`. Open — Ansh.
