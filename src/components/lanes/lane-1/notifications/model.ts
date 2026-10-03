@@ -26,9 +26,20 @@ const CATEGORY: Record<NotificationType, Category | null> = {
   important_call: null,
 };
 
-/** "Needs you" = still unread. Marking everything read empties it. */
+/**
+ * "Needs you" = unread AND action-level. Figma's severity legend (31:1258) has two tones that
+ * ask something of the viewer: Regression ("a behavior got meaningfully worse") and Needs review
+ * ("worth a look today"). Pattern, Improvement and Info are things to know, not things to do.
+ * System rows (integration problems) are admin plumbing, never "Needs you" — even though they
+ * carry a regress tone. Derived from `toneOf` + type because the data type can't say it (#69, #71).
+ */
+const ACTION_TONES: readonly TagTone[] = ["regress", "attention"];
+
+export const needsYou = (n: Notification): boolean =>
+  !n.read && CATEGORY[n.type] !== "system" && ACTION_TONES.includes(toneOf(n));
+
 export const matches = (n: Notification, key: FilterKey): boolean =>
-  key === "all" ? true : key === "needs_you" ? !n.read : CATEGORY[n.type] === key;
+  key === "all" ? true : key === "needs_you" ? needsYou(n) : CATEGORY[n.type] === key;
 
 export const countFor = (list: Notification[], key: FilterKey): number =>
   list.filter((n) => matches(n, key)).length;

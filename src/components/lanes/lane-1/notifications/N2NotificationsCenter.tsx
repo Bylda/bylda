@@ -118,7 +118,7 @@ export function N2NotificationsCenter() {
                   }
                   body={
                     filter === "needs_you"
-                      ? "Everything unread has been dealt with."
+                      ? "Nothing that asks for action is unread."
                       : "New notifications of this kind will show up here."
                   }
                 />

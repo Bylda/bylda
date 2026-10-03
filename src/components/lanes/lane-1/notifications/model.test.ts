@@ -35,17 +35,39 @@ const LIST = [
 ];
 
 describe("filters", () => {
-  it("reproduces the Figma tab counts for the Figma list", () => {
+  it("reproduces the Figma tab counts for the Figma list (except Needs you — see below)", () => {
     expect(countFor(LIST, "all")).toBe(9);
-    expect(countFor(LIST, "needs_you")).toBe(3);
+    // Figma shows 3 (31:1363), counting the unread emerging pattern too; by the action-level
+    // rule that one is a "Pattern", not a thing to do — so 2. Logged in LANE_REQUESTS #71.
+    expect(countFor(LIST, "needs_you")).toBe(2);
     expect(countFor(LIST, "behavior")).toBe(4);
     expect(countFor(LIST, "coaching")).toBe(2);
     expect(countFor(LIST, "reports")).toBe(1);
     expect(countFor(LIST, "system")).toBe(1);
   });
-  it("needs you follows read state", () => {
-    expect(matches(n({ type: "report_ready", read: true }), "needs_you")).toBe(false);
-    expect(matches(n({ type: "report_ready", read: false }), "needs_you")).toBe(true);
+  describe("needs you = unread AND action-level (regress | attention), never system / FYI", () => {
+    const cases: [Notification["type"], Notification["severity"], boolean][] = [
+      ["behavior_regression", "regress", true],
+      ["important_call", "attention", true],
+      ["methodology_breakdown", "attention", true],
+      ["emerging_pattern", "info", false],
+      ["behavior_improvement", "improve", false],
+      ["report_ready", "info", false],
+      ["coaching_acknowledged", "info", false],
+      ["coaching_completed", "improve", false],
+      ["integration_problem", "regress", false],
+    ];
+    it.each(cases)("%s (%s) unread → %s", (type, severity, expected) => {
+      expect(matches(n({ type, severity, read: false }), "needs_you")).toBe(expected);
+    });
+    it.each(cases)("%s (%s) read → never", (type, severity) => {
+      expect(matches(n({ type, severity, read: true }), "needs_you")).toBe(false);
+    });
+    it("a system row stays out even when unread and regress", () => {
+      const sys = n({ type: "integration_problem", severity: "regress", read: false });
+      expect(matches(sys, "system")).toBe(true);
+      expect(matches(sys, "needs_you")).toBe(false);
+    });
   });
   it("a call alert is in no category tab", () => {
     const call = n({ type: "important_call", severity: "attention" });
