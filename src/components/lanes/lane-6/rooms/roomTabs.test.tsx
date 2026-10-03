@@ -1,12 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import type { Insight, Message, Room, Viewer } from "@/lib/data";
+import type { Brief, Insight, Message, Room, Viewer } from "@/lib/data";
 const s = vi.hoisted(() => ({
   viewer: {} as Viewer,
   room: {} as Room,
   raw: vi.fn(),
   scoped: vi.fn(),
   insights: [] as unknown[],
+  messages: [] as Message[],
+  brief: null as Brief | null,
+  link: vi.fn(),
 }));
 vi.mock("@/lib/data", async (original) => ({
   ...(await original<typeof import("@/lib/data")>()),
@@ -14,8 +17,9 @@ vi.mock("@/lib/data", async (original) => ({
   useRoom: () => ({ data: s.room, isLoading: false, error: null }),
   useRoomMessages: () => {
     s.raw();
-    return { data: [], isLoading: false, error: null, isEmpty: true };
+    return { data: s.messages, isLoading: false, error: null, isEmpty: s.messages.length === 0 };
   },
+  useBrief: () => ({ data: s.brief, isLoading: false, error: null }),
   useCalls: () => ({ data: [], isLoading: false, error: null, isEmpty: true }),
   useRoomInsights: () => {
     s.scoped();
@@ -24,7 +28,10 @@ vi.mock("@/lib/data", async (original) => ({
 }));
 vi.mock("@tanstack/react-router", () => ({
   useParams: () => ({ roomId: "room" }),
-  Link: ({ children }: { children: React.ReactNode }) => <a>{children}</a>,
+  Link: (props: { children: React.ReactNode }) => {
+    s.link(props);
+    return <a>{props.children}</a>;
+  },
 }));
 import { LocalRoomTabs } from "./LocalRoomTabs";
 import { roomAttachments, tabInsightAllowed } from "./roomTabModel";
@@ -34,8 +41,29 @@ beforeEach(() => {
   s.raw.mockClear();
   s.scoped.mockClear();
   s.insights = [];
+  s.messages = [];
+  s.brief = null;
+  s.link.mockClear();
 });
 describe("room tabs privacy and actual attachments", () => {
+  it("opens the exact report shared to the room instead of the latest report", () => {
+    s.viewer = { id: "manager", role: "manager", team: { id: "team" } } as Viewer;
+    s.messages = [
+      { roomId: "room", threadId: null, block: { type: "report", reportId: "shared" } },
+    ] as Message[];
+    s.brief = {
+      id: "shared",
+      kind: "weekly_manager",
+      subjectId: "team",
+      title: "Shared report",
+    } as Brief;
+    renderToStaticMarkup(<LocalRoomTabs tab="reports" />);
+    const link = s.link.mock.calls.find(([props]) => props.to === "/app/reports/weekly")![0];
+    expect(link.search({ as: "manager", reportId: "stale" })).toEqual({
+      as: "manager",
+      reportId: "shared",
+    });
+  });
   it("blocks rep raw tabs before fetching", () => {
     for (const tab of ["calls", "reports", "files", "about"] as const)
       expect(renderToStaticMarkup(<LocalRoomTabs tab={tab} />)).toContain("Y9");

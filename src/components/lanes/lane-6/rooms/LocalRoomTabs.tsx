@@ -229,7 +229,7 @@ function ReportAttachment({ id, viewer }: { id: string; viewer: Viewer }) {
               <Button asChild variant="secondary">
                 <Link
                   to={b.kind === "daily_manager" ? "/app/reports/daily" : "/app/reports/weekly"}
-                  search={true}
+                  search={(previous) => ({ ...previous, reportId: b.id })}
                 >
                   Open
                 </Link>
