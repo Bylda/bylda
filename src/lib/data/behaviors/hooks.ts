@@ -5,7 +5,7 @@ import { resolveSource } from "../core/source";
 import {
   BEHAVIORS,
   BEHAVIOR_DETAIL,
-  BEHAVIOR_DETAIL_INTERRUPTING,
+  BEHAVIOR_DETAILS,
   OBJECTIONS,
   PATTERNS,
   SCORES_JORDAN,
@@ -38,9 +38,7 @@ export async function loadBehaviorDetail(
   if (resolveSource(SOURCE) === "mock") {
     const b = BEHAVIORS.find((x) => x.key === key);
     if (!b) return null;
-    const base =
-      key === "interrupting_during_objections" ? BEHAVIOR_DETAIL_INTERRUPTING : BEHAVIOR_DETAIL;
-    return { ...base, behavior: b };
+    return { ...(BEHAVIOR_DETAILS[key] ?? BEHAVIOR_DETAIL), behavior: b };
   }
   await fetchBehaviorScores();
   return null;

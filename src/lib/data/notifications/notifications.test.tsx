@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { notifyManager, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -102,7 +102,24 @@ function mount(ctx: DataCtx) {
   );
   unmount = () => act(() => root.unmount());
 }
-const flush = () => act(async () => void (await new Promise((r) => setTimeout(r, 0))));
+/*
+ * TanStack Query hands observer updates to React through setTimeout(0), after a failed mutation has
+ * awaited onError/onSettled. The old flush() was also a setTimeout(0), registered earlier, so it
+ * could return before the hook was told the write failed: the cache was already rolled back but
+ * `probe.mark.error` was still undefined (a few runs in a hundred). The tests now own that tick:
+ * the scheduler holds notifications, and flush() lets the microtasks drain, then releases them
+ * inside act(). No timer is raced, and nothing reaches React outside act().
+ */
+const held: (() => void)[] = [];
+const flush = () =>
+  act(async () => {
+    let released: (() => void)[];
+    do {
+      await new Promise((r) => setTimeout(r, 0)); // every pending microtask has run by now
+      released = held.splice(0);
+      for (const notify of released) notify();
+    } while (released.length);
+  });
 const cached = () =>
   qc
     .getQueriesData<Notification[]>({ queryKey: ["notifications", "list"] })
@@ -117,9 +134,14 @@ const deferred = () => {
 
 beforeAll(() => {
   (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+  notifyManager.setScheduler((notify) => void held.push(notify));
 });
-afterAll(() => setSourceOverride(null));
+afterAll(() => {
+  notifyManager.setScheduler((notify) => void setTimeout(notify, 0));
+  setSourceOverride(null);
+});
 beforeEach(() => {
+  held.length = 0;
   resetMockNotificationState();
   seedDb();
   fetchMock.mockReset();
@@ -251,6 +273,32 @@ describe("rep view (CLAUDE.md §4, LANE_REQUESTS #72) — scoped by whose row it
   it("a rep with no inbox sees nothing (fail-closed)", async () => {
     expect(await loadNotifications({ ...JORDAN, userId: "u_alex" })).toEqual([]);
     expect(Object.keys(REP_NOTIFICATIONS)).toEqual(["u_jordan"]);
+  });
+});
+
+describe("roles the visibility doc doesn't define (docs/notification-visibility.md)", () => {
+  beforeEach(() => useSource("mock"));
+
+  it.each(["owner", "admin", "manager"] as const)(
+    "%s sees the nine workspace rows",
+    async (role) => {
+      expect(await loadNotifications({ ...DANA, role })).toHaveLength(9);
+    },
+  );
+
+  it.each(["coach", "viewer"] as const)(
+    "%s sees nothing: not the manager's rows, not a rep's",
+    async (role) => {
+      expect(await loadNotifications({ ...DANA, role })).toEqual([]);
+      expect(await loadNotifications({ ...JORDAN, role })).toEqual([]);
+    },
+  );
+
+  it.each(["coach", "viewer"] as const)("%s gets no unread dot", async (role) => {
+    mount({ ...DANA, role });
+    await flush();
+    expect(cached()).toEqual([]);
+    expect(probe.dot).toBe(false);
   });
 });
 

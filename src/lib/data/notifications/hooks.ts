@@ -16,11 +16,23 @@ import { SOURCE } from "./source";
  * "Reps never see peer comparisons or team rankings"; rules per LANE_REQUESTS #72). There is no backend
  * guarantee (RLS is org-wide), so the data layer enforces it. Ownership is the recipient, the
  * real table's `user_id`; `Notification` has no owner field, so it is the inbox a row sits in
- * (mocks/collab.ts). Fail-closed: a rep with no inbox sees nothing. Real mode is already
+ * (mocks/collab.ts). Fail-closed: a rep with no inbox sees nothing, and neither does a role the
+ * visibility doc doesn't define. Real mode is already
  * scoped to the viewer by `user_id` + RLS.
  */
 function mockInbox(ctx: DataCtx): Notification[] {
-  return ctx.role === "rep" ? (REP_NOTIFICATIONS[ctx.userId] ?? []) : NOTIFICATIONS;
+  switch (ctx.role) {
+    case "owner":
+    case "admin":
+    case "manager":
+      return NOTIFICATIONS;
+    case "rep":
+      return REP_NOTIFICATIONS[ctx.userId] ?? [];
+    default:
+      // coach, viewer, and any role added later: docs/notification-visibility.md defines no
+      // visibility for them, so they see nothing until it does (default-deny).
+      return [];
+  }
 }
 
 /** Mock-mode write-through: ids marked read this session, so a refetch can't un-read a row. */

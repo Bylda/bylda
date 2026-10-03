@@ -8,6 +8,7 @@ Notification visibility (full spec: docs/notification-visibility.md)
 - Manager: themselves and reps in their scope. V1 scope = the whole workspace; teams can narrow it later.
 - Owner and Admin: everything in the workspace. Admin has the same visibility as Owner.
 - Integration and system alerts: Owner yes, Admin yes, Manager yes, Rep no.
+- Coach and Viewer: undefined, so they see nothing.
 - The payload counts: a rep-facing title or body must not mention anyone else.
 - Backend-enforced and default-deny. No subject means not returned. Mock and frontend filters are not enforcement.
 
@@ -29,6 +30,9 @@ Frontend filtering is not authorization. Mock filtering is not authorization. Th
 | Admin | Same as Owner |
 | Manager | Themselves, reps in their scope, patterns across that scope, integration and system alerts |
 | Rep | Only notifications whose single subject is that rep |
+| Coach, Viewer | Undefined. Undefined roles see nothing. |
+
+Coach and Viewer exist as V1 roles, but this spec grants them no visibility, so they receive no notifications: empty list, no unread dot. The mock enforces this with an allowlist (owner, admin, manager, rep). Any role added later gets the same default until this table says otherwise.
 
 ## Core privacy principle
 
