@@ -35,27 +35,29 @@ const LIST = [
 ];
 
 describe("filters", () => {
-  it("reproduces the Figma tab counts for the Figma list (except Needs you — see below)", () => {
+  it("reproduces the Figma tab counts for the Figma list", () => {
     expect(countFor(LIST, "all")).toBe(9);
-    // Figma shows 3 (31:1363), counting the unread emerging pattern too; by the action-level
-    // rule that one is a "Pattern", not a thing to do — so 2. Logged in LANE_REQUESTS #71.
-    expect(countFor(LIST, "needs_you")).toBe(2);
+    // Figma 31:1363 reads 3 — the unread regression, call alert and emerging pattern. The
+    // integration problem there is read, so it stays out.
+    expect(countFor(LIST, "needs_you")).toBe(3);
     expect(countFor(LIST, "behavior")).toBe(4);
     expect(countFor(LIST, "coaching")).toBe(2);
     expect(countFor(LIST, "reports")).toBe(1);
     expect(countFor(LIST, "system")).toBe(1);
   });
-  describe("needs you = unread AND action-level (regress | attention), never system / FYI", () => {
+  describe("needs you = unread AND (regress | attention | pattern | system+regress)", () => {
     const cases: [Notification["type"], Notification["severity"], boolean][] = [
       ["behavior_regression", "regress", true],
       ["important_call", "attention", true],
       ["methodology_breakdown", "attention", true],
-      ["emerging_pattern", "info", false],
+      ["emerging_pattern", "info", true],
+      ["integration_problem", "regress", true],
+      ["integration_problem", "attention", false],
+      ["integration_problem", "info", false],
       ["behavior_improvement", "improve", false],
+      ["coaching_completed", "improve", false],
       ["report_ready", "info", false],
       ["coaching_acknowledged", "info", false],
-      ["coaching_completed", "improve", false],
-      ["integration_problem", "regress", false],
     ];
     it.each(cases)("%s (%s) unread → %s", (type, severity, expected) => {
       expect(matches(n({ type, severity, read: false }), "needs_you")).toBe(expected);
@@ -63,10 +65,10 @@ describe("filters", () => {
     it.each(cases)("%s (%s) read → never", (type, severity) => {
       expect(matches(n({ type, severity, read: true }), "needs_you")).toBe(false);
     });
-    it("a system row stays out even when unread and regress", () => {
+    it("a broken integration is in both System and Needs you", () => {
       const sys = n({ type: "integration_problem", severity: "regress", read: false });
       expect(matches(sys, "system")).toBe(true);
-      expect(matches(sys, "needs_you")).toBe(false);
+      expect(matches(sys, "needs_you")).toBe(true);
     });
   });
   it("a call alert is in no category tab", () => {
