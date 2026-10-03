@@ -19,20 +19,21 @@ export function matchesDelivery(brief: Brief, viewer: Viewer, delivery: Delivery
 export function deliveryInsightAllowed(insight: Insight, viewer: Viewer, delivery: Delivery) {
   if (
     !isInsightSufficient(insight) ||
+    !Number.isFinite(insight.callsAnalyzed) ||
     !Number.isFinite(insight.sampleSize) ||
     insight.sampleSize <= 0
   )
     return false;
   if (!["low", "medium", "high"].includes(insight.confidence)) return false;
-  const text = `${insight.headline} ${insight.body ?? ""}`;
-  if (/\b(won|win rate|closed|outcomes?|lost deals)\b/i.test(text)) return false;
-  if (!insight.causalTested && /\bcaus(e|ed|es|ing)\b/i.test(text)) return false;
+  const text = `${insight.headline} ${insight.body ?? ""} ${insight.sampleLabel ?? ""}`;
+  if (/\b(won|wins?|win rates?|closed|outcomes?|lost deals?)\b/i.test(text)) return false;
+  if (insight.causalTested !== true && /\bcaus(e|ed|es|ing)\b/i.test(text)) return false;
   if (delivery === "push")
     return (
       insight.kind !== "pattern" &&
       insight.affectedRepIds.length === 1 &&
       insight.affectedRepIds[0] === viewer.id &&
-      !/\b(team|peers?|ranking|top performers?|other reps?)\b/i.test(insight.headline)
+      !/\b(team|peers?|rank(?:ing)?s?|top performers?|other reps?)\b/i.test(insight.headline)
     );
   return true;
 }

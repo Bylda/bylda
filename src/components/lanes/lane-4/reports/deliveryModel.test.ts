@@ -20,6 +20,23 @@ const insight: Insight = {
   createdAt: "",
 };
 describe("delivery access and evidence", () => {
+  it("rejects malformed quality flags and outcome claims in every displayed text field", () => {
+    for (const patch of [
+      { callsAnalyzed: Infinity },
+      { confidence: undefined },
+      { confidence: "unknown" },
+      { headline: "Outcomes improved" },
+      { body: "Win rates improved" },
+      { sampleLabel: "n = 40 closed outcomes" },
+      { headline: "Pausing caused change", causalTested: "true" },
+    ])
+      expect(deliveryInsightAllowed({ ...insight, ...patch } as Insight, viewer, "email")).toBe(
+        false,
+      );
+    expect(
+      deliveryInsightAllowed({ ...insight, headline: "Rankings improved" }, viewer, "push"),
+    ).toBe(false);
+  });
   it("denies manager delivery to reps, viewers and coaches", () => {
     for (const role of ["rep", "viewer", "coach"] as const)
       expect(canReadDelivery({ ...viewer, role }, "email")).toBe(false);
