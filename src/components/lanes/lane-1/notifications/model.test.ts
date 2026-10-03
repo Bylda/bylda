@@ -45,14 +45,14 @@ describe("filters", () => {
     expect(countFor(LIST, "reports")).toBe(1);
     expect(countFor(LIST, "system")).toBe(1);
   });
-  describe("needs you = unread AND (regress | attention | pattern | system+regress)", () => {
+  describe("needs you = unread AND (regress | attention | emerging pattern)", () => {
     const cases: [Notification["type"], Notification["severity"], boolean][] = [
       ["behavior_regression", "regress", true],
       ["important_call", "attention", true],
       ["methodology_breakdown", "attention", true],
       ["emerging_pattern", "info", true],
       ["integration_problem", "regress", true],
-      ["integration_problem", "attention", false],
+      ["integration_problem", "attention", true],
       ["integration_problem", "info", false],
       ["behavior_improvement", "improve", false],
       ["coaching_completed", "improve", false],
