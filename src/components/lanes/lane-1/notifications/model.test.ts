@@ -41,7 +41,9 @@ describe("filters", () => {
     // integration problem there is read, so it stays out.
     expect(countFor(LIST, "needs_you")).toBe(3);
     expect(countFor(LIST, "behavior")).toBe(4);
-    expect(countFor(LIST, "coaching")).toBe(2);
+    // Figma reads 2: its tabs sum to 8 of 9 and leave the call alert out. Ruling: the call
+    // alert is a Coaching row, so 3. The only count that differs from the frames.
+    expect(countFor(LIST, "coaching")).toBe(3);
     expect(countFor(LIST, "reports")).toBe(1);
     expect(countFor(LIST, "system")).toBe(1);
   });
@@ -71,12 +73,10 @@ describe("filters", () => {
       expect(matches(sys, "needs_you")).toBe(true);
     });
   });
-  it("a call alert is in no category tab", () => {
+  it("a call alert is a Coaching row (ruling; Figma's tabs leave it out)", () => {
     const call = n({ type: "important_call", severity: "attention" });
-    expect(
-      ["behavior", "coaching", "reports", "system"].some((k) => matches(call, k as never)),
-    ).toBe(false);
-    expect(matches(call, "all")).toBe(true);
+    expect(matches(call, "coaching")).toBe(true);
+    expect(["behavior", "reports", "system"].some((k) => matches(call, k as never))).toBe(false);
   });
 });
 
