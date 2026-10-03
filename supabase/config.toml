@@ -14,6 +14,28 @@ verify_jwt = true
 [functions.run-tool]
 verify_jwt = true
 
+# Signed-in app calls. These previously inherited the default (true).
+# Handlers retain auth.getUser() checks; gateway validation is not authorization.
+[functions.operator]
+verify_jwt = true
+
+[functions.advance-mission]
+verify_jwt = true
+
+# Also accepts automation-dispatch's legacy service-role JWT + internal:true.
+[functions.run-workflow]
+verify_jwt = true
+
+# Also accepts the existing pg_cron legacy service-role JWT.
+[functions.automation-dispatch]
+verify_jwt = true
+
+[functions.generate-course]
+verify_jwt = true
+
+[functions.log-activation-event]
+verify_jwt = true
+
 [functions.save-integration]
 verify_jwt = true
 
@@ -167,7 +189,10 @@ verify_jwt = true
 [functions.process-reminders]
 verify_jwt = false
 
-# Sequence cadence worker — cron-invoked (internal) or authed member; self-checks.
+# Mixed callers: cron requires exact service-role bearer + internal:true;
+# app calls require auth.getUser() plus organization membership. Keep the
+# existing handler-enforced auth boundary (not a public unauthenticated worker).
+# See docs/backend/auth-fixes.md and supabase/tests/auth-boundary.test.ts.
 [functions.sequence-runner]
 verify_jwt = false
 
