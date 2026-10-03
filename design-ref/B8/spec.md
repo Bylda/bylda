@@ -1,5 +1,7 @@
 # B8 — Mobile — Direct message (Dana ↔ Jordan) · node `52:11495` · Lane 5 (Mayur) · route `/m/dm/$threadId` · exported 2026-10-02
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.

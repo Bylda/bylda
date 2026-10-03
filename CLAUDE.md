@@ -733,3 +733,38 @@ carry the line *"See CLAUDE.md §13: decision overrides Figma."*
     §13.3 already extends to modals. There is no separate modal shadow; no other shadow.
 16. **No gradient on call thumbnails** — flat `bg-by-surface-sidebar`, same as
     **Block / Call** (§13.2). The `call-thumb` gradient token no longer exists.
+
+### Lane 5 rulings (2026-10-02)
+
+Where the Lane 5 Figma (pages 15, 16, 18) disagrees with rules already approved above.
+Each one applies an existing rule; none is new product scope.
+
+17. **E6 — the rep threshold is not a setting.** "Minimum calls before judging a rep"
+    renders **read-only**, shows **10** (`REP_INSIGHT_MIN_CALLS`, read from
+    `@/lib/data`, never typed into the screen) and carries the same **Locked** tag E6
+    already uses on "Language for relationships". Ignore Figma's dropdown and its
+    "20 calls". §13.13 stays hard. Every other E6 row is built as drawn.
+18. **E12 — rule logic is read-only in V1.** The frames say so themselves: E9
+    *"Custom rule logic and scoring weights are LATER"*, E11 *"New rule · LATER"*,
+    E10 *"Editable phrases are LATER"*. E12 shows the definition, the rule clauses
+    (WHEN / AND / WITHIN / COUNT AS), direction, stages and the test-results panel,
+    with every rule-logic control **disabled**; "Save rule" and "Test on 20 calls"
+    are disabled. Still editable in V1, exactly as E9 lists: pick a template, toggle
+    behaviors on / off (E11) and "Show to reps", rename stages (E10), edit the
+    objection list (E13).
+19. **E5 — reps never see teammates' calls in V1.** "Reps can see teammates' calls"
+    renders **locked off**, with the same **Unavailable** treatment E5 already uses
+    for Leaderboards. No working toggle (§4: there is no backend guarantee, and a rep
+    view never renders a peer surface). "Show reps team averages" stays a toggle; its
+    helper text adds *"Hidden for teams under 8 reps"* (§13.6,
+    `MIN_REPS_FOR_TEAM_MEDIAN`). The VIEWER and COACH columns are display-only.
+20. **Mobile (B1–B9) follows the same rules as desktop.**
+    - Wordmark is `<Wordmark />` (§13.4), never the Inter "B Y L D A" in Figma.
+    - Cards `rounded-by-card`, controls and inputs `rounded-by-control` (§13.5).
+      Ignore Figma's 0 / 7 / 14 / 18. The 28px device outline is the mockup's phone
+      frame — don't build it.
+    - Every insight shows confidence **and** sample size (§4, §13.14): the pattern
+      card on B2 and the BYLDA insight on B7 get their `n =`; the Coach answer on B9
+      gets *"based on N calls"*.
+    - B9 Coach answers from the rep's **own calls only** (§13.11). Brightline is
+      Theo's call in the fixture, so the B9 example compares two of Jordan's calls.

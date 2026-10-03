@@ -1,5 +1,7 @@
 # E6 — Settings — Analysis preferences · node `31:3275` · Lane 5 (Mayur) · route `/app/workspace/analysis` · exported 2026-10-02
 
+> **See CLAUDE.md §13: decision overrides Figma.**
+
 fileKey `HWdVvVXWqJl4BFD9MZ5vgW` · `frame.png` (if present) = Figma render.
 
 > Source: Figma MCP `get_design_context` — **full output, verbatim**, below.
