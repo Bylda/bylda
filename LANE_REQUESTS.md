@@ -9,6 +9,10 @@ a shell tweak — you do **two** things:
 
 When the shared version lands, delete your copy.
 
+### #70 — Lane 6 rooms feed contracts (Mayur)
+
+O1/O2 need viewer-scoped membership/subjects, app-message confidence/sample, structured insights with threshold metadata, typed attachments, reply/thread/context queries and send/react/join/share mutations. Current mocks return raw messages to every role; rep feed content is withheld before mounting message hooks. Structured app posts without evidence metadata stay withheld. Human call attachments require a matching public useCalls item; copied moment claims aren't rendered. Directory shows supplied counts and membership only. Reuse #34 table/note; lane-local message rows and tab navigation compose the kit and need folding into it. Open — Ansh/data owner. Specialized room kind placeholders dispatch through O2 until their own section lands.
+
 ### #69 — Lane 6 report delivery content (Mayur)
 
 P3/P4/P10 need typed summaries with confidence/sample, daily rep briefs scoped to an exact viewer, manager coaching/behavior rows, coverage metrics, call ownership and clip lengths, delivery metadata, and closed-deal counts for outcome statements. Current Brief has generic text and insights only; no daily_rep fixture exists. Section 3 renders supplied safe observations and explicit gaps, never substitutes weekly content for a daily rep brief. Sending/assignment/clip actions remain unavailable. Manager access checks exact team subject; personal previews require exact viewer subject. Open — Ansh/data owner. See `src/components/lanes/lane-4/reports/DeliveryQA.md`.
