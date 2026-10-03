@@ -109,9 +109,16 @@ describe("room tabs privacy and actual attachments", () => {
     for (const patch of [
       { affectedRepIds: ["peer"] },
       { callsAnalyzed: 9 },
+      { callsAnalyzed: Infinity },
+      { confidence: undefined },
+      { confidence: "unknown" },
       { sampleSize: NaN },
       { headline: "Won deals" },
+      { headline: "Outcomes improved" },
+      { body: "Win rates improved" },
+      { sampleLabel: "n = 40 closed outcomes" },
       { headline: "Pauses caused wins" },
+      { headline: "Pausing caused improvement", causalTested: "true" },
       { headline: "Top performers" },
     ])
       expect(tabInsightAllowed({ ...i, ...patch }, s.viewer)).toBe(false);

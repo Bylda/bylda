@@ -2,15 +2,16 @@ import { isInsightSufficient, type Insight, type Message, type Viewer } from "@/
 export function tabInsightAllowed(i: Insight, viewer: Viewer) {
   if (
     !isInsightSufficient(i) ||
+    !Number.isFinite(i.callsAnalyzed) ||
     !Number.isFinite(i.sampleSize) ||
     i.sampleSize <= 0 ||
     !["low", "medium", "high"].includes(i.confidence)
   )
     return false;
-  const text = `${i.headline} ${i.body ?? ""}`;
+  const text = `${i.headline} ${i.body ?? ""} ${i.sampleLabel ?? ""}`;
   if (
-    /\b(won|win rate|closed|outcomes?|lost deals)\b/i.test(text) ||
-    (!i.causalTested && /\bcaus(e|ed|es|ing)\b/i.test(text))
+    /\b(won|wins?|win rates?|closed|outcomes?|lost deals?)\b/i.test(text) ||
+    (i.causalTested !== true && /\bcaus(e|ed|es|ing)\b/i.test(text))
   )
     return false;
   return (
@@ -18,7 +19,7 @@ export function tabInsightAllowed(i: Insight, viewer: Viewer) {
     (i.kind !== "pattern" &&
       i.affectedRepIds.length === 1 &&
       i.affectedRepIds[0] === viewer.id &&
-      !/\b(team|peers?|rankings?|top performers?|other reps?)\b/i.test(i.headline))
+      !/\b(team|peers?|rank(?:ing)?s?|top performers?|other reps?)\b/i.test(i.headline))
   );
 }
 export function roomAttachments(messages: Message[], roomId: string, type: "call" | "report") {
