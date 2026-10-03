@@ -84,11 +84,12 @@ function CallAttachment({ message }: { message: Message }) {
       error={(err) => <RoomFeedError error={err} retry={() => void calls.refetch()} />}
       empty={<StateEmpty title="Call attachment unavailable." />}
     >
-      {(items) =>
-        items.some((call) => call.id === id) ? (
+      {(items) => {
+        const call = items.find((item) => item.id === id);
+        return call ? (
           <div className="flex items-center justify-between gap-3 rounded-by-card border border-by-border-engraved bg-by-surface-raised p-3.5">
             <span className="type-ui-body-strong">
-              {message.block?.type === "call" ? message.block.title : "Call"}
+              {call.repName} × {call.account.name}
             </span>
             <Button asChild variant="secondary">
               <Link to="/app/calls/$callId" params={{ callId: id }} search={true}>
@@ -98,8 +99,8 @@ function CallAttachment({ message }: { message: Message }) {
           </div>
         ) : (
           <StateEmpty title="Call attachment unavailable." />
-        )
-      }
+        );
+      }}
     </DataBoundary>
   );
 }
@@ -177,17 +178,20 @@ function Messages({ room }: { room: Room }) {
           empty={<StateEmpty title="No messages yet." />}
           error={(err) => <RoomFeedError error={err} retry={() => void query.refetch()} />}
         >
-          {(messages) =>
-            messages
-              .filter((m) => m.roomId === room.id && m.threadId === null)
-              .map((message) => (
+          {(messages) => {
+            const scoped = messages.filter((m) => m.roomId === room.id && m.threadId === null);
+            return scoped.length ? (
+              scoped.map((message) => (
                 <MessageRow
                   key={message.id}
                   message={message}
                   onThread={() => setThread(message)}
                 />
               ))
-          }
+            ) : (
+              <StateEmpty title="No messages yet." />
+            );
+          }}
         </DataBoundary>
       </div>
       {thread && (
