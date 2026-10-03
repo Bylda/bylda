@@ -11,8 +11,9 @@ export type FilterKey = "all" | "needs_you" | "behavior" | "coaching" | "reports
 type Category = Exclude<FilterKey, "all" | "needs_you">;
 
 /**
- * Figma 31:1357 counts 9 = 4 Behavior + 2 Coaching + 1 Reports + 1 System + the one call alert,
- * which belongs to no category tab (it only ever shows under All / Needs you).
+ * Figma 31:1357 counts 9 = 4 Behavior + 2 Coaching + 1 Reports + 1 System, which sums to 8: the
+ * call alert (`important_call`) is in no tab. Ansh's ruling: it sits in Coaching (a call worth
+ * reviewing is a coaching moment), so Coaching reads 3 where Figma reads 2. Deliberate deviation.
  */
 const CATEGORY: Record<NotificationType, Category | null> = {
   behavior_regression: "behavior",
@@ -23,7 +24,7 @@ const CATEGORY: Record<NotificationType, Category | null> = {
   coaching_acknowledged: "coaching",
   report_ready: "reports",
   integration_problem: "system",
-  important_call: null,
+  important_call: "coaching",
 };
 
 /**
