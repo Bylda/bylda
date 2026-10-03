@@ -9,6 +9,10 @@ a shell tweak — you do **two** things:
 
 When the shared version lands, delete your copy.
 
+### #71 — Lane 6 room tabs contracts (Mayur)
+
+O3–O7 need room-linked calls/reports/files, verified subject scope for text/evidence, member lists, creation/visibility/watch/delivery settings and mutations. Current O3 uses the public scoped/gated insight hook; personal bodies and sample labels withheld. O4/O5 use exact-room message attachment IDs plus accessible public Call/Brief data, never workspace-wide substitutes. O6 has no file source; O7 displays only supplied Room fields and marks other fields unavailable. Raw tabs restricted for reps before fetching. Reuse #34 table/note; LocalRoomTabs composition stays lane-local. Open — Ansh/data owner.
+
 ## Rules
 
 - **Never** edit another lane's folder, even for a one-line fix.
