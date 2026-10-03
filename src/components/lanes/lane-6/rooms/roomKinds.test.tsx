@@ -7,6 +7,7 @@ const s = vi.hoisted(() => ({
   raw: vi.fn(),
   brief: {} as Brief,
   messages: [] as unknown[],
+  link: vi.fn(),
 }));
 vi.mock("@/lib/data", async (original) => ({
   ...(await original<typeof import("@/lib/data")>()),
@@ -20,7 +21,10 @@ vi.mock("@/lib/data", async (original) => ({
 }));
 vi.mock("@tanstack/react-router", () => ({
   useParams: () => ({ roomId: "room" }),
-  Link: ({ children }: { children: React.ReactNode }) => <a>{children}</a>,
+  Link: (props: { children: React.ReactNode }) => {
+    s.link(props);
+    return <a>{props.children}</a>;
+  },
 }));
 import { LocalKindRoom } from "./LocalKindRoom";
 beforeEach(() => {
@@ -36,6 +40,7 @@ beforeEach(() => {
     period: "Week",
   } as Brief;
   s.raw.mockClear();
+  s.link.mockClear();
 });
 describe("room kinds routing and scope", () => {
   it("blocks rep messages for every room kind", () => {
@@ -76,6 +81,11 @@ describe("room kinds routing and scope", () => {
     const html = renderToStaticMarkup(<LocalKindRoom kind="brief" />);
     expect(html).toContain("Shared report");
     expect(html).not.toContain("Unscoped Secret");
+    const link = s.link.mock.calls.find(([props]) => props.to === "/app/reports/weekly")![0];
+    expect(link.search({ as: "manager", reportId: "stale" })).toEqual({
+      as: "manager",
+      reportId: "report",
+    });
   });
   it("withholds wrong-subject reports", () => {
     s.brief.subjectId = "other";

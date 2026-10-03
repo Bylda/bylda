@@ -59,7 +59,7 @@ function ReportPost({ id, viewer }: { id: string; viewer: Viewer }) {
               <Button asChild className="self-start">
                 <Link
                   to={b.kind === "daily_manager" ? "/app/reports/daily" : "/app/reports/weekly"}
-                  search={true}
+                  search={(previous) => ({ ...previous, reportId: b.id })}
                 >
                   Open report
                 </Link>
