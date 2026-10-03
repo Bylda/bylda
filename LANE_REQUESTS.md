@@ -9,6 +9,10 @@ a shell tweak — you do **two** things:
 
 When the shared version lands, delete your copy.
 
+### #72 — Lane 6 room kinds contracts (Mayur)
+
+O8–O11 need room-linked briefs/coaching results/calls, subject-scoped app posts, pin/member/presence/curated-link queries and deal/stakeholder context. Only daily-brief has a shared report message; coaching/team/deal feeds are empty in current mocks. Never substitute workspace-wide coaching or invent deal values. Public Brief resolves the shared report by exact ID and manager team subject; free-form app statements withheld. All rep kind feeds restricted before raw messages. LocalKindRoom composes kit ContextPanel and #34 note; route component selects actual Room.kind without editing router config. Open — Ansh/data owner.
+
 ## Rules
 
 - **Never** edit another lane's folder, even for a one-line fix.
