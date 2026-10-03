@@ -9,6 +9,10 @@ a shell tweak — you do **two** things:
 
 When the shared version lands, delete your copy.
 
+### #70 — Lane 6 rooms feed contracts (Mayur)
+
+O1/O2 need viewer-scoped membership/subjects, app-message confidence/sample, structured insights with threshold metadata, typed attachments, reply/thread/context queries and send/react/join/share mutations. Current mocks return raw messages to every role; rep feed content is withheld before mounting message hooks. Structured app posts without evidence metadata stay withheld. Human call attachments require a matching public useCalls item; copied moment claims aren't rendered. Directory shows supplied counts and membership only. Reuse #34 table/note; lane-local message rows and tab navigation compose the kit and need folding into it. Open — Ansh/data owner. Specialized room kind placeholders dispatch through O2 until their own section lands.
+
 ## Rules
 
 - **Never** edit another lane's folder, even for a one-line fix.
