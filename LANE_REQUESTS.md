@@ -9,6 +9,10 @@ a shell tweak — you do **two** things:
 
 When the shared version lands, delete your copy.
 
+### #71 — Lane 6 room tabs contracts (Mayur)
+
+O3–O7 need room-linked calls/reports/files, verified subject scope for text/evidence, member lists, creation/visibility/watch/delivery settings and mutations. Current O3 uses the public scoped/gated insight hook; personal bodies and sample labels withheld. O4/O5 use exact-room message attachment IDs plus accessible public Call/Brief data, never workspace-wide substitutes. O6 has no file source; O7 displays only supplied Room fields and marks other fields unavailable. Raw tabs restricted for reps before fetching. Reuse #34 table/note; LocalRoomTabs composition stays lane-local. Open — Ansh/data owner.
+
 ### #70 — Lane 6 rooms feed contracts (Mayur)
 
 O1/O2 need viewer-scoped membership/subjects, app-message confidence/sample, structured insights with threshold metadata, typed attachments, reply/thread/context queries and send/react/join/share mutations. Current mocks return raw messages to every role; rep feed content is withheld before mounting message hooks. Structured app posts without evidence metadata stay withheld. Human call attachments require a matching public useCalls item; copied moment claims aren't rendered. Directory shows supplied counts and membership only. Reuse #34 table/note; lane-local message rows and tab navigation compose the kit and need folding into it. Open — Ansh/data owner. Specialized room kind placeholders dispatch through O2 until their own section lands.
