@@ -13,7 +13,7 @@ import { SOURCE } from "./source";
 /**
  * Mock inbox for the viewer. Rep scoping is by whose row it is, never by type: a rep sees their
  * own regression rows, and team-level alerts and other reps' rows stay hidden (CLAUDE.md §4,
- * "Reps never see peer comparisons or team rankings"; rules per #72). There is no backend
+ * "Reps never see peer comparisons or team rankings"; rules per LANE_REQUESTS #72). There is no backend
  * guarantee (RLS is org-wide), so the data layer enforces it. Ownership is the recipient, the
  * real table's `user_id`; `Notification` has no owner field, so it is the inbox a row sits in
  * (mocks/collab.ts). Fail-closed: a rep with no inbox sees nothing. Real mode is already

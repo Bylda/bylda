@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import type { DataCtx } from "../core/context";
 import { withEmpty, type DataResult } from "../core/query";
 import { resolveSource } from "../core/source";
-import { DM_THREADS, NOTIFICATIONS, ROOMS, SAVED_COUNT } from "../mocks/collab";
+import { DM_THREADS, ROOMS, SAVED_COUNT } from "../mocks/collab";
 import { PEOPLE } from "../mocks/people";
+import { useNotifications } from "../notifications/hooks";
 import { useDataCtx } from "../session/hooks";
 import { fetchSidebar } from "./fetchers";
 import type { SidebarData } from "./map";
@@ -46,14 +47,15 @@ export function useSidebar(): DataResult<SidebarData> {
   return withEmpty(q, (d) => d.rooms.length + d.people.length + d.dms.length === 0);
 }
 
-/** Rail / bell dot — a boolean, never a count (N1 rule). */
+/**
+ * Rail / bell dot — a boolean, never a count (N1 rule). Derived from the notifications list
+ * query itself (same key, same cache), so an optimistic mark-read moves the dot with the rows.
+ */
 export function useHasUnread(): DataResult<boolean> {
-  const ctx = useDataCtx();
-  const q = useQuery({
-    queryKey: shellKeys.unread(ctx?.userId ?? ""),
-    // GAP: behavioral notification types — notifications table exists but lacks V1 types (GAPS 14)
-    queryFn: async () => NOTIFICATIONS.some((n) => !n.read),
-    enabled: !!ctx,
-  });
-  return withEmpty(q, () => false);
+  const q = useNotifications();
+  return {
+    ...q,
+    data: q.data?.some((n) => !n.read),
+    isEmpty: false,
+  } as unknown as DataResult<boolean>;
 }

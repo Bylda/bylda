@@ -5,6 +5,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import type { DataCtx } from "../core/context";
 import { setSourceOverride, type Source } from "../core/source";
 import { NOTIFICATIONS, REP_NOTIFICATIONS } from "../mocks/collab";
+import { useHasUnread } from "../shell/hooks";
 import type { Notification, NotificationType } from "../types";
 
 const DANA: DataCtx = {
@@ -35,7 +36,7 @@ const markMock = vi.mocked(markRead);
  * Figma N2 (31:1258) tab counts: All 9 · Needs you 3 · Behavior 4 · Coaching 2 · Reports 1 · System 1.
  * Behavior + Coaching + Reports + System is only 8, so one type belongs to no category tab. The data
  * type has no category field; this is the mapping the counts imply (important_call is the orphan).
- * "Needs you" is the lane rule (#72): unread AND (tone regress or attention, OR an emerging
+ * "Needs you" is the lane rule (LANE_REQUESTS #72): unread AND (tone regress or attention, OR an emerging
  * pattern), with no System exception. The lane implements it; it is mirrored here so the fixtures
  * are proven to exercise it.
  */
@@ -73,7 +74,11 @@ const seedDb = () => {
   }));
 };
 
-type Probe = { list: Notification[] | undefined; mark: ReturnType<typeof useMarkNotificationRead> };
+type Probe = {
+  list: Notification[] | undefined;
+  dot: boolean | undefined;
+  mark: ReturnType<typeof useMarkNotificationRead>;
+};
 let qc: QueryClient;
 let probe: Probe;
 let unmount: () => void;
@@ -83,9 +88,10 @@ function mount(ctx: DataCtx) {
   qc = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
-  probe = { list: undefined, mark: undefined as never };
+  probe = { list: undefined, dot: undefined, mark: undefined as never };
   function Harness() {
     probe.list = useNotifications().data;
+    probe.dot = useHasUnread().data;
     probe.mark = useMarkNotificationRead();
     return null;
   }
@@ -141,6 +147,7 @@ describe("fixtures match Figma N1 / N2", () => {
     expect(new Set(NOTIFICATIONS.map((n) => n.id)).size).toBe(9);
     const at = NOTIFICATIONS.map((n) => Date.parse(n.createdAt));
     expect(at).toEqual([...at].sort((a, b) => b - a));
+    expect(Math.max(...at)).toBeLessThanOrEqual(Date.now());
   });
 
   it("covers every severity, read and unread, with no body line", () => {
@@ -158,8 +165,10 @@ describe("fixtures match Figma N1 / N2", () => {
     expect(NOTIFICATIONS.filter(needsYou).map((n) => n.id)).toEqual(["n1", "n2", "n3"]);
   });
 
-  it("splits 4 Today / 5 Earlier around 30 Sep and reproduces the tab counts", () => {
-    const today = NOTIFICATIONS.filter((n) => n.createdAt.startsWith("2026-09-30"));
+  it("splits 4 Today / 5 Earlier relative to now, and reproduces the tab counts", () => {
+    const sameDay = (iso: string, now: Date) => new Date(iso).toDateString() === now.toDateString();
+    const now = new Date();
+    const today = NOTIFICATIONS.filter((n) => sameDay(n.createdAt, now));
     expect(today).toHaveLength(4);
     expect(NOTIFICATIONS.length - today.length).toBe(5);
     expect(counts(NOTIFICATIONS)).toEqual({
@@ -171,20 +180,67 @@ describe("fixtures match Figma N1 / N2", () => {
       system: 1,
     });
   });
+
+  it.each([
+    ["just after midnight", new Date(2026, 0, 15, 0, 3)],
+    ["mid-morning", new Date(2026, 0, 15, 9, 30)],
+    ["late evening", new Date(2026, 0, 15, 23, 59)],
+  ])("keeps 4 Today / 5 Earlier %s (dates are relative, not fixed)", async (_label, at) => {
+    vi.useFakeTimers();
+    vi.setSystemTime(at);
+    try {
+      vi.resetModules();
+      const fresh = await import("../mocks/collab");
+      const rows = [...fresh.NOTIFICATIONS, ...(fresh.REP_NOTIFICATIONS.u_jordan ?? [])];
+      for (const list of [fresh.NOTIFICATIONS, fresh.REP_NOTIFICATIONS.u_jordan]) {
+        const ts = list.map((n) => Date.parse(n.createdAt));
+        expect(ts).toEqual([...ts].sort((a, b) => b - a));
+        expect(Math.max(...ts)).toBeLessThanOrEqual(at.getTime());
+      }
+      const today = fresh.NOTIFICATIONS.filter(
+        (n) => new Date(n.createdAt).toDateString() === at.toDateString(),
+      );
+      expect(today).toHaveLength(4);
+      expect(rows.length).toBe(13);
+    } finally {
+      vi.useRealTimers();
+      vi.resetModules();
+    }
+  });
 });
 
-describe("rep view (CLAUDE.md §4, #72) — scoped by whose row it is", () => {
+describe("rep view (CLAUDE.md §4, LANE_REQUESTS #72) — scoped by whose row it is", () => {
   beforeEach(() => useSource("mock"));
 
-  it("manager sees the nine Figma rows and none of the rep's", async () => {
+  it("manager sees exactly the nine Figma rows and none of the rep's", async () => {
     const rows = await loadNotifications(DANA);
     expect(rows).toHaveLength(9);
-    expect(rows.map((n) => n.id)).not.toContain("n10");
+    const mine = new Set((REP_NOTIFICATIONS.u_jordan ?? []).map((n) => n.id));
+    for (const n of rows) expect(mine.has(n.id)).toBe(false);
   });
 
-  it("rep sees exactly their own regression row", async () => {
+  it("rep sees only their own four rows: regression, call, improvement, coaching", async () => {
     const rows = await loadNotifications(JORDAN);
-    expect(rows.map((n) => [n.id, n.type])).toEqual([["n10", "behavior_regression"]]);
+    expect(rows.map((n) => [n.id, n.type])).toEqual([
+      ["n10", "behavior_regression"],
+      ["n13", "important_call"],
+      ["n11", "behavior_improvement"],
+      ["n12", "coaching_acknowledged"],
+    ]);
+    expect(rows.some((n) => n.read)).toBe(true);
+    expect(rows.some((n) => !n.read)).toBe(true);
+  });
+
+  it("every rep-facing row is about Jordan alone: second person, no one else named", async () => {
+    for (const n of await loadNotifications(JORDAN)) {
+      expect(`${n.title} ${n.body ?? ""}`).toMatch(/\b(Your|You)\b/);
+      expect(`${n.title} ${n.body ?? ""}`).not.toMatch(
+        /Sarah|Alex|Mia|Priya|Theo|Nina|Dana|Kiran|team|manager|Aircall|integration/i,
+      );
+      expect(["integration_problem", "emerging_pattern", "methodology_breakdown"]).not.toContain(
+        n.type,
+      );
+    }
   });
 
   it("rep never sees a manager-inbox row: team alerts, other reps, the manager brief", async () => {
@@ -217,14 +273,31 @@ describe("useMarkNotificationRead — mock mode", () => {
     expect(markMock).not.toHaveBeenCalled();
   });
 
+  it("bell dot reads the same cache: it clears when the last unread row is marked", async () => {
+    await flush();
+    expect(probe.dot).toBe(true);
+    for (const id of ["n1", "n2"]) act(() => probe.mark.mutate(id));
+    await flush();
+    expect(probe.dot).toBe(true); // n3 still unread
+    act(() => probe.mark.mutate("n3"));
+    await flush();
+    expect(probe.dot).toBe(false);
+    expect(cached().every((n) => n.read)).toBe(true);
+  });
+
   it("works the same for a rep, on their own row", async () => {
     unmount();
     mount(JORDAN);
     await flush();
-    expect(cached().map((n) => n.id)).toEqual(["n10"]);
+    expect(cached().map((n) => n.id)).toEqual(["n10", "n13", "n11", "n12"]);
+    expect(probe.dot).toBe(true);
     act(() => probe.mark.mutate("n10"));
     await flush();
     expect(isRead("n10")).toBe(true);
+    expect(probe.dot).toBe(true); // n13 still unread
+    act(() => probe.mark.mutate("n13"));
+    await flush();
+    expect(probe.dot).toBe(false);
   });
 
   it("rolls back and surfaces the error when the write fails", async () => {
@@ -252,6 +325,7 @@ describe("useMarkNotificationRead — real mode", () => {
     await flush();
     expect(isRead("n1")).toBe(true); // write still in flight
     expect(counts(cached()).needsYou).toBe(2);
+    expect(probe.dot).toBe(true);
     db.find((r) => r.id === "n1")!.read = true;
     write.resolve();
     await flush();
