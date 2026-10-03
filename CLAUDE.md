@@ -225,6 +225,15 @@ Straight from Dev Handoff (`1:21` → Implementation rules, `21:143`):
 - **Voice**: sharp sales colleague. Casual, concise, contractions.
 - **Every screen has empty / loading / error states** (page 17, `Y1`–`Y13`).
 
+Notification visibility (full spec: docs/notification-visibility.md)
+- Access is decided by the notification's subject (who or what it is about), never by its type.
+- Rep: only notifications whose single subject is that rep. No other reps, no team patterns, no multi-rep rows even when they are one of the subjects, no integration or system alerts.
+- Manager: themselves and reps in their scope. V1 scope = the whole workspace; teams can narrow it later.
+- Owner and Admin: everything in the workspace. Admin has the same visibility as Owner.
+- Integration and system alerts: Owner yes, Admin yes, Manager yes, Rep no.
+- The payload counts: a rep-facing title or body must not mention anyone else.
+- Backend-enforced and default-deny. No subject means not returned. Mock and frontend filters are not enforcement.
+
 ## 5. Data
 
 **Screens import ONLY from `@/lib/data`.** No `fetch`, no `supabase.*`, no
