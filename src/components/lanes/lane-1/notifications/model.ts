@@ -27,19 +27,15 @@ const CATEGORY: Record<NotificationType, Category | null> = {
 };
 
 /**
- * "Needs you" = unread AND one of: Regression (`regress`), Needs review (`attention`), a forming
- * Pattern (`info` — the emerging pattern), or a System row with a regress tone (a broken
- * integration). Improvement and Info (FYI) never qualify, nor does a System row that isn't
- * regress. Derived from `toneOf` + type because the data type can't say it (#69, #71).
+ * "Needs you" = unread AND (tone is regress or attention, OR the type is an emerging pattern).
+ * Improvement and any other info-tone row (FYI) never qualify. No category is exempt: a broken
+ * integration is regress/attention like any other. Derived from `toneOf` + type because the data
+ * type can't say it (#69, #71).
  */
-const NEEDS_YOU_TONES: readonly TagTone[] = ["regress", "attention", "info"];
+const ACTION_TONES: readonly TagTone[] = ["regress", "attention"];
 
-export const needsYou = (n: Notification): boolean => {
-  if (n.read) return false;
-  const tone = toneOf(n);
-  if (CATEGORY[n.type] === "system") return tone === "regress";
-  return NEEDS_YOU_TONES.includes(tone);
-};
+export const needsYou = (n: Notification): boolean =>
+  !n.read && (ACTION_TONES.includes(toneOf(n)) || n.type === "emerging_pattern");
 
 export const matches = (n: Notification, key: FilterKey): boolean =>
   key === "all" ? true : key === "needs_you" ? needsYou(n) : CATEGORY[n.type] === key;
