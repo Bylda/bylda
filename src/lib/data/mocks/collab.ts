@@ -209,52 +209,138 @@ export const DM_THREADS: DmThread[] = [
 
 export const SAVED_COUNT = 12;
 
+/**
+ * N1 / N2 — the manager's (Dana's) inbox: the nine rows in Figma (31:1101 drawer, 31:1258 center), newest first.
+ * Every type and every severity appears once; the three unread rows are the three that
+ * carry a coloured dot. "Today" = 30 Sep 2026 (Wed), so Yesterday / Mon / Sun / Sat line up
+ * with the frame labels. Figma shows no body line on any row, so `body` is null throughout.
+ * Row 8 is `regress` because Figma colours INTEGRATION PROBLEM red; the legacy mapper
+ * (map.ts) still derives `attention` from the type until C-22 stores severity per row.
+ * Hrefs follow the routes lane screens already match on (/app/calls/:id, /app/coaching/:id).
+ */
 export const NOTIFICATIONS: Notification[] = [
   {
     id: "n1",
     type: "behavior_regression",
     typeLabel: "BEHAVIOR REGRESSION",
     severity: "regress",
-    title: "Jordan’s pause after objections dropped to 0.4s",
-    body: "4 of 6 price objections this week.",
-    href: "/app/intelligence/behaviors/pause_after_objection",
+    title: "Sarah’s interruptions are 18% above her baseline.",
+    body: null,
+    href: "/app/intelligence/behaviors/interrupting_during_objections",
+    read: false,
+    createdAt: "2026-09-30T08:10:00Z",
+  },
+  {
+    id: "n2",
+    type: "important_call",
+    typeLabel: "IMPORTANT CALL",
+    severity: "attention",
+    title: "Acme Logistics stalled after a price objection — worth 90 seconds.",
+    body: null,
+    href: "/app/calls/call_acme",
     read: false,
     createdAt: "2026-09-30T08:04:00Z",
   },
   {
-    id: "n2",
+    id: "n3",
+    type: "emerging_pattern",
+    typeLabel: "EMERGING PATTERN",
+    severity: "info",
+    title: "Price objections up 31% across the team.",
+    body: null,
+    href: "/app/intelligence/patterns",
+    read: false,
+    createdAt: "2026-09-30T07:58:00Z",
+  },
+  {
+    id: "n4",
     type: "report_ready",
     typeLabel: "REPORT READY",
     severity: "info",
-    title: "Weekly Sales Behavior Report — Wk 39",
+    title: "Daily Manager Brief — 2 min read.",
     body: null,
-    href: "/app/reports/weekly",
-    read: false,
-    createdAt: "2026-09-29T07:00:00Z",
+    href: "/app/reports/daily",
+    read: true,
+    createdAt: "2026-09-30T07:30:00Z",
   },
   {
-    id: "n3",
+    id: "n5",
+    type: "coaching_completed",
+    typeLabel: "COACHING COMPLETED",
+    severity: "improve",
+    title: "Alex’s focus held for 3 weeks.",
+    body: null,
+    href: "/app/coaching/cf_alex_pause/result",
+    read: true,
+    createdAt: "2026-09-29T10:00:00Z",
+  },
+  {
+    id: "n6",
+    type: "coaching_acknowledged",
+    typeLabel: "COACHING ACKNOWLEDGED",
+    severity: "info",
+    title: "Jordan acknowledged “Pause after objections”.",
+    body: null,
+    href: "/app/coaching/cf_jordan_pause",
+    read: true,
+    createdAt: "2026-09-29T09:00:00Z",
+  },
+  {
+    id: "n7",
+    type: "methodology_breakdown",
+    typeLabel: "METHODOLOGY BREAKDOWN",
+    severity: "attention",
+    title: "Economic buyer missing on 3 deals in Pricing.",
+    body: null,
+    href: "/app/methodology",
+    read: true,
+    createdAt: "2026-09-28T09:00:00Z",
+  },
+  {
+    id: "n8",
     type: "integration_problem",
     typeLabel: "INTEGRATION PROBLEM",
-    severity: "attention",
-    title: "Aircall stopped syncing on Sep 27",
-    body: "23 calls are waiting.",
+    severity: "regress",
+    title: "Aircall disconnected — 23 calls waiting.",
+    body: null,
     href: "/app/connections",
     read: true,
     createdAt: "2026-09-27T12:00:00Z",
   },
   {
-    id: "n4",
-    type: "coaching_completed",
-    typeLabel: "COACHING COMPLETED",
+    id: "n9",
+    type: "behavior_improvement",
+    typeLabel: "BEHAVIOR IMPROVEMENT",
     severity: "improve",
-    title: "Alex held the pause after objections",
-    body: "1.8s over 5 objections (target 1.5s).",
-    href: "/app/coaching/cf_alex_pause/result",
+    title: "Priya’s next-step rate reached her target (81%).",
+    body: null,
+    href: "/app/team/reps/u_priya",
     read: true,
-    createdAt: "2026-09-25T10:00:00Z",
+    createdAt: "2026-09-26T10:00:00Z",
   },
 ];
+
+/**
+ * Inboxes of mock viewers other than the manager, keyed by owner = recipient (the real table's
+ * `user_id`). `Notification` carries no owner field, so who a row belongs to is exactly which
+ * inbox it sits in; the loader in notifications/hooks.ts never reads across inboxes for a rep.
+ * Kept out of NOTIFICATIONS so the manager's feed stays the nine Figma rows.
+ */
+export const REP_NOTIFICATIONS: Record<string, Notification[]> = {
+  u_jordan: [
+    {
+      id: "n10",
+      type: "behavior_regression",
+      typeLabel: "BEHAVIOR REGRESSION",
+      severity: "regress",
+      title: "Your pause after objections dropped to 0.4s.",
+      body: null,
+      href: "/app/rep/progress",
+      read: false,
+      createdAt: "2026-09-30T08:02:00Z",
+    },
+  ],
+};
 
 export const REPORTS: ReportListItem[] = [
   {
