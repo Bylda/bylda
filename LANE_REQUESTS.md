@@ -9,6 +9,10 @@ a shell tweak — you do **two** things:
 
 When the shared version lands, delete your copy.
 
+### #69 — Lane 6 report delivery content (Mayur)
+
+P3/P4/P10 need typed summaries with confidence/sample, daily rep briefs scoped to an exact viewer, manager coaching/behavior rows, coverage metrics, call ownership and clip lengths, delivery metadata, and closed-deal counts for outcome statements. Current Brief has generic text and insights only; no daily_rep fixture exists. Section 3 renders supplied safe observations and explicit gaps, never substitutes weekly content for a daily rep brief. Sending/assignment/clip actions remain unavailable. Manager access checks exact team subject; personal previews require exact viewer subject. Open — Ansh/data owner. See `src/components/lanes/lane-4/reports/DeliveryQA.md`.
+
 ## Rules
 
 - **Never** edit another lane's folder, even for a one-line fix.
