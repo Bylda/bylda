@@ -5,6 +5,7 @@ const state = vi.hoisted(() => ({
   viewer: {} as { data?: Viewer; isLoading: boolean; error: unknown },
   brief: {} as { data?: Brief | null; isLoading: boolean; error: unknown; isEmpty?: boolean },
   load: vi.fn(),
+  link: vi.fn(),
 }));
 vi.mock("@/lib/data", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/data")>()),
@@ -15,7 +16,10 @@ vi.mock("@/lib/data", async (importOriginal) => ({
   },
 }));
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children }: { children: React.ReactNode }) => <a>{children}</a>,
+  Link: (props: { children: React.ReactNode }) => {
+    state.link(props);
+    return <a>{props.children}</a>;
+  },
 }));
 import { LocalReportDelivery } from "./LocalReportDelivery";
 import { ForbiddenForRoleError } from "@/lib/data";
@@ -44,10 +48,19 @@ beforeEach(() => {
     error: null,
   };
   state.load.mockClear();
+  state.link.mockClear();
 });
 const render = (delivery: "email" | "push" | "print" = "email") =>
   renderToStaticMarkup(<LocalReportDelivery delivery={delivery} />);
 describe("shell-free delivery boundaries", () => {
+  it("opens the displayed brief instead of a stale report selection", () => {
+    render();
+    const link = state.link.mock.calls.find(([props]) => props.to === "/app/reports/daily")![0];
+    expect(link.search({ as: "manager", reportId: "stale" })).toEqual({
+      as: "manager",
+      reportId: "brief",
+    });
+  });
   it("checks access before mounting report hooks", () => {
     state.viewer.data!.role = "rep";
     expect(render()).toContain("Y9");

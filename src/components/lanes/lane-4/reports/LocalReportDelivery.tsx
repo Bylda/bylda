@@ -137,7 +137,7 @@ function DeliveryBody({
           <Button asChild className="self-start print:hidden">
             <Link
               to={delivery === "print" ? "/app/reports/weekly" : "/app/reports/daily"}
-              search={true}
+              search={(previous) => ({ ...previous, reportId: brief.id })}
             >
               Open full report
             </Link>
