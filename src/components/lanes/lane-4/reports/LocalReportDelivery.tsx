@@ -185,7 +185,7 @@ export function LocalReportDelivery({ delivery }: { delivery: Delivery }) {
   return (
     <main
       className={cn(
-        "min-h-screen bg-by-surface-base px-4 py-8 text-by-text-primary print:bg-by-surface-raised print:p-0",
+        "min-h-screen bg-by-surface-canvas px-4 py-8 text-by-text-primary print:bg-by-surface-raised print:p-0",
         delivery === "print" && "px-0 py-0",
         delivery === "push" && "px-0",
       )}
