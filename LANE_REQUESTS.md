@@ -13,6 +13,22 @@ When the shared version lands, delete your copy.
 
 O14 needs create-room mutation, purpose/posting-rule/member/private-visibility schema and Slack mirroring. Draft only; no save simulation. Reuse #34 fields/notes and #38 switches; accessible Radix dialog (560px, focus trap/Escape/cancel) is lane-local pending kit folding. O12/O13 need subject-scoped messages/attachments, participant profiles, shared counts, send/reply/Coach answer/practice contracts. DMs require exact thread participation for every role before messages; Coach fixed Jordan attachment resolves only against useMyCoaching with exact viewer repId. Personal raw text and performance summaries withheld without scope/confidence/sample. Own assignment identity/status and navigation available; no fabricated Coach answer, peer comparison, clip or persistence. Open — Ansh/data owner.
 
+### #72 — Lane 6 room kinds contracts (Mayur)
+
+O8–O11 need room-linked briefs/coaching results/calls, subject-scoped app posts, pin/member/presence/curated-link queries and deal/stakeholder context. Only daily-brief has a shared report message; coaching/team/deal feeds are empty in current mocks. Never substitute workspace-wide coaching or invent deal values. Public Brief resolves the shared report by exact ID and manager team subject; free-form app statements withheld. All rep kind feeds restricted before raw messages. LocalKindRoom composes kit ContextPanel and #34 note; route component selects actual Room.kind without editing router config. Open — Ansh/data owner.
+
+### #71 — Lane 6 room tabs contracts (Mayur)
+
+O3–O7 need room-linked calls/reports/files, verified subject scope for text/evidence, member lists, creation/visibility/watch/delivery settings and mutations. Current O3 uses the public scoped/gated insight hook; personal bodies and sample labels withheld. O4/O5 use exact-room message attachment IDs plus accessible public Call/Brief data, never workspace-wide substitutes. O6 has no file source; O7 displays only supplied Room fields and marks other fields unavailable. Raw tabs restricted for reps before fetching. Reuse #34 table/note; LocalRoomTabs composition stays lane-local. Open — Ansh/data owner.
+
+### #70 — Lane 6 rooms feed contracts (Mayur)
+
+O1/O2 need viewer-scoped membership/subjects, app-message confidence/sample, structured insights with threshold metadata, typed attachments, reply/thread/context queries and send/react/join/share mutations. Current mocks return raw messages to every role; rep feed content is withheld before mounting message hooks. Structured app posts without evidence metadata stay withheld. Human call attachments require a matching public useCalls item; copied moment claims aren't rendered. Directory shows supplied counts and membership only. Reuse #34 table/note; lane-local message rows and tab navigation compose the kit and need folding into it. Open — Ansh/data owner. Specialized room kind placeholders dispatch through O2 until their own section lands.
+
+### #69 — Lane 6 report delivery content (Mayur)
+
+P3/P4/P10 need typed summaries with confidence/sample, daily rep briefs scoped to an exact viewer, manager coaching/behavior rows, coverage metrics, call ownership and clip lengths, delivery metadata, and closed-deal counts for outcome statements. Current Brief has generic text and insights only; no daily_rep fixture exists. Section 3 renders supplied safe observations and explicit gaps, never substitutes weekly content for a daily rep brief. Sending/assignment/clip actions remain unavailable. Manager access checks exact team subject; personal previews require exact viewer subject. Open — Ansh/data owner. See `src/components/lanes/lane-4/reports/DeliveryQA.md`.
+
 ## Rules
 
 - **Never** edit another lane's folder, even for a one-line fix.
@@ -175,6 +191,22 @@ G12 `cf_alex_pause` / `u_alex` is **Pause after objection**, assigned 2026-09-10
 ### #60 — `fold-into-kit`: assignment dialog and coaching access (Mayur)
 
 Reuse #34 `LocalField` / `LocalSelect` and #40 `LocalTextarea` directly; existing kit Button/Avatar/Tag/DataBoundary/SystemState compose the section. `LocalAssignmentModal` in G2 adds the missing accessible Radix dialog (focus trap, Escape/cancel, modal scrim, pending dismissal protection); `LocalCoachingDenied` overrides the kit Y9 sample copy because it names Sarah/Dana and implies a peer-sharing exception. `LocalCoachingError` and `LocalMissing` compose retry/forbidden and missing-contract feedback. Semantic tokens; no shared-kit edits or fixture overrides. Fold these compositions into the kit. Open — Ansh.
+
+### #65 — Reports section 2 subject and privacy contracts (Mayur)
+
+P7/P8/P9/P6 use public useBrief unchanged. Latest-by-kind cannot select by route subject; screens require kind + exact subjectId equality for rep/team/behavior, reject wrong reportId/subject, and gate reps before mounting useBrief (only own P7). Shared weekly_rep is Jordan/Wk39/5-min/Sep29 with daily-style sections, including a team outcome pattern and a body comparing top performers. P7 renders only sole-subject non-pattern statements, withholds bodies/sample labels and verifies every evidence call against public useCalls rep ownership. Team/peer/ranking headlines are withheld. Need typed report-scope, subject lookup, scope-safe narrative/evidence and metadata. No peer-copy exception. P8 and P9 have no shared briefs; missing views explicitly show the report layout awaiting data. Behavior subject binding needs an explicit behavior key rather than inferring one from a title or team. Open — Ansh / Tirth.
+
+### #66 — Reports section 2 measurement and content contracts (Mayur)
+
+P7 lacks report-period metrics, comparisons, focus snapshot/check-in and ranked moments. P8 lacks period coverage, fixed-range trajectory, measured coaching results and by-rep rows. P9 lacks supported strong/weak descriptions, sequence rates, event evidence and closed-outcome metadata. P6 lacks mapped outline sections, executive summary/metric quality, collaborators and comments. Current coaching/call aggregates are not substituted for historical reports. Every statement requires confidence, finite positive sample and the public rep/team analyzed-call threshold. Brief has no OutcomeAssociation/n_closed linkage, so recognizable closed-outcome claims are withheld even when sampleSize is large. Need structured outcome references/closed counts (minimum 30), measured series + fixed behavior ranges, qualified narratives and section mappings centrally. No local fixture/value overrides, projections or chart placeholders that assert trends. Open — Ansh / Tirth.
+
+### #67 — Reports section 2 actions (Mayur)
+
+Public reports API remains read-only (#17). Share/delivery/PDF/team-focus actions are disabled with visible explanation. No clipboard copy is described as delivery, no local comments/persistence, no inferred coaching recommendation. P6 native disclosures and contents navigation work locally; report action functionality remains incomplete. Open — Ansh / Tirth.
+
+### #68 — fold-into-kit: report detail compositions (Mayur)
+
+Reuse #34 LocalSettingsNote and LocalSettingsTable, kit Button/DataBoundary/SystemState/InsightCard/EvidenceBlock first. LocalReportDetail in lane-4/reports composes missing report metrics/panels, role/subject boundaries and native accessible outline disclosures/contents. No equivalent report-detail fold entry exists; fold these compositions into the kit. Saved geometry uses semantic token utilities and existing layout scales. Visual differences and test evidence are recorded in reports/Section2QA.md. Open — Ansh.
 
 ### #61 — G2/G12 visual QA (Mayur)
 
