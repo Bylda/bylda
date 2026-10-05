@@ -13,6 +13,7 @@ export {
   insightMinCalls,
   insightScope,
   isInsightSufficient,
+  patternShowsConfidence,
 } from "./types";
 
 export { mocksForced, resolveSource, setSourceOverride, type Source } from "./core/source";
@@ -42,6 +43,7 @@ export {
 export {
   useBehaviors,
   useBehaviorDetail,
+  useTeamBehaviors,
   useRepScores,
   usePatterns,
   useObjectionStats,

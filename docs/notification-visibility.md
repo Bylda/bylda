@@ -8,6 +8,8 @@ Notification visibility (full spec: docs/notification-visibility.md)
 - Manager: themselves and reps in their scope. V1 scope = the whole workspace; teams can narrow it later.
 - Owner and Admin: everything in the workspace. Admin has the same visibility as Owner.
 - Integration and system alerts: Owner yes, Admin yes, Manager yes, Rep no.
+- Coach and Viewer: undefined, so they see nothing.
+- Mark-read writes follow the same authorization as reads: a user can mark only a notification they may read. Anything else fails as not found.
 - The payload counts: a rep-facing title or body must not mention anyone else.
 - Backend-enforced and default-deny. No subject means not returned. Mock and frontend filters are not enforcement.
 
@@ -29,6 +31,9 @@ Frontend filtering is not authorization. Mock filtering is not authorization. Th
 | Admin | Same as Owner |
 | Manager | Themselves, reps in their scope, patterns across that scope, integration and system alerts |
 | Rep | Only notifications whose single subject is that rep |
+| Coach, Viewer | Undefined. Undefined roles see nothing. |
+
+Coach and Viewer exist as V1 roles, but this spec grants them no visibility, so they receive no notifications: empty list, no unread dot. The mock enforces this with an allowlist (owner, admin, manager, rep). Any role added later gets the same default until this table says otherwise.
 
 ## Core privacy principle
 
@@ -89,15 +94,20 @@ Examples: CRM disconnected, dialer authentication expired, call ingestion failed
 
 ## Notification subject model
 
-Every notification MUST have an explicit subject. Access must not be inferred from notification type.
+Every notification has a subject: who or what it is about. Access must not be inferred from notification type.
 
-Required:
+The requirement is the outcome: **a user receives only the notifications they are authorized to see, payload included.** How the backend gets there is its decision. Either of these is acceptable:
+
+- subject columns stored on the row and checked at read, or
+- a role-aware writer that creates a row in the per-recipient table only for users who may see that notification.
+
+The examples below describe a subject with these fields. The names are illustrative, not a required schema:
 
 - `subject_type`: `rep` | `team` | `workspace` | `integration` | `system`
 - `subject_id`: ID of that rep, team, workspace or integration
 - `workspace_id`
 
-Any further fields (recipient or owner ID, team ID, and so on) are the backend's decision, not a requirement of this spec.
+Any further fields (recipient or owner ID, team ID, and so on) are the backend's decision too.
 
 Two notifications can share a type and differ in visibility:
 
@@ -155,6 +165,19 @@ Examples: missing `subject_id`, unknown `workspace_id`, a reference to a deleted
 
 Privacy fails closed, not open.
 
+## Mark-read writes
+
+Marking a notification read is a write on the same row, so it is authorized by the same rule as reading it: **a user may mark read only a notification they are authorized to see.** The subject, scope and role rules above apply unchanged.
+
+- A rep cannot mark another rep's notification, a team notification or an integration alert, whether or not the id is real.
+- A user the spec gives no visibility (Coach, Viewer, any later role) cannot mark anything.
+- An id the user may not read gets the same response as an id that does not exist (not found), so a write never confirms that a notification exists.
+- This holds per id for "mark all": each id is checked on its own, and one denied id leaves the others as they were.
+
+The mock checks the id against the viewer's own inbox. That is not enforcement (see below). The real write, `update notifications set read = true where id = ?`, has no `user_id` filter, so it relies on the table's row-level security (live: `own_rows_update`, below).
+
+**Policies exist live, not in the migrations.** The live project has row-level security on `public.notifications` with `own_rows_read` (SELECT, `user_id = auth.uid()`), `own_rows_update` (UPDATE, `user_id = auth.uid()` for both using and check) and `service_role_all`; authenticated users have no insert or delete policy. None of it is in the migrations (the table is created in `20260516000000_squash.sql`, and `20260701000007_notifications.sql` only inserts), so an environment built from the repo would have none. The request is to add them to the migrations (`LANE_REQUESTS.md` F-1). The table is per recipient (`user_id`), so real-mode visibility is decided when the backend writes a row, not when it reads one.
+
 ## Backend enforcement
 
 Every notification retrieval path must apply these rules.
@@ -201,6 +224,14 @@ A Rep must not be able to obtain unauthorized notification information by callin
 15. A Manager cannot see Reps or patterns outside their assigned team scope.
 16. Realtime updates follow exactly the same rules as API retrieval.
 17. Push, mobile, email, Slack/Teams and search follow exactly the same rules as API retrieval.
+
+**Required now (writes)**
+
+18. Rep A cannot mark Rep B's notification read, by its id.
+19. A team-level, integration or system notification cannot be marked read by a Rep.
+20. An id the user may not read and an id that does not exist return the same response.
+21. A user with no defined visibility (Coach, Viewer) cannot mark anything.
+22. In "mark all", a denied id does not affect the others.
 
 ## Canonical rule
 
