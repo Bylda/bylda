@@ -169,9 +169,9 @@ Marking a notification read is a write on the same row, so it is authorized by t
 - An id the user may not read gets the same response as an id that does not exist (not found), so a write never confirms that a notification exists.
 - This holds per id for "mark all": each id is checked on its own, and one denied id leaves the others as they were.
 
-The mock checks the id against the viewer's own inbox. That is not enforcement (see below). The real write, `update notifications set read = true where id = ?`, has no `user_id` filter, so it is only as safe as the table's row-level security.
+The mock checks the id against the viewer's own inbox. That is not enforcement (see below). The real write, `update notifications set read = true where id = ?`, has no `user_id` filter, so it relies on the table's row-level security (live: `own_rows_update`, below).
 
-**Known gap.** No migration enables row-level security on `public.notifications` or defines a policy for it (the table is created in `20260516000000_squash.sql`, and `20260701000007_notifications.sql` only inserts). The frontend and `BACKEND_BACKLOG.md` C-24 both say "RLS: user_id = auth.uid()", so either it was set outside the migrations or it does not exist. Until a policy for select and update is in the repo, assume any signed-in user can read and mark any notification. Requested in `LANE_REQUESTS.md` F-1.
+**Policies exist live, not in the migrations.** The live project has row-level security on `public.notifications` with `own_rows_read` (SELECT, `user_id = auth.uid()`), `own_rows_update` (UPDATE, `user_id = auth.uid()` for both using and check) and `service_role_all`; authenticated users have no insert or delete policy. None of it is in the migrations (the table is created in `20260516000000_squash.sql`, and `20260701000007_notifications.sql` only inserts), so an environment built from the repo would have none. The request is to add them to the migrations (`LANE_REQUESTS.md` F-1). The table is per recipient (`user_id`), so real-mode visibility is decided when the backend writes a row, not when it reads one.
 
 ## Backend enforcement
 
