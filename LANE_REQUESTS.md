@@ -283,3 +283,19 @@ Whether to add the subject fields to the view type or keep them backend-side (th
 ### #73 — Lane 5 `B5MobileAlerts` filters rep rows by type and href, so it hides a rep's own regression and improvement (Ansh)
 
 `src/components/lanes/lane-5/mobile/B5MobileAlerts.tsx` (lines ~31–38) shows a rep only `important_call` rows whose href matches one of the rep's own calls and `coaching_acknowledged` / `coaching_completed` rows whose href matches one of the rep's own foci. That is a filter **by type and href**, which §4 rules out, and it hides a rep's **own** `behavior_regression` and `behavior_improvement` rows (and any own row whose href doesn't match, e.g. `/app/coaching/:id/result`). It is also redundant: the data layer already returns only the rep's inbox. Needs: drop the screen-side filter and render `useNotifications` as returned, so B5 follows CLAUDE.md §4 / `docs/notification-visibility.md`. Lane 5 is not Lane 1's, so this is **logged, not edited**. Open — Lane 5 (Mayur).
+
+### L1-1 — I1 / I3: what the screens can't read off `Insight` and `Pattern` (Ansh)
+
+Built against F-1's fixtures; nothing here blocks the screens, each is a rule the screen applies today that a field should replace.
+
+- **"Important today" has no flag or rank (I1).** `importantToday()` in `lane-1/intelligence/shared/model.ts` picks team-wide insights (no single rep) that cleared the §13.13 gate, strongest confidence first, newest breaking ties, top 3. Ask: `Insight.important?: boolean` (or a rank) set by the feed job, so "important" is the backend's judgement, not a sort.
+- **`Pattern` has no behavioral direction (I3, I1 panel).** Figma tints a Confirmed tag red or green by whether the behavior is bad or good ("Defending price" red, "Pausing after objections" green). Signal colour is direction only (§3), and the row can't say, so Confirmed and Fading render neutral; only Emerging (attention) and Resolved (improve) carry colour. Ask: `Pattern.direction?: "improving" | "regressing" | "steady"` (C-15).
+- **Nothing links a pattern to its insight (I3 panel).** The sentence, the evidence clip and "Create coaching focus for <rep>" come from the insight about the same behavior and reps; `insightForPattern()` matches on `behaviorKey` + the same rep set. F-1 decided against a pattern-to-insight link; this is the stand-in and it returns null (panel falls back to the pattern's own headline and rule) when nothing matches. The panel's action needs exactly one affected rep, so a multi-rep pattern has none (no team-level coaching focus exists — F-1 "Not added").
+- **I1 shows the first 5 of the tracked behaviors** in the order `useTeamBehaviors` returns them ("12 tracked · 5 shown"). The rule that picks five isn't stated in Figma; the data layer owns the order.
+- **ASSOCIATED WITH is derived** from `OutcomeAssociation` rows (`associatedWith()`): gap ≥ 5 points at Medium+ confidence names the outcome, smaller or Low = "Weak signal", n_closed < 30 = "Not enough data". Association language only.
+
+Open — Ansh (data layer), Tirth (C-15).
+
+### L1-2 — Pattern lifecycle thresholds live only in copy (Ansh)
+
+The I1 context panel's PATTERN LIFECYCLE legend (`lane-1/intelligence/shared/lifecycle.ts`: Emerging < 2 weeks / n < 20, Confirmed 3+ weeks / n ≥ 30, Fading −40%, Resolved) is a string, and the pattern job that sets `Pattern.status` (F-1 item 1) has its own copy of the numbers. Ask: export them from `@/lib/data` next to `TEAM_PATTERN_MIN_CALLS` (e.g. `PATTERN_EMERGING_MAX_DAYS`, `PATTERN_CONFIRMED_MIN_CALLS`, `PATTERN_FADING_DROP`) so the legend is built from the same constants the job uses. Open — Ansh.
