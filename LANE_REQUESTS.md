@@ -262,7 +262,7 @@ Spec: [`docs/notification-visibility.md`](docs/notification-visibility.md) (merg
 - **No team scope.** V1 manager scope is the whole workspace, so nothing breaks today, but a manager narrowed to teams later has no `team_id`/team subject to filter on.
 - **No `category` field.** N1/N2's Behavior / Coaching / Reports / System tabs are derived from `type` in `lane-1/notifications/model.ts` (see #71).
 - **Payload privacy is unverifiable** — `title` and `body` are free text; nothing marks them as safe for a rep (§4: "a rep-facing title or body must not mention anyone else").
-- **Roles `coach` and `viewer` are undefined in the spec** (it covers Owner, Admin, Manager, Rep only) and the mock loader gives them the **manager inbox** (`ctx.role === "rep" ? … : NOTIFICATIONS`). They should be denied or given an explicit rule, default-deny, until the spec rules.
+- **Roles `coach` and `viewer` are undefined in the spec** (it covers Owner, Admin, Manager, Rep only). The mock loader used to hand them the manager inbox; Foundation commit `a710c2a` now denies them (default-deny, they see nothing) until the spec rules. The spec still needs to say what they see.
 
 Whether to add the subject fields to the view type or keep them backend-side (the spec says everything beyond the three required fields is the backend's call) is Foundation's decision. N1/N2 render whatever `useNotifications` returns and add no filtering of their own. Open — Ansh (data layer), Tirth (backend).
 
