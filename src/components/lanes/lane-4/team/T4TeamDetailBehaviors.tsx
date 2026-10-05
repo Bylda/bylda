@@ -79,25 +79,22 @@ function BehaviorList({
   return (
     <section
       aria-label={title}
-      className="flex flex-col rounded-by-card border border-by-border-engraved bg-by-surface-raised px-[18px] py-4"
+      className="flex flex-col gap-2 rounded-by-card border border-by-border-engraved bg-by-surface-raised px-[18px] py-4"
     >
-      <p className="type-ui-label pb-1.5 text-by-text-primary">{title}</p>
+      <p className="type-ui-label text-by-text-primary">{title}</p>
       {rows.length === 0 ? (
         <p className="type-ui-small py-2 text-by-text-secondary">{none}</p>
       ) : (
         rows.map((r) => (
           <div
             key={r.behaviorKey}
-            className="flex items-center gap-2 border-b border-by-border-engraved py-2 last:border-b-0"
+            className="flex items-center gap-2 border-b border-by-border-engraved py-2"
+            title={`n = ${r.sampleSize} calls`}
           >
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <span className="type-ui-body-strong truncate text-by-text-primary">{r.name}</span>
               <span className="type-ui-small text-by-text-secondary">
-                {[
-                  r.valueLabel,
-                  r.changeLabel !== "—" ? `${r.changeLabel} in 30 days` : null,
-                  `n = ${r.sampleSize}`,
-                ]
+                {[r.valueLabel, r.changeLabel !== "—" ? `${r.changeLabel} in 30 days` : null]
                   .filter(Boolean)
                   .join(" · ")}
               </span>
@@ -168,7 +165,7 @@ function HeatGrid({
   unit: (behaviorKey: string) => TeamBehaviorRow["unit"] | undefined;
 }) {
   return (
-    <div className="flex min-w-max flex-col gap-1">
+    <div className="flex min-w-max flex-col gap-2">
       <div className="flex gap-1">
         <span className="w-[100px] shrink-0" />
         {cmp.rows.map((r) => (

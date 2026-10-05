@@ -2,7 +2,7 @@ import { useParams } from "@tanstack/react-router";
 import type { TagTone } from "@/components/bylda";
 import type { BehaviorScore, CoachingFocus, Person, Team } from "@/lib/data";
 import { formatScore } from "../rep/repFormat";
-import type { Attention } from "./teamDemo";
+import { rosterIndex, type Attention } from "./teamDemo";
 
 /** Non-component helpers for the Team screens T1–T7 and T13. Pure functions of data-layer values. */
 
@@ -14,7 +14,11 @@ export function useTeamIdParam(): string {
 
 /** The reps on a team, in roster order — never sorted by any score (not a leaderboard). */
 export const repsOf = (team: Team, people: Person[]) =>
-  people.filter((p) => p.role === "rep" && (p.teamId === team.id || team.repIds.includes(p.id)));
+  people
+    .filter((p) => p.role === "rep" && (p.teamId === team.id || team.repIds.includes(p.id)))
+    .map((p, i) => ({ p, i: rosterIndex(p.id) ?? 1000 + i }))
+    .sort((a, b) => a.i - b.i)
+    .map((x) => x.p);
 
 /** The focus that describes a rep right now: the running one, else the latest closed one. */
 export function currentFocus(foci: CoachingFocus[], repId: string): CoachingFocus | null {

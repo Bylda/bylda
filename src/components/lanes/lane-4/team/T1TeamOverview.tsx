@@ -168,7 +168,7 @@ function RepRow({
       params={{ repId: rep.id }}
       className={cn(rowClass, "min-w-[960px] py-3")}
     >
-      <span className={cn("flex items-center gap-2.5", COLS.rep)}>
+      <span className={cn("flex h-6 items-center gap-2.5", COLS.rep)}>
         <Avatar name={rep.name} src={rep.avatarUrl} size={26} />
         <span className="type-ui-body-strong truncate text-by-text-primary">{rep.name}</span>
       </span>

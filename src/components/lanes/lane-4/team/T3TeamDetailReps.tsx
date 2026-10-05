@@ -69,7 +69,7 @@ function RepRow({ rep, focus }: { rep: Person; focus: CoachingFocus | null }) {
         {summary.data ? summary.data.analyzedCalls : "—"}
       </span>
       <span className={cn("type-ui-small truncate pr-3 text-by-text-primary", COLS.focus)}>
-        {focus ? focusLine(focus) : <Dash />}
+        {focus ? focus.status === "held" ? focusLine(focus) : focus.behaviorName : <Dash />}
       </span>
       <span className={COLS.status}>{att ? <Tag tone={att.tone}>{att.label}</Tag> : <Dash />}</span>
       <Link

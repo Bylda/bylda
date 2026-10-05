@@ -123,6 +123,24 @@ const TEAMS: Record<string, TeamDemo> = {
   },
 };
 
+/** Figma's roster order for the fixture team (T1, T3). Mocks only; live keeps the API's order. */
+const ROSTER = [
+  "u_jordan",
+  "u_sarah",
+  "u_alex",
+  "u_mia",
+  "u_theo",
+  "u_priya",
+  "u_marcus",
+  "u_nina",
+  "u_leo",
+];
+export const rosterIndex = (repId: string): number | null => {
+  if (!mocksForced()) return null;
+  const i = ROSTER.indexOf(repId);
+  return i === -1 ? null : i;
+};
+
 /** Mocks only. `null` against a real workspace. */
 export const repDemo = (repId: string): RepDemo | null =>
   mocksForced() ? (REPS[repId] ?? null) : null;

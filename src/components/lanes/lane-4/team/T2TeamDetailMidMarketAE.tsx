@@ -5,7 +5,6 @@ import {
   ConfidenceMeter,
   ContextPanel,
   DataBoundary,
-  Icon,
   SkeletonBlock,
   StateError,
   SystemState,
@@ -19,7 +18,7 @@ import {
   type Direction,
   type Person,
 } from "@/lib/data";
-import { Dash, KpiStrip, TeamDetailFrame, TeamFocusButton } from "./teamDetail";
+import { Dash, KpiStrip, SuggestionMark, TeamDetailFrame, TeamFocusButton } from "./teamDetail";
 import { activeMethodology, type TeamView } from "./teamData";
 import { teamDemo } from "./teamDemo";
 import { firstNameOf } from "./repProfileFormat";
@@ -54,7 +53,10 @@ function Kpis({ view }: { view: TeamView }) {
   const foci = useCoachingFoci();
   const demo = teamDemo(view.team.id);
   const repIds = new Set(view.reps.map((r) => r.id));
-  const closed = (foci.data ?? []).filter((f) => repIds.has(f.repId) && f.result);
+  const monthAgo = Date.now() - 30 * 86_400_000;
+  const closed = (foci.data ?? []).filter(
+    (f) => repIds.has(f.repId) && f.result && new Date(f.result.measuredOn).getTime() >= monthAgo,
+  );
   const held = closed.filter((f) => f.result?.verdict === "held").length;
   const perRep = view.reps.length > 0 ? view.team.callsThisWeek / view.reps.length : null;
   return (
@@ -82,7 +84,7 @@ function Kpis({ view }: { view: TeamView }) {
         {
           label: "FOCUSES HELD",
           value: foci.data ? `${held} of ${closed.length}` : null,
-          note: "of closed focuses",
+          note: "closed in 30 days",
         },
       ]}
     />
@@ -125,7 +127,7 @@ function TeamFocusSuggestion() {
             className="flex flex-col gap-2.5 rounded-by-card border border-by-border-engraved bg-by-surface-raised px-[18px] py-4"
           >
             <p className="type-mono-micro flex items-center gap-2 text-by-text-secondary">
-              <Icon name="pattern" size={12} className="text-by-signal-info" />
+              <SuggestionMark />
               TEAM FOCUS SUGGESTION
             </p>
             <p className="type-editorial-insight text-by-text-primary">{top.insight.headline}</p>
@@ -176,7 +178,7 @@ function Distribution({ view }: { view: TeamView }) {
       className="flex w-full flex-col rounded-by-card border border-by-border-engraved bg-by-surface-raised"
     >
       <p className="type-mono-micro rounded-t-by-card border-b border-by-border-engraved bg-by-surface-inset px-4 py-[9px] text-by-text-tertiary">
-        DISTRIBUTION · HELD CONTROL IN OBJECTIONS
+        <span className="block w-[260px]">DISTRIBUTION · HELD CONTROL IN OBJECTIONS</span>
       </p>
       {demo.distribution.map((b) => (
         <div

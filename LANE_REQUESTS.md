@@ -313,4 +313,9 @@ Built against today's hooks; nothing here blocks the screens. Figma-only values 
 - **T13:** `useRepComparison` takes no rep or behavior-set selection, so "+ Add rep" and "Behaviors: … set" are disabled. `RepComparisonRow` has no unit, so the unit comes from `useTeamBehaviors` by key (falling back to the bare number). The suggested pairing has no confidence field, so it shows each rep's n.
 - **Fixture differences (frozen mocks):** Theo Brandt / Leo Park vs Figma's Theo Grant / Luis Ortega. Jordan, Alex and Mia have focuses, but Priya and Marcus don't (Figma T5: 5 rows, 4 active, 1 reverted). The comparison has 4 reps × 3 behaviors (Figma: 7 behaviors).
 
+- **Figma check (2026-10-05, `get_screenshot` against the frames in `FRAMES.md`).** The layout, spacing, type and tag tones match on all 8 screens. What's left is content from the frozen fixture (names, counts, focus copy like "day 2", T6 outcomes and durations, T13 rows), plus three items that are outside this lane or would break a rule:
+  - The top-bar breadcrumb ("Team / Team Detail — …") and the context panel starting below the top bar on T2 come from the Foundation shell.
+  - T2 FOCUSES HELD reads "closed in 30 days", a rolling window. Figma says "closed this month", but the fixture's results are dated September, so a calendar month would show 0 of 0.
+  - Sparklines stay on one fixed y-range (§4), so they look flatter than Figma's auto-scaled mockups.
+
 Open — Ansh (data layer) / Tirth (contracts).

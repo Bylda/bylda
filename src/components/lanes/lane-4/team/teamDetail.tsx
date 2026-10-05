@@ -293,3 +293,19 @@ export function KpiStrip({
     </section>
   );
 }
+
+/** Figma's outlined triangle before a suggestion label (T2, T13) — info signal, 10×9. */
+export function SuggestionMark() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 10 9"
+      className="h-[9px] w-2.5 shrink-0 text-by-signal-info"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.2}
+    >
+      <path d="M5 1 L9 8 H1 Z" strokeLinejoin="round" />
+    </svg>
+  );
+}

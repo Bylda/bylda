@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@/components/bylda";
+import { Button, Icon } from "@/components/bylda";
 import { useMethodologies, type Person, type Team } from "@/lib/data";
 // Reused per CLAUDE.md §13 (existing `fold-into-kit` entries #34, #38 — Lane 5).
 import { LocalField, LocalSelect, LocalSettingRow } from "../../lane-5/settings/LocalSettings";
@@ -63,7 +63,7 @@ function SettingsForm({ team, people }: { team: Team; people: Person[] }) {
 
   return (
     <form
-      className="flex w-full flex-col gap-4"
+      className="flex w-full flex-col gap-5 [&>div.border-b]:py-3"
       onSubmit={(e) => {
         e.preventDefault();
         setMessage(
@@ -94,49 +94,41 @@ function SettingsForm({ team, people }: { team: Team; people: Person[] }) {
           }
         />
       </Labeled>
-      <div className="flex flex-col">
-        <LocalSettingRow label="Manager brief" hint={delivery?.managerBrief}>
-          <LocalPreferenceSwitch
-            label="Manager brief"
-            checked={draft.managerBrief}
-            onChange={(v) => set("managerBrief", v)}
-          />
-        </LocalSettingRow>
-        <LocalSettingRow label="Rep brief" hint={delivery?.repBrief}>
-          <LocalPreferenceSwitch
-            label="Rep brief"
-            checked={draft.repBrief}
-            onChange={(v) => set("repBrief", v)}
-          />
-        </LocalSettingRow>
-        <LocalSettingRow label="Team room" hint={delivery?.teamRoom}>
-          <LocalPreferenceSwitch
-            label="Team room"
-            checked={draft.teamRoom}
-            onChange={(v) => set("teamRoom", v)}
-          />
-        </LocalSettingRow>
-        <LocalSettingRow
+      <LocalSettingRow label="Manager brief" hint={delivery?.managerBrief}>
+        <LocalPreferenceSwitch
+          label="Manager brief"
+          checked={draft.managerBrief}
+          onChange={(v) => set("managerBrief", v)}
+        />
+      </LocalSettingRow>
+      <LocalSettingRow label="Rep brief" hint={delivery?.repBrief}>
+        <LocalPreferenceSwitch
+          label="Rep brief"
+          checked={draft.repBrief}
+          onChange={(v) => set("repBrief", v)}
+        />
+      </LocalSettingRow>
+      <LocalSettingRow label="Team room" hint={delivery?.teamRoom}>
+        <LocalPreferenceSwitch
+          label="Team room"
+          checked={draft.teamRoom}
+          onChange={(v) => set("teamRoom", v)}
+        />
+      </LocalSettingRow>
+      <LocalSettingRow label="Reps see team median" hint="Context only — no names">
+        <LocalPreferenceSwitch
           label="Reps see team median"
-          hint="Context only — no names. Hidden automatically while the team has fewer than 8 reps."
-        >
-          <LocalPreferenceSwitch
-            label="Reps see team median"
-            checked={draft.repsSeeMedian}
-            onChange={(v) => set("repsSeeMedian", v)}
-          />
-        </LocalSettingRow>
-      </div>
+          checked={draft.repsSeeMedian}
+          onChange={(v) => set("repsSeeMedian", v)}
+        />
+      </LocalSettingRow>
       <LocalDraftNotice changed={changed} message={message} />
       <div className="flex items-center gap-2">
-        <Button type="submit" disabled={!changed}>
-          Save
-        </Button>
+        <Button type="submit">Save</Button>
         <Button
           type="button"
           variant="ghost"
-          disabled
-          title="Archiving a team isn’t available yet."
+          onClick={() => setMessage("Archiving a team isn’t available yet. Nothing was changed.")}
         >
           Archive team
         </Button>
@@ -147,9 +139,17 @@ function SettingsForm({ team, people }: { team: Team; people: Person[] }) {
 
 function Labeled({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-1.5 [&_select]:w-full [&_select]:py-2.5">
+    <div className="flex flex-col gap-1.5">
       <span className="type-ui-label text-by-text-secondary">{label}</span>
-      {children}
+      {/* Figma 52:3634: full-width 14px select with a small tertiary chevron. */}
+      <div className="relative [&_select]:type-ui-body [&_select]:w-full [&_select]:appearance-none [&_select]:py-2.5 [&_select]:pr-8">
+        {children}
+        <Icon
+          name="chevron"
+          size={12}
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-by-text-tertiary"
+        />
+      </div>
     </div>
   );
 }

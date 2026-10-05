@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Avatar, DataBoundary, SkeletonBlock, SystemState, Tag, cn } from "@/components/bylda";
 import { useCoachingFoci, type CoachingFocus } from "@/lib/data";
-import { shortDate } from "../rep/repFormat";
+import { callDate } from "../rep/repFormat";
 import { firstNameOf, focusTag, isActiveFocus } from "./repProfileFormat";
 import { KpiStrip, TeamDetailFrame, TeamTable, rowClass } from "./teamDetail";
 import { teamError, type TeamView } from "./teamData";
@@ -95,9 +95,17 @@ const COLS = {
   checkIn: "w-[120px] shrink-0",
 };
 
-/** Running first, then by most recently assigned. Never by rep. */
+/** Figma T5 order: in flight, then waiting on the rep, then measured. Never by rep. */
+const STAGE: Record<CoachingFocus["status"], number> = {
+  measuring: 0,
+  acknowledged: 0,
+  not_yet: 1,
+  assigned: 2,
+  held: 3,
+  reverted: 3,
+};
 const order = (a: CoachingFocus, b: CoachingFocus) =>
-  Number(isActiveFocus(b)) - Number(isActiveFocus(a)) || b.assignedAt.localeCompare(a.assignedAt);
+  STAGE[a.status] - STAGE[b.status] || b.assignedAt.localeCompare(a.assignedAt);
 
 function CoachingTable({ foci }: { foci: CoachingFocus[] }) {
   return (
@@ -109,7 +117,9 @@ function CoachingTable({ foci }: { foci: CoachingFocus[] }) {
       minWidth="min-w-[920px]"
     >
       {[...foci].sort(order).map((f) => {
-        const tag = focusTag(f);
+        // Figma T5 draws a not-yet-acknowledged focus as a neutral outlined tag.
+        const tag =
+          f.status === "assigned" ? { tone: "neutral" as const, label: "Assigned" } : focusTag(f);
         return (
           <Link
             key={f.id}
@@ -148,7 +158,7 @@ function checkIn(f: CoachingFocus): string {
   if (f.judgeAfter.date) {
     return new Date(f.judgeAfter.date).getTime() < Date.now()
       ? "Overdue"
-      : shortDate(f.judgeAfter.date);
+      : callDate(f.judgeAfter.date);
   }
   return f.judgeAfter.calls ? `after ${f.judgeAfter.calls} calls` : "—";
 }

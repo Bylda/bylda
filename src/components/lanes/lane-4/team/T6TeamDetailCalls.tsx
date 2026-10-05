@@ -49,7 +49,10 @@ function TeamCalls({ view }: { view: TeamView }) {
   const calls = useCalls();
   const [filter, setFilter] = useState<Filter>("all");
   const repIds = new Set(view.reps.map((r) => r.id));
-  const team = calls.data?.filter((c) => repIds.has(c.repId));
+  // Ranked by coaching value (Dev Handoff: coaching_value drives ranking in Calls); unscored last.
+  const team = calls.data
+    ?.filter((c) => repIds.has(c.repId))
+    .sort((a, b) => (b.coachingValue ?? -1) - (a.coachingValue ?? -1));
   return (
     <DataBoundary
       query={{ ...calls, data: team, isEmpty: !!team && team.length === 0 }}
