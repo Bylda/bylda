@@ -167,6 +167,20 @@ Reuse existing #34 `LocalField`, `LocalSelect`, `LocalSettingsTable` directly fr
 
 `useCallComparison` returns two reviews plus whole-call talk share/objection/next-step aggregates, not matched objections, a three-minute window, response latency, discounts, diagnosis, confidence or sample counts. C8 shows raw transcript excerpts anchored independently to each call's first detected objection, or absolute timestamps when absent. No claim of same objection/different outcome; no ungated behavior differences/actions or inferred causes. Sharing unavailable. Shared call_brightline is Jordan/Discovery/30:00 with no objection anchor and generic Jordan/David transcript; call_kestrel is Alex but shared transcript speakers still Jordan/David. Metadata/transcript preserved, no Theo or design-only quotes fabricated. Need paired-event/window/quality contract and shared transcript correction. Open — Ansh / Tirth.
 
+### F-2 — Notifications: a type that isn't designed is left out, not relabelled (Foundation)
+
+**Why.** Live data is legacy `new_lead` only; the backend produces no designed type yet (F-1 item 5). `mapNotificationRow` used to rewrite every unknown type to `report_ready` / info with the row's `message` as its title and a link to `/app/notifications`, so a lead notification would have shown in N1 and N2 as a REPORT READY row (under the Reports tab, counted in All) and could not be told apart from a real report, because the raw type was dropped on the way.
+
+**What changed.** `mapNotificationRow` returns `null` for a type that isn't one of the nine in `NotificationType` (a null or empty type included); `mapNotificationRows` drops the nulls, and `loadNotifications` uses it. The list is the single source for every count and for the bell dot (`useHasUnread` reads the same cache), so a dropped row is in none of them: a user whose only unread rows are `new_lead` has no dot. In dev (`import.meta.env.DEV`), one `console.warn` per unknown raw type, not per row or per refetch, names the type and this entry, so drift between the backend and `NotificationType` is visible. `NotificationType`, `Notification` and every hook signature and return shape are unchanged; screens need nothing.
+
+**Consequences.**
+- A new backend type is invisible until it is added to `NotificationType` and the mapper together (a Foundation change). The dev warning is the signal.
+- Dropping is a presentation rule, not authorization: `docs/notification-visibility.md` still decides who may see a row, and the backend still decides what it writes.
+- `fetchNotifications` applies its `limit(50)` before the drop, so if the table fills with legacy rows, designed rows older than the newest 50 would not reach the list. Not a problem today (no designed row exists). A server-side `type in (...)` filter would fix it but would also hide the drift the warning exists to show, so it is left as is.
+- Mock mode never produced an unknown type; nothing changes there.
+
+Open — Ansh / Tirth.
+
 ### F-1 — I1 / I3 fixtures, new optional fields, and the backend contracts they need (Foundation)
 
 Fixtures match I1 `27:298` and I3 `27:567` in row count and variety: 3 Important-today insights (High/Medium/Medium; info/regress/neutral), 6 patterns in Figma's order (5 open + 1 resolved), 12 tracked behaviors (I1 shows 5), 6 objections (I4), and outcome associations for the five table rows. Existing hook signatures and return shapes are unchanged.
