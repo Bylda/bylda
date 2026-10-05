@@ -23,17 +23,46 @@ const SEVERITY: Record<NotificationType, Notification["severity"]> = {
   behavior_improvement: "improve",
 };
 
-/** Today's row. Unknown legacy types map to report_ready/info; title = message. */
+const isDesigned = (t: string | null): t is NotificationType =>
+  (V1_TYPES as string[]).includes(t ?? "");
+
+/** Raw types already warned about this session, so one drifting type is one line, not one per row. */
+const warnedTypes = new Set<string>();
+
+/** Tests only — forget which unknown types were already warned about. */
+export function resetUnknownTypeWarnings() {
+  warnedTypes.clear();
+}
+
+/** Dev only: say once per raw type that rows of it are being left out (LANE_REQUESTS F-2). */
+function warnUnknownType(raw: string | null) {
+  if (!import.meta.env.DEV) return;
+  const key = raw ?? "(null)";
+  if (warnedTypes.has(key)) return;
+  warnedTypes.add(key);
+  console.warn(
+    `[notifications] rows of type "${key}" are left out: it is not one of the designed types. ` +
+      `Drift between the backend and NotificationType (LANE_REQUESTS F-2).`,
+  );
+}
+
+/**
+ * Today's row. A type that isn't one of the designed ones returns null: the row is dropped, not
+ * rewritten as something else, so it never shows under a label that isn't its own. Live data is
+ * legacy `new_lead` only (F-2). Title = message.
+ */
 export function mapNotificationRow(r: {
   id: string;
   type: string | null;
   message: string | null;
   read: boolean | null;
   created_at: string;
-}): Notification {
-  const type = (V1_TYPES as string[]).includes(r.type ?? "")
-    ? (r.type as NotificationType)
-    : "report_ready";
+}): Notification | null {
+  if (!isDesigned(r.type)) {
+    warnUnknownType(r.type);
+    return null;
+  }
+  const type = r.type;
   return {
     id: r.id,
     type,
@@ -47,6 +76,10 @@ export function mapNotificationRow(r: {
     createdAt: r.created_at,
   };
 }
+
+/** The list the hooks serve: dropped rows are gone, so no count or the bell dot ever sees them. */
+export const mapNotificationRows = (rows: Parameters<typeof mapNotificationRow>[0][]) =>
+  rows.map(mapNotificationRow).filter((n): n is Notification => n !== null);
 
 /** C-22 · proposed notifications row after the V1 columns land. */
 export type NotificationV1Row = {

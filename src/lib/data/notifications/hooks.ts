@@ -7,7 +7,7 @@ import { useDataCtx } from "../session/hooks";
 import { NOTIFICATIONS, REP_NOTIFICATIONS } from "../mocks/collab";
 import type { Notification, PushRegistration } from "../types";
 import { fetchNotifications, markRead } from "./fetchers";
-import { mapNotificationRow } from "./map";
+import { mapNotificationRows } from "./map";
 import { notificationKeys } from "./queryKeys";
 import { SOURCE } from "./source";
 
@@ -49,7 +49,7 @@ export async function loadNotifications(ctx: DataCtx): Promise<Notification[]> {
   if (resolveSource(SOURCE) === "mock") {
     return mockInbox(ctx).map((n) => (mockRead.has(n.id) && !n.read ? { ...n, read: true } : n));
   }
-  return (await fetchNotifications(ctx.userId)).map(mapNotificationRow);
+  return mapNotificationRows(await fetchNotifications(ctx.userId));
 }
 
 export const useNotifications = () =>

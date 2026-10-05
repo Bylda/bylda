@@ -22,6 +22,7 @@ vi.mock("../session/hooks", () => ({ useDataCtx: () => viewer.ctx }));
 vi.mock("./fetchers", () => ({ fetchNotifications: vi.fn(), markRead: vi.fn() }));
 
 import { fetchNotifications, markRead } from "./fetchers";
+import { mapNotificationRow, resetUnknownTypeWarnings } from "./map";
 import {
   loadNotifications,
   resetMockNotificationState,
@@ -411,6 +412,111 @@ describe("mark-read follows the same authorization as reads (docs/notification-v
     expect(isRead("n10")).toBe(true);
     expect(isRead("n13")).toBe(true);
     expect((await loadNotifications(DANA)).find((n) => n.id === "n1")?.read).toBe(false);
+  });
+});
+
+describe("rows of a type that isn't designed are left out (LANE_REQUESTS F-2)", () => {
+  /** Live data today: legacy `new_lead` only. */
+  const lead = (id: string, over: Partial<(typeof db)[number]> = {}) => ({
+    id,
+    type: "new_lead",
+    message: "New lead: Acme Logistics",
+    read: false,
+    created_at: new Date().toISOString(),
+    ...over,
+  });
+  let warn: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => {
+    useSource("real");
+    resetUnknownTypeWarnings();
+    warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+  afterEach(() => {
+    warn.mockRestore();
+    vi.unstubAllEnvs();
+  });
+
+  it("the mapper returns null for new_lead, and every designed type still maps to itself", () => {
+    expect(mapNotificationRow(lead("l1"))).toBeNull();
+    expect(mapNotificationRow(lead("l2", { type: "" }))).toBeNull();
+    expect(mapNotificationRow(lead("l3", { type: null as never }))).toBeNull();
+    for (const n of NOTIFICATIONS) {
+      const row = mapNotificationRow({ ...lead(n.id), type: n.type, message: n.title });
+      expect(row).toMatchObject({ id: n.id, type: n.type, title: n.title });
+      expect(row?.typeLabel).toBe(n.typeLabel); // not rewritten to REPORT READY
+    }
+  });
+
+  it("a new_lead row is not returned, and the designed rows around it are", async () => {
+    db.splice(2, 0, lead("lead_1"), lead("lead_2", { read: true }));
+    const rows = await loadNotifications(DANA);
+    expect(rows.map((n) => n.id)).toEqual(NOTIFICATIONS.map((n) => n.id));
+  });
+
+  it("a designed type is still returned on its own", async () => {
+    db = [lead("r1", { type: "report_ready", message: "Daily Manager Brief" })];
+    expect(await loadNotifications(DANA)).toMatchObject([{ id: "r1", type: "report_ready" }]);
+  });
+
+  it("counts ignore dropped rows", async () => {
+    db.push(lead("lead_1"), lead("lead_2"), lead("lead_3"));
+    mount(DANA);
+    await flush();
+    expect(cached().map((n) => n.id)).toEqual(NOTIFICATIONS.map((n) => n.id));
+    expect(counts(cached()).all).toBe(9);
+    expect(counts(cached())).toEqual(counts(await loadNotifications(DANA)));
+  });
+
+  it("the bell dot ignores dropped rows: only an unread designed row lights it", async () => {
+    db = [lead("lead_1"), lead("lead_2")];
+    mount(DANA);
+    await flush();
+    expect(cached()).toEqual([]);
+    expect(probe.dot).toBe(false); // two unread leads, no dot
+
+    unmount();
+    db = [lead("lead_1"), lead("r_read", { type: "report_ready", read: true })];
+    mount(DANA);
+    await flush();
+    expect(cached().map((n) => n.id)).toEqual(["r_read"]);
+    expect(probe.dot).toBe(false); // the only designed row is read
+
+    unmount();
+    db = [lead("lead_1", { read: true }), lead("r_new", { type: "report_ready" })];
+    mount(DANA);
+    await flush();
+    expect(probe.dot).toBe(true);
+  });
+
+  it("dev: one warning per unknown raw type, not per row and not per load", async () => {
+    db.push(
+      lead("a1"),
+      lead("a2"),
+      lead("a3"),
+      lead("m1", { type: "mystery" }),
+      lead("m2", { type: "mystery" }),
+      lead("n1", { type: null as never }),
+    );
+    await loadNotifications(DANA);
+    await loadNotifications(DANA); // a refetch: still no new line
+    expect(warn).toHaveBeenCalledTimes(3);
+    const lines = warn.mock.calls.map((c) => String(c[0]));
+    expect(lines.some((l) => l.includes('"new_lead"'))).toBe(true);
+    expect(lines.some((l) => l.includes('"mystery"'))).toBe(true);
+    expect(lines.some((l) => l.includes('"(null)"'))).toBe(true);
+    expect(lines.every((l) => l.includes("F-2"))).toBe(true);
+  });
+
+  it("dev: a designed type never warns", async () => {
+    await loadNotifications(DANA); // the nine designed rows
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it("not in dev: no warning, the row is still left out", async () => {
+    vi.stubEnv("DEV", false);
+    db.push(lead("lead_1"));
+    expect((await loadNotifications(DANA)).map((n) => n.id)).not.toContain("lead_1");
+    expect(warn).not.toHaveBeenCalled();
   });
 });
 
