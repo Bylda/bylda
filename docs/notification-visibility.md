@@ -94,15 +94,20 @@ Examples: CRM disconnected, dialer authentication expired, call ingestion failed
 
 ## Notification subject model
 
-Every notification MUST have an explicit subject. Access must not be inferred from notification type.
+Every notification has a subject: who or what it is about. Access must not be inferred from notification type.
 
-Required:
+The requirement is the outcome: **a user receives only the notifications they are authorized to see, payload included.** How the backend gets there is its decision. Either of these is acceptable:
+
+- subject columns stored on the row and checked at read, or
+- a role-aware writer that creates a row in the per-recipient table only for users who may see that notification.
+
+The examples below describe a subject with these fields. The names are illustrative, not a required schema:
 
 - `subject_type`: `rep` | `team` | `workspace` | `integration` | `system`
 - `subject_id`: ID of that rep, team, workspace or integration
 - `workspace_id`
 
-Any further fields (recipient or owner ID, team ID, and so on) are the backend's decision, not a requirement of this spec.
+Any further fields (recipient or owner ID, team ID, and so on) are the backend's decision too.
 
 Two notifications can share a type and differ in visibility:
 
