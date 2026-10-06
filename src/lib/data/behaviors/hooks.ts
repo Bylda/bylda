@@ -4,10 +4,11 @@ import { isEmptyArray } from "../core/query";
 import { resolveSource } from "../core/source";
 import {
   BEHAVIORS,
-  BEHAVIOR_DETAIL,
   BEHAVIOR_DETAILS,
   OBJECTIONS,
+  OUTCOME_PATTERNS,
   PATTERNS,
+  PROSPECT_PATTERNS,
   SCORES_JORDAN,
   TEAM_BEHAVIOR_ROWS,
 } from "../mocks/intelligence";
@@ -37,7 +38,10 @@ export async function loadBehaviors(ctx: DataCtx): Promise<Behavior[]> {
   return (await fetchBehaviors()).map(mapBehavior);
 }
 
-/** I2 — team-wide, so never served to a rep. */
+/**
+ * I2 — team-wide, so never served to a rep. Each behavior gets its own detail or null: a
+ * behavior with no detail fixture returns null, never another behavior's numbers.
+ */
 export async function loadBehaviorDetail(
   ctx: DataCtx,
   key: string,
@@ -45,8 +49,9 @@ export async function loadBehaviorDetail(
   assertNotRep(ctx, "team behavior detail");
   if (resolveSource(SOURCE) === "mock") {
     const b = BEHAVIORS.find((x) => x.key === key);
-    if (!b) return null;
-    return { ...(BEHAVIOR_DETAILS[key] ?? BEHAVIOR_DETAIL), behavior: b };
+    const d = b ? BEHAVIOR_DETAILS[key] : undefined;
+    if (!b || !d) return null;
+    return { ...d, behavior: b };
   }
   await fetchBehaviorScores();
   return null;
@@ -79,10 +84,20 @@ export async function loadRepScores(ctx: DataCtx, repId: string): Promise<Behavi
   return (await fetchBehaviorScores()).map(mapBehaviorScore);
 }
 
-/** I1/I3/I7–I11 — team-wide patterns, managers only. */
+/**
+ * I1/I3/I7–I11 — team-wide patterns, managers only.
+ * Mock: with no scope this is the I3 list (team · rep · methodology), as I1 and I3 draw it. The
+ * I9 outcome and I11 prospect fixtures are served only when that scope is asked for, so they
+ * don't land in I3's tabs or I1's open-pattern count.
+ */
 export async function loadPatterns(ctx: DataCtx, scope?: Pattern["scope"]): Promise<Pattern[]> {
   assertNotRep(ctx, "team patterns");
-  if (resolveSource(SOURCE) === "mock") return PATTERNS.filter((p) => !scope || p.scope === scope);
+  if (resolveSource(SOURCE) === "mock") {
+    if (!scope) return PATTERNS;
+    return [...PATTERNS, ...OUTCOME_PATTERNS, ...PROSPECT_PATTERNS].filter(
+      (p) => p.scope === scope,
+    );
+  }
   return (await fetchPatterns()).map(mapPattern).filter((p) => !scope || p.scope === scope);
 }
 

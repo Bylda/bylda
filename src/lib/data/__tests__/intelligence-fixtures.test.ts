@@ -11,7 +11,13 @@ import {
 } from "../behaviors/hooks";
 import { loadOutcomeAssociations } from "../outcomes/hooks";
 import { BEHAVIOR_DETAILS } from "../mocks/intelligence";
-import { OUTCOME_MIN_CLOSED, patternShowsConfidence, type GatedInsight } from "../types";
+import { MM_REP_IDS } from "../mocks/people";
+import {
+  OUTCOME_MIN_CLOSED,
+  patternShowsConfidence,
+  type BehaviorDetail,
+  type GatedInsight,
+} from "../types";
 
 /**
  * Fixtures match Figma I1 Intelligence Home (27:298) and I3 Emerging Patterns (27:567) in row
@@ -332,5 +338,176 @@ describe("I1 Intelligence Home", () => {
       "won",
       "advanced",
     ]);
+  });
+});
+
+describe("Behavior detail — one fixture per behavior, never another's", () => {
+  it("every one of the 12 tracked behaviors resolves to its own detail", async () => {
+    const behaviors = await loadBehaviors(DANA);
+    expect(behaviors).toHaveLength(12);
+    const details = await Promise.all(behaviors.map((b) => loadBehaviorDetail(DANA, b.key)));
+    details.forEach((d, i) => {
+      expect(d?.behavior.key).toBe(behaviors[i].key);
+      expect(d?.byRep.length).toBeGreaterThan(1);
+    });
+    // no two behaviors share a by-rep list
+    const shapes = details.map((d) => JSON.stringify(d!.byRep));
+    expect(new Set(shapes).size).toBe(12);
+  });
+
+  it("a behavior with no detail fixture returns null, not a borrowed one", async () => {
+    const key = "pause_after_objection";
+    const saved = BEHAVIOR_DETAILS[key];
+    delete BEHAVIOR_DETAILS[key];
+    try {
+      expect(await loadBehaviorDetail(DANA, key)).toBeNull();
+    } finally {
+      BEHAVIOR_DETAILS[key] = saved;
+    }
+    expect((await loadBehaviorDetail(DANA, key))?.behavior.key).toBe(key);
+  });
+
+  it("every team-behaviors row is the same numbers as its detail", async () => {
+    for (const r of await loadTeamBehaviors(DANA)) {
+      const d = (await loadBehaviorDetail(DANA, r.behaviorKey))!;
+      expect([r.name, r.teamValue, r.unit, r.direction, r.confidence, r.sampleSize]).toEqual([
+        d.behavior.name,
+        d.teamValue,
+        d.unit,
+        d.direction,
+        d.confidence,
+        d.sampleSize,
+      ]);
+      expect(r.sparkline).toEqual(d.sparkline);
+    }
+  });
+
+  it("by-rep entries are real Mid-Market reps, each once", async () => {
+    for (const b of await loadBehaviors(DANA)) {
+      const ids = (await loadBehaviorDetail(DANA, b.key))!.byRep.map((r) => r.repId);
+      expect(new Set(ids).size).toBe(ids.length);
+      for (const id of ids) expect(MM_REP_IDS).toContain(id);
+    }
+  });
+});
+
+describe("I7 Team behaviors — BEST / NEEDS WORK", () => {
+  /** I7 reads these as the extremes of `value` through `higherIsBetter`, not by list position. */
+  const bestAndWorst = (d: BehaviorDetail) => {
+    const sorted = [...d.byRep].sort((a, b) =>
+      d.behavior.higherIsBetter ? b.value - a.value : a.value - b.value,
+    );
+    const first = (name: string) => name.split(" ")[0];
+    return [first(sorted[0].repName), first(sorted.at(-1)!.repName)];
+  };
+
+  it("matches the nine rows Figma 51:1420 draws", async () => {
+    const drawn: [string, string, string][] = [
+      ["discovery_depth", "Theo", "Mia"],
+      ["pause_after_objection", "Theo", "Jordan"],
+      ["interrupting_during_objections", "Theo", "Jordan"],
+      ["early_discounting", "Priya", "Jordan"],
+      ["next_step_booked", "Priya", "Sarah"],
+      ["talk_share", "Theo", "Jordan"],
+      ["monologue_over_2min", "Nina", "Alex"],
+      ["economic_buyer_by_s3", "Theo", "Sarah"],
+      // Figma's BEST is "Dana's team", not a rep (GAP) — Priya is best among reps
+      ["recap_before_pricing", "Priya", "Marcus"],
+    ];
+    for (const [key, best, worst] of drawn) {
+      const d = (await loadBehaviorDetail(DANA, key))!;
+      expect([key, ...bestAndWorst(d)]).toEqual([key, best, worst]);
+      // no tie at either end, so BEST / NEEDS WORK is never a coin flip
+      const vals = d.byRep.map((r) => r.value);
+      const ends = [Math.max(...vals), Math.min(...vals)];
+      for (const v of ends) expect(vals.filter((x) => x === v)).toHaveLength(1);
+    }
+  });
+
+  it("the pause distribution puts all nine reps in Figma's buckets, around the 1.1s team value", async () => {
+    const d = (await loadBehaviorDetail(DANA, "pause_after_objection"))!;
+    expect(d.byRep).toHaveLength(9);
+    expect(new Set(d.byRep.map((r) => r.repId))).toEqual(new Set(MM_REP_IDS));
+    const bucket = (v: number) =>
+      v < 0.5 ? "<0.5" : v < 1 ? "0.5-1" : v <= 1.5 ? "1-1.5" : ">1.5";
+    const by = (b: string) =>
+      d.byRep
+        .filter((r) => bucket(r.value) === b)
+        .map((r) => r.repName.split(" ")[0])
+        .sort();
+    expect(by("<0.5")).toEqual(["Jordan", "Sarah"]);
+    expect(by("0.5-1")).toEqual(["Leo", "Mia"]); // Figma's "Luis" is the fixture's Leo
+    expect(by("1-1.5")).toEqual(["Alex", "Marcus", "Nina"]);
+    expect(by(">1.5")).toEqual(["Priya", "Theo"]);
+    const vals = d.byRep.map((r) => r.value).sort((a, b) => a - b);
+    expect(vals[4]).toBe(d.teamValue);
+  });
+
+  it("Jordan's by-rep pause is his own R2 score", async () => {
+    const d = (await loadBehaviorDetail(DANA, "pause_after_objection"))!;
+    expect(d.byRep.find((r) => r.repId === "u_jordan")).toMatchObject({ value: 0.4, n: 41 });
+  });
+});
+
+describe("I9 Outcome patterns / I11 Prospect patterns", () => {
+  it("I9 has the hero, the five behavior rows and the two cards, in Figma's order", async () => {
+    const rows = await loadPatterns(DANA, "outcome");
+    expect(rows.map((p) => [p.headline, p.confidence, p.sampleSize])).toEqual([
+      [
+        "Won deals contain more second-level discovery questions — 3.4 per call vs 1.6 in losses.",
+        "high",
+        42,
+      ],
+      ["Second-level discovery Qs", "high", 42],
+      ["EB on a call by stage 3", "medium", 42],
+      ["Discount in first 60s of price talk", "medium", 42],
+      ["Recap before pricing", "low", 42],
+      ["Talk share > 65%", "low", 42],
+      ["Deals with a mutual plan by call 3 closed 11 days faster.", "low", 14],
+      ["4 of 6 stalled deals stalled right after an unhandled price objection.", "medium", 6],
+    ]);
+  });
+
+  it("I11 has the CFO hero and the five prospect-signal rows, in Figma's order", async () => {
+    const rows = await loadPatterns(DANA, "prospect");
+    expect(rows.map((p) => [p.headline, p.sampleSize, p.confidence, p.rule])).toEqual([
+      [
+        "When a CFO joins, the first objection is about rollout risk 3× more often than price — but reps answer it as price.",
+        22,
+        "medium",
+        null,
+      ],
+      ["CFO on the call", 22, "medium", "Rollout-risk objection by min 20 (68%)"],
+      ["“We already use Gong”", 31, "medium", "Asks for integration detail next (55%)"],
+      ["Prospect talk share > 55% in discovery", 104, "high", "Next step booked 81% vs 58%"],
+      ["Multiple stakeholders (3+)", 46, "low", "Longer cycle, higher close rate"],
+      ["Board / budget freeze language", 3, "low", "New — watching"],
+    ]);
+  });
+
+  it("both are aggregates: no rep named, no causal wording, every behavior key tracked", async () => {
+    const keys = new Set((await loadBehaviors(DANA)).map((b) => b.key));
+    const rows = [
+      ...(await loadPatterns(DANA, "outcome")),
+      ...(await loadPatterns(DANA, "prospect")),
+    ];
+    expect(new Set(rows.map((p) => p.id)).size).toBe(rows.length);
+    for (const p of rows) {
+      expect(p.affectedRepIds).toEqual([]);
+      expect(p.sampleSize).toBeGreaterThan(0);
+      expect(p.headline).not.toMatch(/\bcaus/i);
+      if (p.behaviorKey) expect(keys.has(p.behaviorKey)).toBe(true);
+    }
+  });
+
+  it("stay out of the unscoped list, so I1 and I3 are unchanged", async () => {
+    const all = await loadPatterns(DANA);
+    expect(all).toHaveLength(6);
+    expect(all.some((p) => p.scope === "outcome" || p.scope === "prospect")).toBe(false);
+  });
+
+  it("are never served to a rep", async () => {
+    await expect(loadPatterns(JORDAN, "outcome")).rejects.toThrow();
+    await expect(loadPatterns(JORDAN, "prospect")).rejects.toThrow();
   });
 });
