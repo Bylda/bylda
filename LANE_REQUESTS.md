@@ -322,6 +322,43 @@ Section 6 builds against the existing fixtures and renders only what the data ca
 
 Open — Ansh (this repo's `map.ts` / view types). The backend asks go to the backend repo.
 
+### L1-4 — I7–I11: what the Intelligence tabs can't read off `TeamBehaviorRow`, `Pattern`, `Methodology` or `OutcomeAssociation` (Ansh)
+
+Section 7 builds against the existing hooks and renders only what the data carries. Each item is a Figma element left out, or a rule the screen applies that a field should replace. "Backend ask" lines are written to be copied into the backend repo. Frontend changes are limited to `map.ts`, the view types and the fixtures (Foundation).
+
+**All five tabs**
+- Header + tab counts come from one shared hook (`lane-1/intelligence/shared/useIntelligenceContext.ts`) built on the same hooks as I1. Methodology / Outcome / Rep / Prospect tabs show no count, as in Figma.
+- Figma lists `usePatterns` for I7. The rows are behaviors, so patterns only feed the tab counts there.
+- **Mock fallback relabels another behavior's detail (Foundation).** `loadBehaviorDetail` in mock mode returns `BEHAVIOR_DETAILS[key] ?? BEHAVIOR_DETAIL` with `behavior` swapped to the requested key. So for the 7 behaviors without a modelled detail, I7's BEST / NEEDS WORK and I2 show the *interrupting* fixture's reps under another behavior's name. The screen can't detect it (`detailFor()` checks the key, which the loader rewrites). *Ask (data layer):* return `null` (or a summary with empty `byRep`) for a key with no modelled detail; I7 then shows "—". Real mode already returns `null`.
+
+**I7 Team behaviors (`51:1420`)**
+- **BEST / NEEDS WORK** have no field on `TeamBehaviorRow`. Each row reads its own `useBehaviorDetail` and takes the top and bottom of `byRep`, ranked by `behavior.higherIsBetter`, as the fixture comment intends. That's 12 reads for 12 rows. *Backend ask:* `best_rep_id` and `needs_work_rep_id` on the team-behavior row (manager-only), so it's one read.
+- **"Watch" tag.** `Direction` is three-valued, so the tag is Up / Down / Steady. *Backend ask:* a nullable `attention` flag (or a fourth state) on the row.
+- **DISTRIBUTION panel.** Reps are grouped into four equal bands across the behavior's fixed y-range (§4), and the bar length is the band's share of reps. Figma draws one behavior with no picker, so the panel shows the first regressing behavior. A row click opens I2, as the panel note says. *Ask:* none, unless product wants a picker.
+
+**I8 Methodology adherence (`51:2887`)**
+- **Coverage strip** (MEDDIC COVERAGE / METRICS / ECONOMIC BUYER / DECISION PROCESS / CHAMPION) has no object. Not drawn. *Backend ask:* `methodology_coverage {element_key, label, rate, note?}` for the team and window, plus an overall rate.
+- **STAGE column.** A `Behavior` carries no stage, so the column isn't drawn. DONE is the row's `valueLabel`, since not every required behavior is a done-rate. *Backend ask:* `stage_key` on `Behavior` (or on its methodology link).
+- **BY REP · COVERAGE panel** has no per-rep coverage. The panel lists the methodology's stages and says per-rep coverage isn't measured. *Backend ask:* `methodology_coverage_by_rep {rep_id, rate}`, manager-only.
+- **METHODOLOGY BREAKDOWN cards** are the open `scope: "methodology"` patterns. "Create team focus" opens G2 on the pattern's behavior, since no team-level focus exists (F-1 "Not added"). The fixture's one methodology pattern is Low, so it renders as an observation with no buttons (§4).
+
+**I9 Outcome patterns (`51:1819`)**
+- **WON / LOST columns.** Figma's numbers are how often the behavior appears in won vs lost deals. `OutcomeAssociation` is the outcome rate *with* vs *without* the behavior, so the table reads OUTCOME · WITH · WITHOUT · GAP · CONF · n. Under n_closed 30 the numbers are hidden (§4). *Backend ask (optional):* `rate_in_won` and `rate_in_lost` per behavior if product wants Figma's framing.
+- **OUTCOMES IN SCOPE** (won 19 / lost 23 / advanced 41 / stalled 6 / open 88) has no field. Not drawn. *Backend ask:* `outcome_counts {won, lost, advanced, stalled, open}` for the team and window.
+- **Card category line** ("WON vs LOST", "CYCLE LENGTH", "STALLS") has no field on `Pattern`, so every card reads "OUTCOME PATTERN". *Backend ask:* nullable `category` on the pattern.
+- **No `scope: "outcome"` fixture**, so mock mode shows the "no outcome pattern yet" line above the table. *Ask (Foundation fixtures):* two or three outcome patterns from the frame.
+
+**I10 Rep patterns (`51:2196`)**
+- **Card actions and panel tags differ by kind in Figma** ("See result" after coaching, none for a model rep; tags "1 regression" / "1 improvement" / "model rep"). `Pattern` has neither a kind nor a direction (L1-1), so every single-rep card offers "Open profile" (T8) and the BY REP tag counts the rep's most pressing lifecycle status (`repSummaries()`). *Backend ask:* the `direction` from L1-1, plus nullable `kind: "regression" | "improvement" | "model" | "emerging"`.
+- **Fixture:** 3 rep patterns (Mia, Alex, Nina — Nina's is resolved, so "no live evidence"). Figma draws Jordan, Mia, Alex and Theo.
+
+**I11 Prospect patterns (`51:2556`)**
+- **Persona** ("CFOs", the BY PERSONA panel) has no field. The panel keeps only Figma's PRIVACY note. *Backend ask:* nullable `persona` on prospect patterns, plus a per-persona aggregate `{persona, top_objections[]}`. Aggregate only, never one prospect.
+- **WHAT FOLLOWS** is `selected.associatedOutcome` (F-1), or "—" when it's missing.
+- **No `scope: "prospect"` fixture**, so mock mode shows the empty state. *Ask (Foundation fixtures):* the five rows from the frame.
+
+Open — Ansh (this repo's `map.ts`, view types and fixtures). The backend asks go to the backend repo.
+
 ### L4-1 — T1–T7, T13 Team: fields and mutations the team view models don't carry (Dravin)
 
 Built against today's hooks; nothing here blocks the screens. Figma-only values render from a mocks-only fixture (`lane-4/team/teamDemo.ts`, `VITE_BYLDA_MOCKS=true`). In live mode those cells show "—" or the block is hidden, and nothing is invented. No backend change is requested from a lane.
