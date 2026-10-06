@@ -321,3 +321,23 @@ Section 6 builds against the existing fixtures and renders only what the data ca
 - The frame is a standalone 1600 × 1000 poster. Inside the shell it's a dark section with a 1035px canvas that fits main at 1440 (scrolls sideways when narrower). Node corners use `rounded-by-control` (§13.5), not Figma's 2px.
 
 Open — Ansh (this repo's `map.ts` / view types). The backend asks go to the backend repo.
+
+### L4-1 — T1–T7, T13 Team: fields and mutations the team view models don't carry (Dravin)
+
+Built against today's hooks; nothing here blocks the screens. Figma-only values render from a mocks-only fixture (`lane-4/team/teamDemo.ts`, `VITE_BYLDA_MOCKS=true`). In live mode those cells show "—" or the block is hidden, and nothing is invented. No backend change is requested from a lane.
+
+- **Per rep (T1, T3):** no attention status (Coach now / Watch / Coach soon / Improving / Strong / Steady / New), no 8-week trajectory (a composite of the methodology's important behaviors against the rep's own baseline, on one fixed y-range for every rep), no "recent change" line, and no tenure (same gap as #32 a). T1's filter chips (Needs coaching / Improving / Declining) and its headline counts come from these fields, so live mode shows only "All reps · N" and a neutral headline. T1 and T3 read CALLS · 30D from `RepSummary.analyzedCalls`, the same number T8 shows. Figma puts different numbers on the two frames (Jordan: 38 vs 58).
+- **Per team (T2):** no team trajectory or held-control KPI, no held-control distribution, no "since" date, and no per-team delivery schedule (manager brief, rep brief, room). CALLS / REP / WK is `callsThisWeek / reps`, so it's labelled "team average", not Figma's "team median". FOCUSES HELD counts closed focuses (with a `result`) for the team's reps. The TEAM FOCUS SUGGESTION is the first gated team `pattern` insight from `useInsights`, with confidence + n. It has no "covers 71% of regressions" object.
+- **No team-level coaching focus.** "Team coaching focus" and "Create team focus" open G2 (`/app/coaching/assign`, with `behaviorKey` when the insight has one). G2 is per rep (same as F-1 "Not added").
+- **T4 heatmap** reuses `useRepComparison(teamId)` (rep × behavior vs `teamMedian`), so it shows that hook's reps and behaviors (fixture: 4 × 3; Figma: 6 × 6). A cell counts as better or worse when it differs from the median by at least 10% of the visible range, and direction comes from `Behavior.higherIsBetter` (T13's "How to read" rule). Strengths / Focus areas are `useTeamBehaviors` rows with direction improving / regressing.
+- **T6 chips:** "Needs review" means the top moment is a regression. "High coaching value" means the team's top quarter by `coachingValue`, because Figma doesn't give a cutoff. *Ask:* one shared definition in `@/lib/data`. The tab count is `Team.analyzedCalls` (486), but the list is whatever `useCalls` returns for the team's reps (fixture: 8).
+- **T7:** no team-settings mutation (name, manager, methodology, delivery toggles, "reps see team median") and no archive. Edits stay a local draft with `LocalDraftNotice`, and Archive is disabled. T7 reuses Lane 5's `fold-into-kit` primitives (#34 `LocalField` / `LocalSelect` / `LocalSettingRow`, #38 `LocalPreferenceSwitch` / `LocalDraftNotice`) by import, so folding those into the kit needs a one-line import swap here.
+- **T13:** `useRepComparison` takes no rep or behavior-set selection, so "+ Add rep" and "Behaviors: … set" are disabled. `RepComparisonRow` has no unit, so the unit comes from `useTeamBehaviors` by key (falling back to the bare number). The suggested pairing has no confidence field, so it shows each rep's n.
+- **Fixture differences (frozen mocks):** Theo Brandt / Leo Park vs Figma's Theo Grant / Luis Ortega. Jordan, Alex and Mia have focuses, but Priya and Marcus don't (Figma T5: 5 rows, 4 active, 1 reverted). The comparison has 4 reps × 3 behaviors (Figma: 7 behaviors).
+
+- **Figma check (2026-10-05, `get_screenshot` against the frames in `FRAMES.md`).** The layout, spacing, type and tag tones match on all 8 screens. What's left is content from the frozen fixture (names, counts, focus copy like "day 2", T6 outcomes and durations, T13 rows), plus three items that are outside this lane or would break a rule:
+  - The top-bar breadcrumb ("Team / Team Detail — …") and the context panel starting below the top bar on T2 come from the Foundation shell.
+  - T2 FOCUSES HELD reads "closed in 30 days", a rolling window. Figma says "closed this month", but the fixture's results are dated September, so a calendar month would show 0 of 0.
+  - Sparklines stay on one fixed y-range (§4), so they look flatter than Figma's auto-scaled mockups.
+
+Open — Ansh (data layer) / Tirth (contracts).
