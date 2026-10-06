@@ -1,0 +1,109 @@
+# CODEOWNERS — who must review what. Last matching pattern wins.
+#
+# GitHub handles: Ansh = @anshpatel102104-ai · Tirth = @tirthkachhia ·
+# Dravin = @dravindilip-svg · Mayur = @mayurnp27.
+# Every handle needs write access on the repo, or GitHub silently ignores its rules.
+#
+# Owners (CLAUDE.md §8 / §12):
+#   Lane 1 Ansh · Lane 2 Mayur · Lane 4 Dravin · Lane 5 Mayur · Lane 6 Mayur · Backend Tirth
+#   Foundation + data layer: Ansh. 10 Reports is Lane 6 (placeholders under lane-4/reports/).
+
+# ── Default: anything not listed below ───────────────────────────────────────
+*                                           @anshpatel102104-ai
+
+# ══ BACKEND — mirrors the boundary-patterns block in BACKEND_BOUNDARY.md ═════
+# CODEOWNERS can't read that block; change a pattern there, change it here.
+/supabase/                                  @anshpatel102104-ai
+/workers/                                   @anshpatel102104-ai
+/wrangler.jsonc                             @anshpatel102104-ai
+/n8n/                                       @anshpatel102104-ai
+/N8N/                                       @anshpatel102104-ai
+/src/integrations/supabase/types.ts         @anshpatel102104-ai
+/src/integrations/supabase/client.server.ts @anshpatel102104-ai
+/src/integrations/supabase/auth-middleware.ts @anshpatel102104-ai
+/.env                                       @anshpatel102104-ai
+/.env.*                                     @anshpatel102104-ai
+/.dev.vars                                  @anshpatel102104-ai
+/scripts/demo-seed/                         @anshpatel102104-ai
+/spec_schema.ts                             @anshpatel102104-ai
+
+# ══ FROZEN — CLAUDE.md §12 A ═════════════════════════════════════════════════
+/src/lib/invokeEdge.ts                      @anshpatel102104-ai
+/src/lib/queries.ts                         @anshpatel102104-ai
+/src/lib/crm.ts                             @anshpatel102104-ai
+/src/lib/auth.tsx                           @anshpatel102104-ai
+/src/integrations/supabase/client.ts        @anshpatel102104-ai
+/src/lib/feature-gates.ts                   @anshpatel102104-ai
+/src/lib/plan.ts                            @anshpatel102104-ai
+/src/lib/stripe.ts                          @anshpatel102104-ai
+/src/lib/impersonation.ts                   @anshpatel102104-ai
+/src/lib/admin.ts                           @anshpatel102104-ai
+/src/lib/ownerMode.ts                       @anshpatel102104-ai
+/src/lib/observability.ts                   @anshpatel102104-ai
+/src/lib/analytics.ts                       @anshpatel102104-ai
+/vite.config.ts                             @anshpatel102104-ai
+/bunfig.toml                                @anshpatel102104-ai
+/.lovable/                                  @anshpatel102104-ai
+/package.json                               @anshpatel102104-ai
+/bun.lock                                   @anshpatel102104-ai
+
+# Foundation (frozen once the foundation PR merges)
+/src/styles/                                @anshpatel102104-ai
+/src/styles.css                             @anshpatel102104-ai
+/src/components/ui/                         @anshpatel102104-ai
+/src/components/bylda/                      @anshpatel102104-ai
+/src/routes/app.tsx                         @anshpatel102104-ai
+/src/routes/dev/                            @anshpatel102104-ai
+/design-ref/                                @anshpatel102104-ai
+/src/lib/data/                              @anshpatel102104-ai
+
+# Guards and the docs everybody builds against
+/.github/                                   @anshpatel102104-ai
+/scripts/                                   @anshpatel102104-ai
+/BACKEND_BOUNDARY.md                        @anshpatel102104-ai
+/CLAUDE.md                                  @anshpatel102104-ai
+/FRAMES.md                                  @anshpatel102104-ai
+/LEGACY_ROUTES.md                           @anshpatel102104-ai
+/TEAM_START.md                              @anshpatel102104-ai
+
+# Backend backlog: Tirth maintains it, Ansh approves contract changes
+/BACKEND_BACKLOG.md                         @tirthkachhia @anshpatel102104-ai
+
+# ══ LANES — each owner reviews their own folders ═════════════════════════════
+# Lane 1 — Ansh: 05 Home, 14 Notifications, 08 Intelligence
+/src/routes/app/home/                       @anshpatel102104-ai
+/src/routes/app/notifications/              @anshpatel102104-ai
+/src/routes/app/intelligence/               @anshpatel102104-ai
+/src/components/lanes/lane-1/               @anshpatel102104-ai
+
+# Lane 2 — Mayur: 07 Calls, 11 Coaching, 13 Search & Ask
+/src/routes/app/calls/                      @mayurnp27
+/src/routes/app/search/                     @mayurnp27
+/src/routes/app/coaching/                   @mayurnp27
+/src/components/lanes/lane-2/               @mayurnp27
+
+# Lane 4 — Dravin: 04 Onboarding/Auth, 06 Rep, 09 Team
+/src/routes/welcome/                        @dravindilip-svg
+/src/routes/app/rep/                        @dravindilip-svg
+/src/routes/app/team/                       @dravindilip-svg
+/src/components/lanes/lane-4/               @dravindilip-svg
+
+# Lane 5 — Mayur: 15 Integrations, 16 Settings + Methodology, 17 states, 18 Mobile
+/src/routes/app/connections/                @mayurnp27
+/src/routes/app/workspace/                  @mayurnp27
+/src/routes/app/methodology/                @mayurnp27
+/src/routes/app/states/                     @mayurnp27
+/src/routes/m/                              @mayurnp27
+/src/components/lanes/lane-5/               @mayurnp27
+
+# Lane 6 — Mayur: 10 Reports, 12 Rooms & Messages
+/src/routes/app/rooms/                      @mayurnp27
+/src/routes/app/dm/                         @mayurnp27
+/src/routes/app/reports/                    @mayurnp27
+/src/routes/doc/                            @mayurnp27
+/src/components/lanes/lane-6/               @mayurnp27
+# Reports placeholders stay in lane-4's folder; must come after the lane-4 rule
+/src/components/lanes/lane-4/reports/       @mayurnp27
+
+# Generated — whoever regenerates it; Ansh breaks ties
+/src/routeTree.gen.ts                       @anshpatel102104-ai

@@ -1,0 +1,55 @@
+# Backend boundary guard (CLAUDE.md §2, §12 G).
+#
+# Boundary paths — the `boundary-patterns` block in BACKEND_BOUNDARY.md — may
+# change ONLY in a PR whose head branch starts with `backend/` AND that carries
+# the label `backend`. Every other PR that touches one fails. The decision lives
+# in scripts/backend-pr-gate.sh so it can be tested locally; the path matching
+# lives in scripts/boundary-check.sh.
+name: backend-guard
+
+on:
+  pull_request:
+    branches: [integration, main]
+    # labeled/unlabeled: adding or removing the `backend` label re-runs the gate.
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-guard-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  boundary:
+    name: Backend boundary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          # Full history so `git merge-base <base> HEAD` resolves.
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch --no-tags origin "${{ github.event.pull_request.base.ref }}"
+
+      - name: Gate
+        env:
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: bash scripts/backend-pr-gate.sh
+
+      - name: Explain a failure
+        if: failure()
+        run: |
+          echo "::error title=Backend boundary violation::This PR changes a read-only backend path. Only backend/* branches with the 'backend' label may. See BACKEND_BOUNDARY.md; log the need in LANE_REQUESTS.md."
+
+  tokens:
+    name: Design tokens
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No raw colours outside src/styles/bylda.css
+        run: node scripts/tokens-check.mjs
