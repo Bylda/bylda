@@ -205,10 +205,10 @@ Type gaps the mocks can't carry without new fields (2026-10-06, tagged `// GAP:`
 | --- | --- | --- |
 | `I7` 51:1420 | BEST "Dana's team" on Recap before pricing | `BehaviorDetail.byRep` holds reps only; the fixture's best rep is Priya |
 | `I7` 51:1420 | "Luis" in the pause distribution | the fixture's ninth Mid-Market rep is Leo Park (`u_leo`) |
-| `I9` 51:1819 | WON / LOST / GAP columns, eyebrows, hero / table / card slot | no `Pattern` field; the drawn numbers sit in `Pattern.rule` as text |
-| `I9` 51:1819 | OUTCOMES IN SCOPE (Won 19 · Lost 23 · Advanced 41 · Stalled 6 · Open 88) | no type |
-| `I11` 51:2556 | "PROSPECT PATTERN · CFOs" eyebrow, hero / row slot | no `Pattern` field |
-| `I11` 51:2556 | BY PERSONA (CFO, Ops lead, IT, VP Sales) | no type, and no n or confidence drawn |
+| `I9` 51:1819 | BEHAVIOR ↔ OUTCOME table: behavior seen in won vs lost (79% / 43%, …) | no type: `OutcomeAssociation` is outcome rate with vs without, and I5 disagrees with these numbers; not mocked |
+| `I9` 51:1819 | hero "19 won · 23 lost" label, eyebrows, OUTCOMES IN SCOPE (Won 19 · Lost 23 · Advanced 41 · Stalled 6 · Open 88) | no field / no type |
+| `I11` 51:2556 | hero sentence "When a CFO joins…" separate from the "CFO on the call" row | `Pattern` has one headline; a separate row would be a sixth table row |
+| `I11` 51:2556 | "PROSPECT PATTERN · CFOs" eyebrow, BY PERSONA (CFO, Ops lead, IT, VP Sales) | no field / no type, and no n or confidence drawn for personas |
 
 ### 09 — Team · 16 fields · 88% missing
 

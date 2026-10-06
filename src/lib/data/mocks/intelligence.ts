@@ -148,7 +148,7 @@ export const SCORES_JORDAN: BehaviorScore[] = [
     direction: "regressing",
     confidence: "high",
     sampleSize: 41,
-    sparkline: spark([0.9, 0.7, 0.6, 0.4], 0, 3),
+    sparkline: spark([0.9, 0.7, 0.6, 0.4], 0, 2),
   },
   {
     behaviorKey: "discovery_depth",
@@ -689,14 +689,15 @@ export const BEHAVIOR_DETAILS: Record<string, BehaviorDetail> = {
   }),
   // I7 DISTRIBUTION · PAUSE AFTER OBJECTION: < 0.5s Jordan · Sarah · 0.5–1s Mia · Luis (Leo) ·
   // 1–1.5s Alex · Marcus · Nina · > 1.5s Theo · Priya. All nine reps; the median is the 1.1s team
-  // value. Jordan's 0.4s over 41 is his own R2 score (SCORES_JORDAN).
+  // value. Jordan's 0.4s over 41 is his own R2 score (SCORES_JORDAN). The fixed y-range is 0–2s
+  // here and in SCORES_JORDAN: I7 bands reps into quarters of it, which are Figma's 0.5s edges.
   pause_after_objection: summary("pause_after_objection", {
     teamValue: 1.1,
     unit: "seconds",
     direction: "regressing",
     confidence: "high",
     sampleSize: 486,
-    sparkline: spark([1.3, 1.3, 1.2, 1.2, 1.1, 1.1], 0, 3),
+    sparkline: spark([1.3, 1.3, 1.2, 1.2, 1.1, 1.1], 0, 2),
     byRep: [
       rep("u_jordan", "Jordan Reyes", 0.4, 41),
       rep("u_sarah", "Sarah Lin", 0.45, 33),
@@ -705,8 +706,8 @@ export const BEHAVIOR_DETAILS: Record<string, BehaviorDetail> = {
       rep("u_nina", "Nina Okafor", 1.1, 19),
       rep("u_marcus", "Marcus Hale", 1.2, 22),
       rep("u_alex", "Alex Morgan", 1.4, 29),
-      rep("u_priya", "Priya Nair", 1.8, 31),
-      rep("u_theo", "Theo Brandt", 2.1, 27),
+      rep("u_priya", "Priya Nair", 1.7, 31),
+      rep("u_theo", "Theo Brandt", 1.9, 27),
     ],
   }),
   early_discounting: summary("early_discounting", {
@@ -937,20 +938,19 @@ export const PATTERNS: Pattern[] = [
 ];
 
 /**
- * I9 Outcome patterns (51:1819), scope "outcome", in the order Figma draws them: the hero card,
- * the five BEHAVIOR ↔ OUTCOME rows, then the CYCLE LENGTH and STALLS cards. Team-wide aggregates,
- * so no rep is named (`affectedRepIds` is empty). `sampleSize` is the n Figma prints: 19 won +
- * 23 lost = 42 closed for the hero and the table, n = 14 and n = 6 for the cards. `rule` carries
- * the line Figma draws beside the headline. Kept out of the I3 list (see loadPatterns).
- * These are not OutcomeAssociation rows: the table is how often a behavior is seen in won vs lost
- * deals, OutcomeAssociation is the outcome rate with vs without the behavior. I5 (28:743) has
- * Recap before pricing × closed-won as "n too small" while I9 reads 58% / 22%, so mixing the two
- * would contradict a merged screen.
- * GAP: WON / LOST / GAP and the eyebrows ("OUTCOME PATTERN · WON vs LOST", "CYCLE LENGTH",
- * "STALLS") have no Pattern field, nor does which slot (hero, table, card) a row fills; the drawn
- * numbers sit in `rule` as text. OUTCOMES IN SCOPE (Won 19 · Lost 23 · Advanced (14d) 41 ·
- * Stalled 6 · Open 88) has no type at all. "See examples" / "See calls" have no target.
- * firstSeenAt is not drawn, so invented. No lifecycle status: I9 draws none.
+ * I9 Outcome patterns (51:1819), scope "outcome": the three cards Figma draws, in its order. The
+ * first is the full-width hero (19 won + 23 lost = 42 closed), then CYCLE LENGTH (n = 14) and
+ * STALLS (n = 6). Team-wide aggregates, so no rep is named. Kept out of the I3 list (see
+ * loadPatterns).
+ * I9's BEHAVIOR ↔ OUTCOME table is not modelled here: it is how often a behavior is seen in won vs
+ * lost deals (EB by stage 3 79% / 43%, Discount in first 60s 9% / 64%, Recap before pricing
+ * 58% / 22%, Talk share > 65% 12% / 19%), while OutcomeAssociation is the outcome rate with vs
+ * without the behavior. I5 (28:743) has Recap before pricing × closed-won as "n too small", so
+ * adding I9's numbers to OUTCOMES would contradict a merged screen.
+ * GAP: won/lost prevalence has no type. The hero's "19 won · 23 lost" label, the eyebrows
+ * ("OUTCOME PATTERN · WON vs LOST", "CYCLE LENGTH", "STALLS") and OUTCOMES IN SCOPE (Won 19 ·
+ * Lost 23 · Advanced (14d) 41 · Stalled 6 · Open 88) have no field. firstSeenAt is not drawn, so
+ * invented. No lifecycle status: I9 draws none.
  */
 export const OUTCOME_PATTERNS: Pattern[] = [
   {
@@ -963,62 +963,7 @@ export const OUTCOME_PATTERNS: Pattern[] = [
     firstSeenAt: "2026-08-18",
     behaviorKey: "discovery_depth",
     affectedRepIds: [],
-    rule: "19 won · 23 lost",
-  },
-  {
-    id: "pat_out_discovery_qs",
-    scope: "outcome",
-    headline: "Second-level discovery Qs",
-    confidence: "high",
-    sampleSize: 42,
-    firstSeenAt: "2026-08-18",
-    behaviorKey: "discovery_depth",
-    affectedRepIds: [],
-    rule: "3.4 per call won · 1.6 lost · +1.8",
-  },
-  {
-    id: "pat_out_eb_stage3",
-    scope: "outcome",
-    headline: "EB on a call by stage 3",
-    confidence: "medium",
-    sampleSize: 42,
-    firstSeenAt: "2026-08-25",
-    behaviorKey: "economic_buyer_by_s3",
-    affectedRepIds: [],
-    rule: "79% of won · 43% of lost · +36 pts",
-  },
-  {
-    id: "pat_out_early_discount",
-    scope: "outcome",
-    headline: "Discount in first 60s of price talk",
-    confidence: "medium",
-    sampleSize: 42,
-    firstSeenAt: "2026-09-01",
-    behaviorKey: "early_discounting",
-    affectedRepIds: [],
-    rule: "9% of won · 64% of lost · −55 pts",
-  },
-  {
-    id: "pat_out_recap",
-    scope: "outcome",
-    headline: "Recap before pricing",
-    confidence: "low",
-    sampleSize: 42,
-    firstSeenAt: "2026-09-08",
-    behaviorKey: "recap_before_pricing",
-    affectedRepIds: [],
-    rule: "58% of won · 22% of lost · +36 pts",
-  },
-  {
-    id: "pat_out_talk_share",
-    scope: "outcome",
-    headline: "Talk share > 65%",
-    confidence: "low",
-    sampleSize: 42,
-    firstSeenAt: "2026-09-08",
-    behaviorKey: "talk_share",
-    affectedRepIds: [],
-    rule: "12% of won · 19% of lost · −7 pts",
+    rule: null,
   },
   {
     id: "pat_out_mutual_plan",
@@ -1045,84 +990,91 @@ export const OUTCOME_PATTERNS: Pattern[] = [
   },
 ];
 
+/** I11 rows: WHAT FOLLOWS is `selected.associatedOutcome`; the window is I11's "LAST 30 DAYS". */
+const prospectRow = (
+  id: string,
+  headline: string,
+  sampleSize: number,
+  confidence: Pattern["confidence"],
+  firstSeenAt: string,
+  frequency: string,
+  associatedOutcome: string | null,
+  trend = "Last 30 days",
+  behaviorKey: string | null = null,
+): Pattern => ({
+  id,
+  scope: "prospect",
+  headline,
+  confidence,
+  sampleSize,
+  firstSeenAt,
+  behaviorKey,
+  affectedRepIds: [],
+  rule: null,
+  selected: { frequency, associatedOutcome, trend },
+});
+
 /**
- * I11 Prospect patterns (51:2556), scope "prospect": the hero card, then the five WHAT PROSPECTS
- * DO — AND WHAT FOLLOWS rows in Figma's order. `sampleSize` is the CALLS column (the hero's "22
- * calls with a CFO"), `rule` the WHAT FOLLOWS cell. Prospect patterns are aggregate — Bylda
- * builds no profile of an individual prospect — so no rep or prospect is named anywhere.
- * GAP: the "PROSPECT PATTERN · CFOs" eyebrow and the hero/row slot have no field. BY PERSONA
- * (CFO / Finance → Rollout risk · price, Ops lead → Adoption · training time, IT → Security ·
- * integrations, VP Sales → Rep adoption · proof) has no type, and no n or confidence is drawn for
- * it, so it isn't modelled. firstSeenAt is not drawn, so invented. No lifecycle status.
+ * I11 Prospect patterns (51:2556), scope "prospect": the five WHAT PROSPECTS DO — AND WHAT FOLLOWS
+ * rows in Figma's order. `sampleSize` is the CALLS column, `selected.associatedOutcome` the WHAT
+ * FOLLOWS cell. Aggregate only — Bylda builds no profile of a prospect — so no rep or prospect is
+ * named anywhere.
+ * GAP: Figma's hero sentence ("When a CFO joins, the first objection is about rollout risk 3× more
+ * often than price — but reps answer it as price.", Medium, 22 calls with a CFO) is the CFO row's
+ * finding, and Pattern has one headline. A separate row for it would be a sixth table row, so the
+ * CFO row carries the short headline. The "PROSPECT PATTERN · CFOs" eyebrow and BY PERSONA (CFO /
+ * Finance, Ops lead, IT, VP Sales) have no field. "Board / budget freeze language" has no outcome
+ * yet: Figma's "New — watching" is its trend, and WHAT FOLLOWS is null. firstSeenAt is invented.
  */
 export const PROSPECT_PATTERNS: Pattern[] = [
-  {
-    id: "pat_pro_cfo_rollout",
-    scope: "prospect",
-    headline:
-      "When a CFO joins, the first objection is about rollout risk 3× more often than price — but reps answer it as price.",
-    confidence: "medium",
-    sampleSize: 22,
-    firstSeenAt: "2026-09-02",
-    behaviorKey: null,
-    affectedRepIds: [],
-    rule: null,
-  },
-  {
-    id: "pat_pro_cfo_on_call",
-    scope: "prospect",
-    headline: "CFO on the call",
-    confidence: "medium",
-    sampleSize: 22,
-    firstSeenAt: "2026-09-02",
-    behaviorKey: null,
-    affectedRepIds: [],
-    rule: "Rollout-risk objection by min 20 (68%)",
-  },
-  {
-    id: "pat_pro_already_gong",
-    scope: "prospect",
-    headline: "“We already use Gong”",
-    confidence: "medium",
-    sampleSize: 31,
-    firstSeenAt: "2026-08-26",
-    behaviorKey: null,
-    affectedRepIds: [],
-    rule: "Asks for integration detail next (55%)",
-  },
-  {
-    id: "pat_pro_talk_share",
-    scope: "prospect",
-    headline: "Prospect talk share > 55% in discovery",
-    confidence: "high",
-    sampleSize: 104,
-    firstSeenAt: "2026-08-04",
-    behaviorKey: "talk_share",
-    affectedRepIds: [],
-    rule: "Next step booked 81% vs 58%",
-  },
-  {
-    id: "pat_pro_stakeholders",
-    scope: "prospect",
-    headline: "Multiple stakeholders (3+)",
-    confidence: "low",
-    sampleSize: 46,
-    firstSeenAt: "2026-08-19",
-    behaviorKey: null,
-    affectedRepIds: [],
-    rule: "Longer cycle, higher close rate",
-  },
-  {
-    id: "pat_pro_budget_freeze",
-    scope: "prospect",
-    headline: "Board / budget freeze language",
-    confidence: "low",
-    sampleSize: 3,
-    firstSeenAt: "2026-09-29",
-    behaviorKey: null,
-    affectedRepIds: [],
-    rule: "New — watching",
-  },
+  prospectRow(
+    "pat_pro_cfo_on_call",
+    "CFO on the call",
+    22,
+    "medium",
+    "2026-09-02",
+    "22 calls with a CFO",
+    "Rollout-risk objection by min 20 (68%)",
+  ),
+  prospectRow(
+    "pat_pro_already_gong",
+    "“We already use Gong”",
+    31,
+    "medium",
+    "2026-08-26",
+    "31 calls",
+    "Asks for integration detail next (55%)",
+  ),
+  prospectRow(
+    "pat_pro_talk_share",
+    "Prospect talk share > 55% in discovery",
+    104,
+    "high",
+    "2026-08-04",
+    "104 discovery calls",
+    "Next step booked 81% vs 58%",
+    "Last 30 days",
+    "talk_share",
+  ),
+  prospectRow(
+    "pat_pro_stakeholders",
+    "Multiple stakeholders (3+)",
+    46,
+    "low",
+    "2026-08-19",
+    "46 calls",
+    "Longer cycle, higher close rate",
+  ),
+  prospectRow(
+    "pat_pro_budget_freeze",
+    "Board / budget freeze language",
+    3,
+    "low",
+    "2026-09-29",
+    "3 calls",
+    null,
+    "New — watching",
+  ),
 ];
 
 /**

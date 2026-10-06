@@ -7,6 +7,7 @@ import {
   loadBehaviors,
   loadObjectionStats,
   loadPatterns,
+  loadRepScores,
   loadTeamBehaviors,
 } from "../behaviors/hooks";
 import { loadOutcomeAssociations } from "../outcomes/hooks";
@@ -443,6 +444,19 @@ describe("I7 Team behaviors — BEST / NEEDS WORK", () => {
     expect(vals[4]).toBe(d.teamValue);
   });
 
+  it("pause has one fixed y-range, whose quarters are Figma's 0.5s bands", async () => {
+    const d = (await loadBehaviorDetail(DANA, "pause_after_objection"))!;
+    const row = (await loadTeamBehaviors(DANA)).find(
+      (r) => r.behaviorKey === "pause_after_objection",
+    )!;
+    const mine = (await loadRepScores(JORDAN, "u_jordan")).find(
+      (s) => s.behaviorKey === "pause_after_objection",
+    )!;
+    for (const s of [d.sparkline, row.sparkline, mine.sparkline])
+      expect([s.yMin, s.yMax]).toEqual([0, 2]);
+    for (const r of d.byRep) expect(r.value).toBeLessThanOrEqual(d.sparkline.yMax);
+  });
+
   it("Jordan's by-rep pause is his own R2 score", async () => {
     const d = (await loadBehaviorDetail(DANA, "pause_after_objection"))!;
     expect(d.byRep.find((r) => r.repId === "u_jordan")).toMatchObject({ value: 0.4, n: 41 });
@@ -450,7 +464,7 @@ describe("I7 Team behaviors — BEST / NEEDS WORK", () => {
 });
 
 describe("I9 Outcome patterns / I11 Prospect patterns", () => {
-  it("I9 has the hero, the five behavior rows and the two cards, in Figma's order", async () => {
+  it("I9 has the hero and the two cards, in Figma's order", async () => {
     const rows = await loadPatterns(DANA, "outcome");
     expect(rows.map((p) => [p.headline, p.confidence, p.sampleSize])).toEqual([
       [
@@ -458,31 +472,23 @@ describe("I9 Outcome patterns / I11 Prospect patterns", () => {
         "high",
         42,
       ],
-      ["Second-level discovery Qs", "high", 42],
-      ["EB on a call by stage 3", "medium", 42],
-      ["Discount in first 60s of price talk", "medium", 42],
-      ["Recap before pricing", "low", 42],
-      ["Talk share > 65%", "low", 42],
       ["Deals with a mutual plan by call 3 closed 11 days faster.", "low", 14],
       ["4 of 6 stalled deals stalled right after an unhandled price objection.", "medium", 6],
     ]);
   });
 
-  it("I11 has the CFO hero and the five prospect-signal rows, in Figma's order", async () => {
+  it("I11 has the five prospect-signal rows, with WHAT FOLLOWS, in Figma's order", async () => {
     const rows = await loadPatterns(DANA, "prospect");
-    expect(rows.map((p) => [p.headline, p.sampleSize, p.confidence, p.rule])).toEqual([
-      [
-        "When a CFO joins, the first objection is about rollout risk 3× more often than price — but reps answer it as price.",
-        22,
-        "medium",
-        null,
-      ],
+    expect(
+      rows.map((p) => [p.headline, p.sampleSize, p.confidence, p.selected?.associatedOutcome]),
+    ).toEqual([
       ["CFO on the call", 22, "medium", "Rollout-risk objection by min 20 (68%)"],
       ["“We already use Gong”", 31, "medium", "Asks for integration detail next (55%)"],
       ["Prospect talk share > 55% in discovery", 104, "high", "Next step booked 81% vs 58%"],
       ["Multiple stakeholders (3+)", 46, "low", "Longer cycle, higher close rate"],
-      ["Board / budget freeze language", 3, "low", "New — watching"],
+      ["Board / budget freeze language", 3, "low", null],
     ]);
+    expect(rows.at(-1)!.selected?.trend).toBe("New — watching");
   });
 
   it("both are aggregates: no rep named, no causal wording, every behavior key tracked", async () => {
