@@ -198,6 +198,18 @@ An objection **frequency** view is buildable today by aggregating
 `call_insights.objections` jsonb client-side. That is the one real Intelligence
 screen available. Everything else is mocked.
 
+Type gaps the mocks can't carry without new fields (2026-10-06, tagged `// GAP:` in
+`src/lib/data/mocks/intelligence.ts`):
+
+| Frame | Drawn | Gap |
+| --- | --- | --- |
+| `I7` 51:1420 | BEST "Dana's team" on Recap before pricing | `BehaviorDetail.byRep` holds reps only; the fixture's best rep is Priya |
+| `I7` 51:1420 | "Luis" in the pause distribution | the fixture's ninth Mid-Market rep is Leo Park (`u_leo`) |
+| `I9` 51:1819 | BEHAVIOR ↔ OUTCOME table: behavior seen in won vs lost (79% / 43%, …) | no type: `OutcomeAssociation` is outcome rate with vs without, and I5 disagrees with these numbers; not mocked |
+| `I9` 51:1819 | hero "19 won · 23 lost" label, eyebrows, OUTCOMES IN SCOPE (Won 19 · Lost 23 · Advanced 41 · Stalled 6 · Open 88) | no field / no type |
+| `I11` 51:2556 | hero sentence "When a CFO joins…" separate from the "CFO on the call" row | `Pattern` has one headline; a separate row would be a sixth table row |
+| `I11` 51:2556 | "PROSPECT PATTERN · CFOs" eyebrow, BY PERSONA (CFO, Ops lead, IT, VP Sales) | no field / no type, and no n or confidence drawn for personas |
+
 ### 09 — Team · 16 fields · 88% missing
 
 | Field | Status |

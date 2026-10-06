@@ -10,7 +10,8 @@ import { StateLoading } from "../states/SystemState";
 import { NewMenu, ProfileMenu, WorkspaceSwitcher } from "../menus/ShellMenus";
 import { ContextPanelProvider } from "./ContextPanel";
 import { activeKey, navFor } from "./nav";
-import { AREA_NAMES, screenForRoute } from "./screens";
+import { crumbFor } from "./crumb";
+import { screenForRoute } from "./screens";
 
 /*
  * App Shell / Navigation v2 (37:51) + Workspace Top Bar (36:52).
@@ -476,7 +477,7 @@ function useCrumb(): string {
   const matches = useMatches();
   const last = matches[matches.length - 1];
   const entry = last ? screenForRoute(last.fullPath) : undefined;
-  if (entry) return `${AREA_NAMES[entry.area] ?? ""} / ${entry.name}`;
+  if (entry) return crumbFor(entry);
   return last?.pathname ?? "";
 }
 
